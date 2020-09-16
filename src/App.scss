@@ -1,0 +1,19 @@
+@font-face {
+  font-family: 'OpenSansHebrew';
+  src: url('./assets/fonts/OpenSansHebrew-Regular.ttf'); /* IE9 Compat Modes */
+  src: url('./assets/fonts/OpenSansHebrew-Regular.ttf') format('embedded-opentype'), /* IE6-IE8 */
+       url('./assets/fonts/OpenSansHebrew-Regular.ttf') format('woff'), /* Modern Browsers */
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'OpenSansHebrew';
+}
+
+.App {
+  display: flex;
+  height: 100vh;
+  direction: rtl;
+}
