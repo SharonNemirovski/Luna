@@ -1,0 +1,65 @@
+html,
+body {
+  overflow: hidden;
+}
+.Passes {
+  height: 100%;
+  box-shadow: 1px 3px 5px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(0, 0, 0, 0.171);
+}
+.CardHolder {
+  height: 100%;
+
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-column-gap: 13px;
+  grid-row-gap: 8px;
+  overflow-y: auto;
+}
+.fab {
+  z-index: 1000000000;
+  width: 70px;
+  height: 70px;
+  background-color: rgb(62, 145, 247);
+  border-radius: 50%;
+  box-shadow: 0 6px 10px 0 #666;
+
+  font-size: 50px;
+  line-height: 70px;
+  color: white;
+  text-align: center;
+
+  position: sticky;
+  right: 90%;
+  bottom: 50px;
+  cursor: pointer;
+  transition: all 0.1s ease-in-out;
+}
+.swal2-input {
+  width: 250px !important;
+}
+
+.fab:hover {
+  box-shadow: 0 6px 14px 0 #666;
+  color: rgb(62, 145, 245);
+  background-color: white;
+  transform: scale(1.05);
+}
+.Swal-wide {
+  min-width: 560px !important;
+}
+
+.animationForAddCard {
+  animation-name: addCard;
+  animation-duration: 1s;
+}
+
+/* The animation code */
+@keyframes addCard {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
