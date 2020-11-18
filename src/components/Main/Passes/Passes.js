@@ -22,12 +22,8 @@ export default function Passes() {
   const [posts, setPosts] = React.useState([
     { title: 'sharon', description: '031245', imgUrl: malam },
     { title: 'sharon', description: '031245', imgUrl: binat },
-    { title: 'sharon', description: '031245', imgUrl: malam },
-    { title: 'sharon', description: '031245', imgUrl: malam },
-    { title: 'sharon', description: '031245', imgUrl: malam },
-    { title: 'sharon', description: '031245', imgUrl: malam },
-    { title: 'sharon', description: '031245', imgUrl: malam },
-    { title: 'sharon', description: '031245', imgUrl: malam },
+   
+    
   ]);
   return (
     <div className="Passes DropAnimation">
