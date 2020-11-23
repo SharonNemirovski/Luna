@@ -1,24 +1,65 @@
 .Faults {
   height: 100%;
-  box-shadow: 1px 3px 5px rgba(0,0,0,.3);
+  box-shadow: 1px 3px 5px rgba(0, 0, 0, 0.3);
   border: 1px solid rgba(0, 0, 0, 0.171);
 }
 
-.body{
+.body {
   text-align: center;
+  overflow: hidden;
+  overflow-y: scroll;
 }
 
-
-table,td,tr{
+table,
+td,
+tr {
   border: 3px solid rgb(106, 158, 255);
 }
 
-.table{
+.table {
   margin-top: 5%;
   margin-left: auto;
   margin-right: auto;
   width: 60%;
-  
 }
 
+.fultsTableHolder {
+  margin-left: 15px;
+  display: grid;
+  height: 100%;
+  width: 100%;
+  overflow-y: hidden;
+}
+// .table {
+//   grid-row: 3/4;
+//   grid-column: 2/3;
+//   display: grid;
+//   grid-template-rows: 1fr 1fr 1fr 1fr;
+//   margin-right: 5px;
+//   width: 100%;
+//   border-radius: 10px;
+//   max-height: 510px;
+//   overflow-y: hidden;
+// }
+// .operations{
+//   display: grid;
+//   grid-Template-Columns: 1fr 1fr 1fr 1fr 1fr;
+//   grid-Column: 2/3;
+//   grid-Row: 1/2;
+// }
 
+// .fultitle {
+//   margin-Top: 20px;
+//   width: 100%;
+//   grid-Row: 2/3;
+//   border-Radius: 10px;
+//   margin-Left: 30px;
+//   grid-Column: 2/3;
+// }
+// .fultstable{
+//   display: grid;
+//   grid-Template-Rows: 5% 15% 80%;
+//   grid-Template-Columns: 2% 96% 2%;
+//   width: 100%;
+//   justify-Content: center;
+// }
