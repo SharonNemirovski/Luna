@@ -151,6 +151,7 @@ export default function FultsTable() {
         const temp_arr = fults.filter((item) => {
           return item.Num != id;
         });
+        //patch req to backend -- check again
         setFults(temp_arr);
         console.log(db_id);
         fetch(`http://localhost:4000/luna/closeFult/${db_id}`, {
