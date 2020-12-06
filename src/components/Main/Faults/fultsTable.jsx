@@ -1,20 +1,19 @@
 import React, { useEffect, useState } from "react";
 import Fult from "./fult";
-import { useStyles } from "./styles";
+import { useStyles, theme } from "./styles";
+import { ThemeProvider } from "@material-ui/core/styles";
 import FultTopics from "./Tablecontant";
 import AddIcon from "@material-ui/icons/Add";
-import Button from "@material-ui/core/Button";
-import SearchIcon from "@material-ui/icons/Search";
-import InputBase from "@material-ui/core/InputBase";
-import Backdrop from "@material-ui/core/Backdrop";
-import Card from "@material-ui/core/Card";
 import fetch from "node-fetch";
+import "./Faults.scss";
+import Snackbar from "@material-ui/core/Snackbar";
 
 export default function FultsTable() {
   const classes = useStyles();
   const [fults, setFults] = useState([]);
+  const [fults_search, setFultssearch] = useState([]);
   const Swal = require("sweetalert2");
-  const [open, setOpen] = useState(false);
+  const [snack, setOpen] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -22,27 +21,35 @@ export default function FultsTable() {
       const data = await res.json();
       let temp_arry = [...fults];
       data.map((entity) => {
+        let faultime = entity.created_at;
+        faultime = faultime.split("T");
+        faultime = faultime[0].replace("-", "/").replace("-", "/");
+        faultime = faultime.split("/");
+        const time = faultime[2] + "/" + faultime[1] + "/" + faultime[0];
         let tempFult = {
           Num: data.findIndex((element) => element === entity) + 1,
           key: entity.id,
           Place: entity.place,
           By: entity.by,
-          time: entity.created_at,
+          time: time,
           Network: entity.network,
+          Description: entity.description,
           Status: entity.status,
           Tech: entity.emp,
           Id: entity._id,
+          Is_close: entity.closed,
         };
         temp_arry.push(tempFult);
       });
       setFults(temp_arry);
+      setFultssearch(temp_arry);
     })();
   }, []);
 
   const handleClose = () => {
     setOpen(false);
   };
-  const handleClick = () => {
+  const AddFult = () => {
     Swal.mixin({
       input: "text",
       inputAttributes: {
@@ -77,7 +84,7 @@ export default function FultsTable() {
           const place = result.value[0];
           const techname = result.value[1];
           const network = result.value[2];
-          const status = result.value[3];
+          const description = result.value[3];
           const by = result.value[4];
 
           Swal.fire({
@@ -91,7 +98,7 @@ export default function FultsTable() {
             :רשת
             <pre><code>${network}</code></pre>
             :תיאור
-            <pre><code>${status}</code></pre>
+            <pre><code>${description}</code></pre>
             :נוצר על ידי
             <pre><code>${by}</code></pre>
           `,
@@ -105,7 +112,7 @@ export default function FultsTable() {
                 place: String(place),
                 by: String(by),
                 network: String(network),
-                status: String(status),
+                description: String(description),
                 emp: String(techname),
                 closed: false,
               };
@@ -118,13 +125,20 @@ export default function FultsTable() {
                 .then((json) => {
                   const fult_id = json._id;
                   const date = json.created_at;
+                  let faultime = date;
+                  faultime = faultime.split("T");
+                  faultime = faultime[0].replace("-", "/").replace("-", "/");
+                  faultime = faultime.split("/");
+                  const time =
+                    faultime[2] + "/" + faultime[1] + "/" + faultime[0];
                   let tempFult = {
                     Num: fults.length + 1,
                     Place: place,
                     By: by,
-                    time: date,
+                    time: time,
                     Network: network,
-                    Status: status,
+                    Status: "",
+                    Description: description,
                     Tech: techname,
                     Id: fult_id,
                     Is_close: false,
@@ -138,9 +152,36 @@ export default function FultsTable() {
         }
       });
   };
-  const onDeleteFult = (id, db_id) => {
+  const onClosingFult = (id, db_id) => {
     Swal.fire({
       icon: "warning",
+      title: "?סגירת תקלה",
+      footer: "לחצ/י אישור לסגירת התקלה",
+      confirmButtonText: "אישור",
+      showCancelButton: true,
+      cancelButtonText: "בטל",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const temp_arr = fults.filter((item) => {
+          return item.Num != id;
+        });
+        //POST req to backend
+        setFults(temp_arr);
+        fetch(`http://localhost:4000/luna/closeFult/${db_id}`, {
+          method: "POST",
+        })
+          .then((res) => res.json())
+          .then((json) => {
+            console.log(json);
+          });
+        Swal.fire({ icon: "success", title: "התקלה נסגרה" });
+      }
+    });
+  };
+
+  const onDeleteFult = (id, db_id) => {
+    Swal.fire({
+      icon: "error",
       title: "?מחיקת תקלה",
       footer: "לחצ/י אישור למחיקת התקלה",
       confirmButtonText: "אישור",
@@ -151,74 +192,57 @@ export default function FultsTable() {
         const temp_arr = fults.filter((item) => {
           return item.Num != id;
         });
-        //patch req to backend -- check again
+        //DELETE req to backend
         setFults(temp_arr);
-        console.log(db_id);
-        fetch(`http://localhost:4000/luna/closeFult/${db_id}`, {
-          method: "PATCH",
-        })
-          .then((res) => res.json())
-          .then((json) => {
-            console.log(json);
-          });
+        fetch(`http://localhost:4000/luna/DeleteFult/${db_id}`, {
+          method: "DELETE",
+          headers: {
+            "Content-type": "application/json; charset=UTF-8", // Indicates the content
+          },
+        }).then((res) => res.json());
         Swal.fire({ icon: "success", title: "התקלה נמחקה" });
       }
     });
   };
-  const onEditFult = () => {
-    setOpen(!open);
-  };
-  const search = (pattern) => {};
+
+  const onEditFult = () => {};
+
   return (
-    <div className={classes.fultstable}>
-      <div className={classes.operations}>
-        <Button
-          variant="outlined"
-          className={classes.button}
-          color="primary"
-          onClick={handleClick}
-        >
-          <AddIcon />
-        </Button>
-        <div className={classes.search}>
-          <div className={classes.searchIcon}>
-            <SearchIcon />
-          </div>
-          <InputBase
-            placeholder="...חיפוש"
-            classes={{
-              root: classes.inputRoot,
-              input: classes.inputInput,
-            }}
-            inputProps={{ "aria-label": "search" }}
-            onChange={search}
-          />
+    <ThemeProvider theme={theme}>
+      <div className="fultstable">
+        <FultTopics className="FultTopics" />
+        <div className="table">
+          {fults.map((entity) => (
+            <Fult
+              key={entity.key}
+              number={entity.Num}
+              f_place={entity.Place}
+              createdby={entity.By}
+              createdat={entity.time}
+              net={entity.Network}
+              stats=""
+              description={entity.Description}
+              techname={entity.Tech}
+              id={entity.Id}
+              is_close={entity.Is_close}
+              onClose={() => {
+                onClosingFult(entity.Num, entity.Id);
+              }}
+              onDelete={() => {
+                onDeleteFult(entity.Num, entity.Id);
+              }}
+              onEdit={() => {
+                onEditFult();
+              }}
+            />
+          ))}
+        </div>
+        <div className="operations">
+          <button variant="outlined" className="button" onClick={AddFult}>
+            <AddIcon style={{ color: "#1562aa" }} />
+          </button>
         </div>
       </div>
-
-      <FultTopics className={classes.topics} />
-      <div className={classes.table}>
-        {fults.map((entity) => (
-          <Fult
-            key={entity.key}
-            number={entity.Num}
-            f_place={entity.Place}
-            createdby={entity.By}
-            createdat={entity.time}
-            net={entity.Network}
-            stats={entity.Status}
-            techname={entity.Tech}
-            id={entity.Id}
-            is_close={entity.Is_close}
-            onDelete={() => {
-              onDeleteFult(entity.Num, entity.Id);
-            }}
-            onEdit={() => {
-              onEditFult();
-            }}
-          />
-        ))}
-      </div>
-    </div>
+    </ThemeProvider>
   );
 }

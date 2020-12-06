@@ -1,5 +1,143 @@
 .History {
   height: 100%;
-  box-shadow: 1px 3px 5px rgba(0,0,0,.3);
+  box-shadow: 1px 3px 5px rgba(0, 0, 0, 0.3);
   border: 1px solid rgba(0, 0, 0, 0.171);
+}
+.contantholder {
+  box-shadow: 1px 3px 5px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(0, 0, 0, 0.171);
+}
+.card {
+  display: flex;
+  flex-direction: column;
+
+  border-radius: 10px;
+}
+.expend_fult {
+  display: grid;
+  grid-template-rows: repeat(2, 1fr);
+  grid-template-columns: 1fr;
+  width: 100%;
+}
+.fult {
+  display: grid;
+  margin-top: 20px;
+  width: 100%;
+  border-radius: 10px;
+  box-shadow: 1px 3px 5px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(0, 0, 0, 0.171);
+}
+.contant {
+  display: grid;
+  text-align: right;
+}
+.topogragh {
+  text-align: right;
+  font-size: 14;
+  margin-right: 10px;
+  margin-left: 10px;
+  justify-self: center;
+  align-self: center;
+}
+.operation_holder {
+  width: 100%;
+  margin-top: 10px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+}
+.topogragh_status {
+  text-align: right;
+  font-size: 14;
+  margin-right: 10px;
+  margin-left: 10px;
+  direction: rtl;
+}
+.table {
+  margin-top: 20px;
+  grid-row: 3/4;
+  grid-column: 2/3;
+  display: grid;
+  grid-template-rows: 1fr 1fr 1fr 1fr;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  border-radius: 10px;
+  max-height: 453px;
+  overflow-y: scroll;
+}
+.table::-webkit-scrollbar {
+  width: 0 !important;
+}
+.operations {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-column: 2/3;
+  grid-row: 1/2;
+  margin-bottom: 15px;
+}
+
+.fultitle {
+  margin-top: 20px;
+  width: 100%;
+  grid-row: 2/3;
+  border-radius: 10px;
+  margin-left: 30px;
+  grid-column: 2/3;
+}
+.fultstable {
+  margin-top: 10px;
+  display: grid;
+  grid-template-rows: 8% 12% 80%;
+  grid-template-columns: 2% 96% 2%;
+  width: 100%;
+  justify-content: center;
+}
+
+.fultcontant {
+  text-align: right;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  width: 100%;
+  border-radius: 4px;
+}
+
+.fultsTableHolder {
+  margin-left: 15px;
+  display: grid;
+  height: 100%;
+  width: 100%;
+  overflow-y: hidden;
+}
+.button {
+  grid-column: 5/6;
+  grid-row: 1/2;
+  height: 100%;
+  margin-right: 5px;
+  border-radius: 3px;
+  border-color: #1890ff;
+}
+.formControl {
+  grid-column: 5/6;
+  border-color: #1562aa;
+}
+.FultTopics {
+  margin-top: 15px;
+  height: 25px;
+}
+
+.redstatus {
+  background-color: rgb(201, 35, 35);
+  color: rgb(201, 35, 35);
+  border-radius: 50%;
+  margin-right: 8px;
+  height: 20px;
+  width: 20px;
+}
+.greenstatus {
+  color: rgb(32, 207, 61);
+  background-color: rgb(32, 207, 61);
+  border-radius: 50%;
+  margin-right: 8px;
+  height: 20px;
+  width: 20px;
 }

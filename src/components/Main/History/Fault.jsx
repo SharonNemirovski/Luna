@@ -14,10 +14,10 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import DoneIcon from "@material-ui/icons/Done";
 import AttachFileIcon from "@material-ui/icons/AttachFile";
 import Badge from "@material-ui/core/Badge";
-import "./Faults.scss";
+import "./History.scss";
 import AssignmentIcon from "@material-ui/icons/Assignment";
 
-export default function Fult({
+export default function Fault({
   number,
   f_place,
   createdby,
@@ -53,8 +53,6 @@ export default function Fult({
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
-
-  const handleEdit = () => {};
 
   return (
     <div className="fult">
@@ -103,18 +101,8 @@ export default function Fult({
 
                 <Typography>
                   <div className="operation_holder">
-                    <IconButton onClick={onEdit}>
-                      <EditIcon style={{ color: "#1562aa" }} />
-                    </IconButton>
-
-                    <IconButton onClick={onClose}>
-                      <DoneIcon style={{ color: "#1562aa" }} />
-                    </IconButton>
                     <IconButton onClick={onDelete}>
                       <DeleteIcon style={{ color: "#1562aa" }} />
-                    </IconButton>
-                    <IconButton>
-                      <AttachFileIcon style={{ color: "#1562aa" }} />
                     </IconButton>
                   </div>
                 </Typography>
