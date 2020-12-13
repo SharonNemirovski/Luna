@@ -13,7 +13,7 @@ export default {
     switch(type) {
       case 'fault':
         return <AlertOutlined />
-      case 'pass':
+      case 'passes':
         return <CreditCardOutlined />
       case 'history':
         return <FolderOpenOutlined />
@@ -27,7 +27,7 @@ export default {
   getMenuItems() {
     return [
       { name: 'צפייה בתקלות', link: 'fault', type: 'fault' },
-      { name: 'אישורי כניסה', link: 'passes', type: 'pass' },
+      { name: 'אישורי כניסה', link: 'passes', type: 'passes' },
       { name: 'ארכיון', link: 'history', type: 'history' },
       { name: 'צור קשר', link: 'contact', type: 'contact' }
     ]
