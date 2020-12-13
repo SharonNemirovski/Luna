@@ -7,6 +7,13 @@ import { makeStyles } from '@material-ui/core/styles';
 
 import malam from '../../../assets/malam.png';
 import binat from '../../../assets/binat.png';
+import { FlareSharp } from '@material-ui/icons';
+var inputOptions = new Promise(function (resolve) {
+  resolve({
+    netcom: 'נטקום',
+    binat: 'בינת',
+  });
+});
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -20,43 +27,64 @@ export default function Passes() {
   const classes = useStyles();
 
   const [posts, setPosts] = React.useState([
-    { title: 'sharon', description: '031245', imgUrl: malam },
+    { title: 'sharon', description: '031223', imgUrl: malam },
     { title: 'sharon', description: '031245', imgUrl: binat },
-   
-    
   ]);
   return (
     <div className="Passes DropAnimation">
       <div className="CardHolder">
         {posts.map((post, index) => (
-          <div
-            className="animationForAddCard"
-            onClick={() => {
-              Swal.fire({
-                title: post.title,
-                text: `${post.description}`,
-                confirmButtonText: 'סגור',
-                showDenyButton: true,
-                denyButtonText: 'מחק',
-                imageUrl: post.imgUrl,
-                imageWidth: 100,
-                imageHeight: 100,
-                imageAlt: 'Custom image',
-              }).then((res) => {
-                if (res.isDenied) {
-                  let tempArrDel = [...posts];
-                  tempArrDel.splice(index, 1);
-                  setPosts(tempArrDel);
-                }
-              });
-            }}
-          >
-            <GenCard
-              key={index}
-              imgUrl={post.imgUrl}
-              title={post.title}
-              description={post.description}
-            />
+          <div className="animationForAddCard">
+            <div
+              onClick={() => {
+                Swal.fire({
+                  allowOutsideClick: false,
+                  title: post.title,
+                  text: `${post.description}`,
+                  confirmButtonText: 'סגור',
+                  showDenyButton: true,
+                  denyButtonText: 'מחק',
+                  showCancelButton: 'true',
+                  cancelButtonText: 'עריכה',
+                  imageUrl: post.imgUrl,
+                  imageWidth: 100,
+                  imageHeight: 100,
+                  imageAlt: 'Custom image',
+                }).then((res) => {
+                  if (res.isDenied) {
+                    let tempArrDel = [...posts];
+                    tempArrDel.splice(index, 1);
+                    setPosts(tempArrDel);
+                  }
+                  //when u click to EDIT
+                  if (res.isDismissed) {
+                    console.log('lalala');
+                    Swal.fire({
+                      allowOutsideClick: false,
+                      title: post.title,
+                      text: `${post.description}`,
+                      confirmButtonText: 'סגור',
+                      showDenyButton: true,
+                      denyButtonText: 'מחק',
+                      showCancelButton: 'true',
+                      cancelButtonText: 'עריכה',
+                      imageUrl: post.imgUrl,
+                      imageWidth: 100,
+                      imageHeight: 100,
+                      imageAlt: 'Custom image',
+                    })
+                    
+                  }
+                });
+              }}
+            >
+              <GenCard
+                key={index}
+                imgUrl={post.imgUrl}
+                title={post.title}
+                description={post.description}
+              />
+            </div>
           </div>
         ))}
       </div>
@@ -64,7 +92,11 @@ export default function Passes() {
         class="fab"
         onClick={() =>
           Swal.mixin({
+            validationMessage: 'שדה זה הוא חובה',
             input: 'text',
+            inputAttributes: {
+              required: true,
+            },
             confirmButtonText: 'הבא',
             progressSteps: ['1', '2', '3', '4', '5', '6', '7'],
             customClass: 'Swal-wide',
@@ -92,7 +124,17 @@ export default function Passes() {
               },
               {
                 title: 'הוספת טכנאי',
-                text: '(נטקום או בינת) :חברה',
+                input: 'radio',
+                inputOptions: inputOptions,
+                inputValidator: function (result) {
+                  return new Promise(function (resolve, reject) {
+                    if (result) {
+                      resolve();
+                    } else {
+                      reject('נא לבחור חברת טכנאי');
+                    }
+                  });
+                },
               },
               {
                 title: 'הוספת טכנאי',
@@ -102,7 +144,7 @@ export default function Passes() {
             .then((result) => {
               if (result.value) {
                 let nameOfTech = result.value[0];
-                let info = `אישור כניסה:${result.value[7]}`;
+                let info = `${result.value[6]} :אישור כניסה`;
                 let newTech = {
                   title: nameOfTech,
                   description: info,
