@@ -7,6 +7,7 @@ import AddIcon from "@material-ui/icons/Add";
 import fetch from "node-fetch";
 import "./Faults.scss";
 import Snackbar from "@material-ui/core/Snackbar";
+import Backdrop from "@material-ui/core/Backdrop";
 
 export default function FultsTable() {
   const classes = useStyles();
@@ -14,7 +15,7 @@ export default function FultsTable() {
   const [fults_search, setFultssearch] = useState([]);
   const Swal = require("sweetalert2");
   const [snack, setOpen] = useState(false);
-
+  const [backdrop, openBackdrop] = useState(false);
   useEffect(() => {
     (async () => {
       const res = await fetch(`http://localhost:4000/luna/getFults`);
@@ -205,10 +206,17 @@ export default function FultsTable() {
     });
   };
 
-  const onEditFult = () => {};
-
+  const onEditFult = () => {
+    openBackdrop(true);
+  };
+  const closeBackdrop = () => {
+    openBackdrop(false);
+  };
   return (
     <ThemeProvider theme={theme}>
+      <Backdrop className="backdrop" open={backdrop} onClick={closeBackdrop}>
+        hello
+      </Backdrop>
       <div className="fultstable">
         <FultTopics className="FultTopics" />
         <div className="table">
