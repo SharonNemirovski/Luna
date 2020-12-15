@@ -1,35 +1,35 @@
 // --- sidenav related Utils.
-import React from 'react'
-import { 
+import React from "react";
+import {
   AlertOutlined,
   CreditCardOutlined,
   FolderOpenOutlined,
   PhoneOutlined,
-} from '@ant-design/icons';
+} from "@ant-design/icons";
 
 export default {
   // --- icon by type
   IconByType(type) {
-    switch(type) {
-      case 'fault':
-        return <AlertOutlined />
-      case 'passes':
-        return <CreditCardOutlined />
-      case 'history':
-        return <FolderOpenOutlined />
-      case 'contact':
-        return <PhoneOutlined />
+    switch (type) {
+      case "fault":
+        return <AlertOutlined />;
+      case "passes":
+        return <CreditCardOutlined />;
+      case "history":
+        return <FolderOpenOutlined />;
+      case "contact":
+        return <PhoneOutlined />;
       default:
-        return null
+        return null;
     }
   },
   // --- menu items for side nav.
   getMenuItems() {
     return [
-      { name: 'צפייה בתקלות', link: 'fault', type: 'fault' },
-      { name: 'אישורי כניסה', link: 'passes', type: 'passes' },
-      { name: 'ארכיון', link: 'history', type: 'history' },
-      { name: 'צור קשר', link: 'contact', type: 'contact' }
-    ]
-  }
-}
+      { name: "צפייה בתקלות", link: "fault", type: "fault" },
+      { name: "אישורי כניסה", link: "passes", type: "passes" },
+      { name: "ארכיון", link: "history", type: "history" },
+      { name: "צור קשר", link: "contact", type: "contact" },
+    ];
+  },
+};
