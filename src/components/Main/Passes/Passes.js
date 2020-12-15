@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './Passes.scss';
 import GenCard from './genCard';
 import '../Animation/anima.scss';
@@ -7,6 +7,13 @@ import { makeStyles } from '@material-ui/core/styles';
 
 import malam from '../../../assets/malam.png';
 import binat from '../../../assets/binat.png';
+import TechInfo from '../../Modals/TechInfo/TechInfo';
+var inputOptions = new Promise(function (resolve) {
+  resolve({
+    netcom: 'נטקום',
+    binat: 'בינת',
+  });
+});
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -18,53 +25,68 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Passes() {
   const classes = useStyles();
+  const [isTechInfoModalOpen, setIsTechInfoModalOpen] = useState(false);
+  const [selectedTech, setSelectedTech] = useState(null);
+  const [posts, setPosts] = React.useState([]);
 
-  const [posts, setPosts] = React.useState([
-    { title: 'sharon', description: '031245', imgUrl: malam },
-    { title: 'sharon', description: '031245', imgUrl: binat },
-   
-    
-  ]);
+  const openTechInfoModal = (post) => {
+    setIsTechInfoModalOpen(true);
+    setSelectedTech(post);
+  }
+
+  // --- temp until DB is implemented.
+  const onTechDelete = id => {
+    setPosts(posts.filter((post) => post.id !== id));
+    setIsTechInfoModalOpen(false);
+  }
+
+  const onTechUpdate = techObj => {
+    const updatedPosts = posts.map((post) => {
+        if(techObj.id !== post.id) return post;
+        post.name = techObj.name;
+        post.description = techObj.description;
+        return post;
+    })
+    setPosts(updatedPosts);
+  }
+
+  React.useEffect(() => {
+    // --- call to BE for data.
+    setPosts([
+      { id: 1, name: 'sharon', description: '031246', imgUrl: malam },
+      { id: 2, name: 'sharon', description: '031245', imgUrl: binat },
+    ])
+  }, []);
+
+
   return (
     <div className="Passes DropAnimation">
       <div className="CardHolder">
         {posts.map((post, index) => (
           <div
-            className="animationForAddCard"
-            onClick={() => {
-              Swal.fire({
-                title: post.title,
-                text: `${post.description}`,
-                confirmButtonText: 'סגור',
-                showDenyButton: true,
-                denyButtonText: 'מחק',
-                imageUrl: post.imgUrl,
-                imageWidth: 100,
-                imageHeight: 100,
-                imageAlt: 'Custom image',
-              }).then((res) => {
-                if (res.isDenied) {
-                  let tempArrDel = [...posts];
-                  tempArrDel.splice(index, 1);
-                  setPosts(tempArrDel);
-                }
-              });
-            }}
-          >
-            <GenCard
-              key={index}
-              imgUrl={post.imgUrl}
-              title={post.title}
-              description={post.description}
-            />
+            key={post.id} 
+            onClick={() => openTechInfoModal(post)}
+            className="animationForAddCard">
+            <div>
+              <GenCard
+                key={index}
+                imgUrl={post.imgUrl}
+                title={post.name}
+                description={post.description}
+              />
+            </div>
           </div>
         ))}
       </div>
       <div
-        class="fab"
+        className="fab"
         onClick={() =>
           Swal.mixin({
+            validationMessage: 'שדה זה הוא חובה',
             input: 'text',
+            inputAttributes: {
+              required: true,
+            },
             confirmButtonText: 'הבא',
             progressSteps: ['1', '2', '3', '4', '5', '6', '7'],
             customClass: 'Swal-wide',
@@ -92,7 +114,17 @@ export default function Passes() {
               },
               {
                 title: 'הוספת טכנאי',
-                text: '(נטקום או בינת) :חברה',
+                input: 'radio',
+                inputOptions: inputOptions,
+                inputValidator: function (result) {
+                  return new Promise(function (resolve, reject) {
+                    if (result) {
+                      resolve();
+                    } else {
+                      reject('נא לבחור חברת טכנאי');
+                    }
+                  });
+                },
               },
               {
                 title: 'הוספת טכנאי',
@@ -102,7 +134,7 @@ export default function Passes() {
             .then((result) => {
               if (result.value) {
                 let nameOfTech = result.value[0];
-                let info = `אישור כניסה:${result.value[7]}`;
+                let info = `${result.value[6]} :אישור כניסה`;
                 let newTech = {
                   title: nameOfTech,
                   description: info,
@@ -128,6 +160,16 @@ export default function Passes() {
         {' '}
         +{' '}
       </div>
+
+    {
+      isTechInfoModalOpen && 
+        <TechInfo
+          onSave={onTechUpdate}
+          onDelete={onTechDelete}
+          onClose={() => setIsTechInfoModalOpen(false)} 
+          selectedTech={selectedTech} />
+    } 
+  
     </div>
   );
 }

@@ -1,7 +1,7 @@
 import React from "react";
 import "./Main.scss";
 // --- components
-import { Route, Switch } from "react-router-dom";
+import { Redirect, Route, Switch } from "react-router-dom";
 import Faults from "./Faults/Faults";
 import Passes from "./Passes/Passes";
 import History from "./History/History";
@@ -15,6 +15,7 @@ export default function Main() {
         <Route path="/passes" component={Passes} />
         <Route path="/history" component={History} />
         <Route path="/contact" component={Contact} />
+        <Redirect to="fault" />
       </Switch>
     </div>
   );

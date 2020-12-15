@@ -6,10 +6,10 @@ body {
   height: 100%;
   box-shadow: 1px 3px 5px rgba(0, 0, 0, 0.3);
   border: 1px solid rgba(0, 0, 0, 0.171);
+  position: relative;
 }
 .CardHolder {
   height: 100%;
-
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-column-gap: 13px;
@@ -54,6 +54,8 @@ body {
   animation-duration: 1s;
 }
 
+
+
 /* The animation code */
 @keyframes addCard {
   from {
@@ -63,3 +65,4 @@ body {
     opacity: 1;
   }
 }
+
