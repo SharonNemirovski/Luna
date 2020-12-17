@@ -126,14 +126,15 @@ export default function Fult({
               <div className="expend_fult">
                 <Typography component={'span'} className="topogragh_status">
                   תיאור התקלה:
-                  <Typography className="topogragh">
-                    {fields.description}
-                  </Typography>
+                  <span className = "topogragh_info">{fields.description}</span>
                 </Typography>
                 <Typography component={'span'} className="topogragh_status">
                   סטטוס:
-                  {fields.last_changed}
-                  <Typography component={'span'} className="topogragh">{fields.status}</Typography>
+                  <span className = "topogragh_info">{fields.status}</span>
+                </Typography>
+                <Typography component={'span'} className="topogragh_status">
+                  עודכן לאחרונה בתאריך:
+                  <span className = "topogragh_info"> {fields.last_changed}</span>
                 </Typography>
 
                 <Typography component={'span'}>
@@ -142,10 +143,15 @@ export default function Fult({
                       <EditIcon style={{ color: "#1562aa" }} />
                     </IconButton>
 
-                    <IconButton onClick={onClose}>
+                    <IconButton onClick={()=>{
+                      setExpanded(false);
+                      onClose();
+                    }}>
                       <DoneIcon style={{ color: "#1562aa" }} />
                     </IconButton>
-                    <IconButton onClick={onDelete}>
+                    <IconButton onClick={()=>{ 
+                      setExpanded(false);
+                      onDelete();}}>
                       <DeleteIcon style={{ color: "#1562aa" }} />
                     </IconButton>
                     <IconButton>

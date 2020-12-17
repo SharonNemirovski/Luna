@@ -1,11 +1,10 @@
 .BackDropModal {
-  animation: mfp-3d-unfold;
   position: fixed;
   z-index: 1111111;
   top: 0;
   left: 0;
-  height: 100%;
-  width: 100%;
+  height: 100vmax;
+  width: 100vmax;
   background-color: rgba(0, 0, 0, 0.3);
   display: flex;
   text-align: center;
@@ -58,79 +57,6 @@
           background-color: rgb(212, 50, 50);
         }
       }
-    }
-  }
-}
-@-webkit-keyframes swing-in-top-fwd {
-  0% {
-    -webkit-transform: rotateX(-100deg);
-    transform: rotateX(-100deg);
-    -webkit-transform-origin: top;
-    transform-origin: top;
-    opacity: 0;
-  }
-  100% {
-    -webkit-transform: rotateX(0deg);
-    transform: rotateX(0deg);
-    -webkit-transform-origin: top;
-    transform-origin: top;
-    opacity: 1;
-  }
-}
-@keyframes swing-in-top-fwd {
-  0% {
-    -webkit-transform: rotateX(-100deg);
-    transform: rotateX(-100deg);
-    -webkit-transform-origin: top;
-    transform-origin: top;
-    opacity: 0;
-  }
-  100% {
-    -webkit-transform: rotateX(0deg);
-    transform: rotateX(0deg);
-    -webkit-transform-origin: top;
-    transform-origin: top;
-    opacity: 1;
-  }
-}
-
-.mfp-3d-unfold {
-  .mfp-content {
-    perspective: 2000px;
-  }
-
-  /* start state */
-  .mfp-with-anim {
-    opacity: 0;
-    transition: all 0.3s ease-in-out;
-    transform-style: preserve-3d;
-    transform: rotateY(-60deg);
-  }
-
-  &.mfp-bg {
-    opacity: 0;
-    transition: all 0.5s;
-  }
-
-  /* animate in */
-  &.mfp-ready {
-    .mfp-with-anim {
-      opacity: 1;
-      transform: rotateY(0deg);
-    }
-    &.mfp-bg {
-      opacity: 0.8;
-    }
-  }
-
-  /* animate out */
-  &.mfp-removing {
-    .mfp-with-anim {
-      transform: rotateY(60deg);
-      opacity: 0;
-    }
-    &.mfp-bg {
-      opacity: 0;
     }
   }
 }

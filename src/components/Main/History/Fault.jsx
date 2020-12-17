@@ -90,7 +90,9 @@ export default function Fult({
 
                 <Typography component={'span'} >
                   <div className="operation_holder">
-                    <IconButton onClick={onDelete}>
+                  <IconButton onClick={()=>{ 
+                      setExpanded(false);
+                      onDelete();}}>
                       <DeleteIcon style={{ color: "#1562aa" }} />
                     </IconButton>
 
