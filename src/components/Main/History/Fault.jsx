@@ -9,16 +9,15 @@ import Collapse from "@material-ui/core/Collapse";
 import IconButton from "@material-ui/core/IconButton";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { ThemeProvider } from "@material-ui/core/styles";
-import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
-import DoneIcon from "@material-ui/icons/Done";
-import AttachFileIcon from "@material-ui/icons/AttachFile";
 import Badge from "@material-ui/core/Badge";
 import "./History.scss";
 import AssignmentIcon from "@material-ui/icons/Assignment";
 
-export default function Fault({
+
+export default function Fult({
   number,
+  ID,
   f_place,
   createdby,
   createdat,
@@ -27,26 +26,13 @@ export default function Fault({
   description,
   techname,
   onDelete,
-  onClose,
-  onEdit,
-  id,
   is_close,
+  LastChange
 }) {
   const classes = useStyles();
-  const [fields, setFields] = useState({
-    num: number,
-    place: f_place,
-    by: createdby,
-    created_at: createdat,
-    network: net,
-    description: description,
-    status: "",
-    tech: techname,
-  });
 
   const status_color = () => {
-    let style_color = "";
-    return is_close == true ? "greenstatus" : "redstatus";
+    return is_close === true ? "greenstatus" : "redstatus";
   };
   const [expanded, setExpanded] = useState(false);
 
@@ -54,16 +40,18 @@ export default function Fault({
     setExpanded(!expanded);
   };
 
+ 
   return (
-    <div className="fult">
+ 
+        <div className="fult">
       <Card className="card">
         <CardContent className={classes.cardcontant}>
-          <Typography className="topogragh"> {fields.num}</Typography>
-          <Typography className="topogragh">{fields.place}</Typography>
-          <Typography className="topogragh">{fields.network}</Typography>
-          <Typography className="topogragh">{fields.tech}</Typography>
-          <Typography className="topogragh">{fields.by}</Typography>
-          <Typography className="topogragh">{fields.created_at}</Typography>
+          <Typography  component={'span'} className="topogragh"> {number}</Typography>
+          <Typography  component={'span'} className="topogragh">{f_place}</Typography>
+          <Typography  component={'span'} className="topogragh">{net}</Typography>
+          <Typography  component={'span'} className="topogragh">{techname}</Typography>
+          <Typography  component={'span'} className="topogragh">{createdby}</Typography>
+          <Typography  component={'span'} className="topogragh">{createdat}</Typography>
 
           <CardActions disableSpacing className={classes.action}>
             <IconButton
@@ -88,22 +76,24 @@ export default function Fault({
           <CardContent className="contant">
             <ThemeProvider theme={theme}>
               <div className="expend_fult">
-                <Typography className="topogragh_status">
+                <Typography  component={'span'} className="topogragh_status">
                   תיאור התקלה:
-                  <Typography className="topogragh">
-                    {fields.description}
+                  <Typography  component={'span'} className="topogragh">
+                    {description}
                   </Typography>
                 </Typography>
-                <Typography className="topogragh_status">
+                <Typography  component={'span'} className="topogragh_status">
                   סטטוס:
-                  <Typography className="topogragh">{fields.status}</Typography>
+                  {LastChange}
+                  <Typography  component={'span'} className="topogragh">{stats}</Typography>
                 </Typography>
 
-                <Typography>
+                <Typography component={'span'} >
                   <div className="operation_holder">
                     <IconButton onClick={onDelete}>
                       <DeleteIcon style={{ color: "#1562aa" }} />
                     </IconButton>
+
                   </div>
                 </Typography>
               </div>
@@ -112,5 +102,7 @@ export default function Fault({
         </Collapse>
       </Card>
     </div>
+
+    
   );
 }

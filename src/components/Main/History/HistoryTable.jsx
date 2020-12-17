@@ -9,18 +9,16 @@ import fetch from "node-fetch";
 import "./History.scss";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
-import FormHelperText from "@material-ui/core/FormHelperText";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
-import { Search } from "@material-ui/icons";
+
 
 export default function HistoryTable() {
   const classes = useStyles();
   const [fults, setFults] = useState([]);
   const [fults_search, setFultssearch] = useState([]);
   const Swal = require("sweetalert2");
-  const [open, setOpen] = useState(false);
-  const [searchBY, setSearch] = React.useState("");
+  const [searchBY, setSearch] = useState("");
 
   useEffect(() => {
     (async () => {
@@ -45,6 +43,7 @@ export default function HistoryTable() {
           Tech: entity.emp,
           Id: entity._id,
           Is_close: entity.closed,
+          LastChange:entity.last_changed
         };
         temp_arry.push(tempFult);
       });
@@ -53,9 +52,7 @@ export default function HistoryTable() {
     })();
   }, []);
 
-  const handleClose = () => {
-    setOpen(false);
-  };
+
 
   const onDeleteFult = (id, db_id) => {
     Swal.fire({
@@ -68,7 +65,7 @@ export default function HistoryTable() {
     }).then((result) => {
       if (result.isConfirmed) {
         const temp_arr = fults.filter((item) => {
-          return item.Num != id;
+          return item.Num !== id;
         });
         //DELETE req to backend
         setFults(temp_arr);
@@ -83,7 +80,6 @@ export default function HistoryTable() {
     });
   };
 
-  const onEditFult = () => {};
   const search = (pattern) => {
     console.log("pattern is: ");
     const search_p = pattern.target.value;
@@ -167,13 +163,13 @@ export default function HistoryTable() {
         <div className="table">
           {fults.map((entity) => (
             <Fult
-              key={entity.key}
+              key={ fults.findIndex((element) => element === entity)}
               number={entity.Num}
               f_place={entity.Place}
               createdby={entity.By}
               createdat={entity.time}
               net={entity.Network}
-              stats=""
+              stats={entity.Status}
               description={entity.Description}
               techname={entity.Tech}
               id={entity.Id}

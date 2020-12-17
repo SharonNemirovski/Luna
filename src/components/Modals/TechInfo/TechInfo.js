@@ -1,16 +1,7 @@
 import React, { useState } from "react";
 import "./TechInfo.scss";
 import TextField from "@material-ui/core/TextField";
-import { makeStyles } from "@material-ui/core/styles";
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    "& .MuiTextField-root": {
-      margin: theme.spacing(1),
-      width: "25ch",
-    },
-  },
-}));
 
 export default function TechInfo({
   isEditModeSet = false,
@@ -19,7 +10,7 @@ export default function TechInfo({
   onDelete,
   onSave,
 }) {
-  const classes = useStyles();
+  
   const [isEditMode, setIsEditMode] = useState(isEditModeSet);
   const { name, description, imgUrl, id } = selectedTech;
   const [techInfo, setTechInfo] = useState({
@@ -67,7 +58,7 @@ export default function TechInfo({
             {isEditMode ? (
               <TextField
                 onChange={(e) => onDescriptionChange(e.target.value)}
-                label="תיאור טכנאי"
+                label="אישור כניסה"
                 value={techInfo.description}
               />
             ) : (

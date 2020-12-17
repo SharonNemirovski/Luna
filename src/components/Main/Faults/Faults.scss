@@ -113,7 +113,6 @@ tr {
   grid-template-columns: repeat(5, 1fr);
   grid-column: 2/3;
   grid-row: 3/4;
-  height: 100%;
 }
 .button {
   grid-column: 3/4;
@@ -160,4 +159,15 @@ tr {
   margin-right: 8px;
   height: 20px;
   width: 20px;
+}
+.dropEdit {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.3);
+  display: flex;
+  text-align: center;
+  justify-content: center;
 }

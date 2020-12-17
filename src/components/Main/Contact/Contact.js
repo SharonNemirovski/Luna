@@ -7,7 +7,7 @@ export default function Contact() {
   return (
     <div className="Contact DropAnimation">
       <div className="wrap">
-        <img src={contactIMG} className="imgC"></img>
+        <img src={contactIMG} className="imgC" alt =" "></img>
       </div>
     </div>
   );

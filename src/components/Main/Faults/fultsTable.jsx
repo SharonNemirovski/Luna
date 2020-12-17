@@ -1,21 +1,19 @@
 import React, { useEffect, useState } from "react";
 import Fult from "./fult";
-import { useStyles, theme } from "./styles";
+import { theme } from "./styles";
 import { ThemeProvider } from "@material-ui/core/styles";
 import FultTopics from "./Tablecontant";
 import AddIcon from "@material-ui/icons/Add";
 import fetch from "node-fetch";
 import "./Faults.scss";
-import Snackbar from "@material-ui/core/Snackbar";
-import Backdrop from "@material-ui/core/Backdrop";
+
+
+
 
 export default function FultsTable() {
-  const classes = useStyles();
   const [fults, setFults] = useState([]);
-  const [fults_search, setFultssearch] = useState([]);
   const Swal = require("sweetalert2");
-  const [snack, setOpen] = useState(false);
-  const [backdrop, openBackdrop] = useState(false);
+
   useEffect(() => {
     (async () => {
       const res = await fetch(`http://localhost:4000/luna/getFults`);
@@ -39,17 +37,14 @@ export default function FultsTable() {
           Tech: entity.emp,
           Id: entity._id,
           Is_close: entity.closed,
+          LastChange:entity.last_changed
         };
         temp_arry.push(tempFult);
       });
       setFults(temp_arry);
-      setFultssearch(temp_arry);
     })();
   }, []);
 
-  const handleClose = () => {
-    setOpen(false);
-  };
   const AddFult = () => {
     Swal.mixin({
       input: "text",
@@ -164,10 +159,10 @@ export default function FultsTable() {
     }).then((result) => {
       if (result.isConfirmed) {
         const temp_arr = fults.filter((item) => {
-          return item.Num != id;
+          return item.Num !== id;
         });
         //POST req to backend
-        setFults(temp_arr);
+        setFults([...fults],temp_arr);
         fetch(`http://localhost:4000/luna/closeFult/${db_id}`, {
           method: "POST",
         })
@@ -191,10 +186,11 @@ export default function FultsTable() {
     }).then((result) => {
       if (result.isConfirmed) {
         const temp_arr = fults.filter((item) => {
-          return item.Num != id;
+          return item.Num !== id ;
         });
-        //DELETE req to backend
         setFults(temp_arr);
+        //DELETE req to backend
+        
         fetch(`http://localhost:4000/luna/DeleteFult/${db_id}`, {
           method: "DELETE",
           headers: {
@@ -206,51 +202,42 @@ export default function FultsTable() {
     });
   };
 
-  const onEditFult = () => {
-    openBackdrop(true);
-  };
-  const closeBackdrop = () => {
-    openBackdrop(false);
-  };
+
   return (
     <ThemeProvider theme={theme}>
-      <Backdrop className="backdrop" open={backdrop} onClick={closeBackdrop}>
-        hello
-      </Backdrop>
-      <div className="fultstable">
-        <FultTopics className="FultTopics" />
-        <div className="table">
-          {fults.map((entity) => (
-            <Fult
-              key={entity.key}
-              number={entity.Num}
-              f_place={entity.Place}
-              createdby={entity.By}
-              createdat={entity.time}
-              net={entity.Network}
-              stats=""
-              description={entity.Description}
-              techname={entity.Tech}
-              id={entity.Id}
-              is_close={entity.Is_close}
-              onClose={() => {
-                onClosingFult(entity.Num, entity.Id);
-              }}
-              onDelete={() => {
-                onDeleteFult(entity.Num, entity.Id);
-              }}
-              onEdit={() => {
-                onEditFult();
-              }}
-            />
-          ))}
+      
+        <div className="fultstable">
+          <FultTopics className="FultTopics" />
+          <div className="table">
+            {fults.map((entity) => (
+              <Fult
+                key={fults.findIndex((element) => element === entity)}
+                number={fults.findIndex((element) => element === entity) + 1}
+                f_place={entity.Place}
+                createdby={entity.By}
+                createdat={entity.time}
+                net={entity.Network}
+                stats={entity.Status}
+                description={entity.Description}
+                techname={entity.Tech}
+                ID={entity.Id}
+                is_close={entity.Is_close}
+                LastChange = {entity.LastChange}
+                onClose={() => {
+                  onClosingFult(entity.Num, entity.Id);
+                }}
+                onDelete={() => {
+                  onDeleteFult(entity.Num, entity.Id);
+                }}
+              />
+            ))}
+          </div>
+          <div className="operations">
+            <button variant="outlined" className="button" onClick={AddFult}>
+              <AddIcon style={{ color: "#1562aa" }} />
+            </button>
+          </div>
         </div>
-        <div className="operations">
-          <button variant="outlined" className="button" onClick={AddFult}>
-            <AddIcon style={{ color: "#1562aa" }} />
-          </button>
-        </div>
-      </div>
     </ThemeProvider>
   );
 }

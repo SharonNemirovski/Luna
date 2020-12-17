@@ -16,9 +16,12 @@ import AttachFileIcon from "@material-ui/icons/AttachFile";
 import Badge from "@material-ui/core/Badge";
 import "./Faults.scss";
 import AssignmentIcon from "@material-ui/icons/Assignment";
+import fetch from "node-fetch";
+import Backdrop from "./modals/backdrop";
 
 export default function Fult({
   number,
+  ID,
   f_place,
   createdby,
   createdat,
@@ -28,25 +31,26 @@ export default function Fult({
   techname,
   onDelete,
   onClose,
-  onEdit,
-  id,
   is_close,
+  LastChange
 }) {
   const classes = useStyles();
+  const Swal = require("sweetalert2");
   const [fields, setFields] = useState({
     num: number,
+    id:ID,
     place: f_place,
     by: createdby,
     created_at: createdat,
     network: net,
     description: description,
-    status: "",
+    status: stats,
     tech: techname,
+    last_changed:LastChange,
   });
-
+  const [backdrop, openBackdrop] = useState(false);
   const status_color = () => {
-    let style_color = "";
-    return is_close == true ? "greenstatus" : "redstatus";
+    return is_close === true ? "greenstatus" : "redstatus";
   };
   const [expanded, setExpanded] = useState(false);
 
@@ -54,10 +58,40 @@ export default function Fult({
     setExpanded(!expanded);
   };
 
-  const handleEdit = () => {};
+  const handleEdit = () =>{
+    openBackdrop(true);
+  };
+
+  const UpdateFault = (new_status) => {
+    if (new_status !== "") {
+      const fultStatus = { status: String(new_status) };
+      const changetime = Date.now;
+      fetch(`http://localhost:4000/luna/UpdateFult/${ID}`, {
+        method: "POST",
+        body: JSON.stringify(fultStatus),
+        headers: { "Content-Type": "application/json" },
+      })
+        .then((res) => res.json())
+        .then(() => {
+          console.log("success fetch");
+        });
+        //backend update works ^^^
+      setFields({...fields ,status:new_status , last_changed:changetime});
+      Swal.fire("!סטטוס התקלה עודכן", "  ", "success");
+      openBackdrop(false);
+      
+    } 
+    else {
+      openBackdrop(false);
+    }
+  };
 
   return (
-    <div className="fult">
+    <div>
+      {backdrop && (
+          <Backdrop onClose={() => openBackdrop(false)} onEdit={UpdateFault} />
+        )}
+        <div className="fult">
       <Card className="card">
         <CardContent className={classes.cardcontant}>
           <Typography className="topogragh"> {fields.num}</Typography>
@@ -90,20 +124,21 @@ export default function Fult({
           <CardContent className="contant">
             <ThemeProvider theme={theme}>
               <div className="expend_fult">
-                <Typography className="topogragh_status">
+                <Typography component={'span'} className="topogragh_status">
                   תיאור התקלה:
                   <Typography className="topogragh">
                     {fields.description}
                   </Typography>
                 </Typography>
-                <Typography className="topogragh_status">
+                <Typography component={'span'} className="topogragh_status">
                   סטטוס:
-                  <Typography className="topogragh">{fields.status}</Typography>
+                  {fields.last_changed}
+                  <Typography component={'span'} className="topogragh">{fields.status}</Typography>
                 </Typography>
 
-                <Typography>
+                <Typography component={'span'}>
                   <div className="operation_holder">
-                    <IconButton onClick={onEdit}>
+                    <IconButton onClick={handleEdit}>
                       <EditIcon style={{ color: "#1562aa" }} />
                     </IconButton>
 
@@ -124,5 +159,7 @@ export default function Fult({
         </Collapse>
       </Card>
     </div>
+    </div>
+    
   );
 }

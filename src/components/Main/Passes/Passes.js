@@ -3,11 +3,10 @@ import "./Passes.scss";
 import GenCard from "./genCard";
 import "../Animation/anima.scss";
 import Swal from "sweetalert2";
-import { makeStyles } from "@material-ui/core/styles";
-
 import malam from "../../../assets/malam.png";
 import binat from "../../../assets/binat.png";
 import TechInfo from "../../Modals/TechInfo/TechInfo";
+
 var inputOptions = new Promise(function (resolve) {
   resolve({
     netcom: "נטקום",
@@ -15,16 +14,8 @@ var inputOptions = new Promise(function (resolve) {
   });
 });
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    "& > *": {
-      margin: theme.spacing(1),
-    },
-  },
-}));
 
 export default function Passes() {
-  const classes = useStyles();
   const [isTechInfoModalOpen, setIsTechInfoModalOpen] = useState(false);
   const [selectedTech, setSelectedTech] = useState(null);
   const [posts, setPosts] = React.useState([]);

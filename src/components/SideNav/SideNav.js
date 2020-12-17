@@ -1,12 +1,4 @@
-// --- React & Styling
-import React from "react";
-import "./SideNav.scss";
-import logo from "../../assets/logo.png";
-// --- components
-import { LogoutOutlined } from "@ant-design/icons";
-import SideNavMenuItem from "./SideNavMenuItem/SideNavMenuItem";
 // --- utils
-import sideNavUtils from "./SideNavUtil";
 import React, { useEffect } from "react";
 import "./SideNav.scss";
 import logo from "../../assets/logoClear.png";

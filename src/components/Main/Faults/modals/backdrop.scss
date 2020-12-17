@@ -1,0 +1,136 @@
+.BackDropModal {
+  animation: mfp-3d-unfold;
+  position: fixed;
+  z-index: 1111111;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.3);
+  display: flex;
+  text-align: center;
+  justify-content: center;
+
+  .BackDropModal_content {
+    background-color: #fff;
+    border-radius: 8px;
+    height: 350px;
+    width: 500px;
+    margin-top: 10%;
+    padding: 15px;
+
+    img {
+      height: 150px;
+      width: 150px;
+    }
+
+    .BackDropModal_form {
+      display: flex;
+      flex-direction: column;
+      margin-top: 20px;
+    }
+
+    .BackDropModal_actions {
+      padding-top: 15px;
+      button {
+        border: none;
+        border-radius: 4px;
+        padding: 4px 8px;
+        font-size: 17px;
+        letter-spacing: 2px;
+        margin: 2px 4px;
+        cursor: pointer;
+        width: 80px;
+        outline: none;
+
+        &:nth-child(1) {
+          color: #fff;
+          background-color: #3e91f7;
+        }
+
+        &:nth-child(2) {
+          color: #fff;
+          background-color: rgb(80, 155, 20);
+        }
+
+        &:nth-child(3) {
+          color: #fff;
+          background-color: rgb(212, 50, 50);
+        }
+      }
+    }
+  }
+}
+@-webkit-keyframes swing-in-top-fwd {
+  0% {
+    -webkit-transform: rotateX(-100deg);
+    transform: rotateX(-100deg);
+    -webkit-transform-origin: top;
+    transform-origin: top;
+    opacity: 0;
+  }
+  100% {
+    -webkit-transform: rotateX(0deg);
+    transform: rotateX(0deg);
+    -webkit-transform-origin: top;
+    transform-origin: top;
+    opacity: 1;
+  }
+}
+@keyframes swing-in-top-fwd {
+  0% {
+    -webkit-transform: rotateX(-100deg);
+    transform: rotateX(-100deg);
+    -webkit-transform-origin: top;
+    transform-origin: top;
+    opacity: 0;
+  }
+  100% {
+    -webkit-transform: rotateX(0deg);
+    transform: rotateX(0deg);
+    -webkit-transform-origin: top;
+    transform-origin: top;
+    opacity: 1;
+  }
+}
+
+.mfp-3d-unfold {
+  .mfp-content {
+    perspective: 2000px;
+  }
+
+  /* start state */
+  .mfp-with-anim {
+    opacity: 0;
+    transition: all 0.3s ease-in-out;
+    transform-style: preserve-3d;
+    transform: rotateY(-60deg);
+  }
+
+  &.mfp-bg {
+    opacity: 0;
+    transition: all 0.5s;
+  }
+
+  /* animate in */
+  &.mfp-ready {
+    .mfp-with-anim {
+      opacity: 1;
+      transform: rotateY(0deg);
+    }
+    &.mfp-bg {
+      opacity: 0.8;
+    }
+  }
+
+  /* animate out */
+  &.mfp-removing {
+    .mfp-with-anim {
+      transform: rotateY(60deg);
+      opacity: 0;
+    }
+    &.mfp-bg {
+      opacity: 0;
+    }
+  }
+}
