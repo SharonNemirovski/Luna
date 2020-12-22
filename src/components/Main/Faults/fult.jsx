@@ -18,16 +18,21 @@ import "./Faults.scss";
 import AssignmentIcon from "@material-ui/icons/Assignment";
 import fetch from "node-fetch";
 import Backdrop from "./modals/backdrop";
+import netcom from "../../../assets/netcomlogo.png";
+import bynet from "../../../assets/bynetlogo.png";
+import hoshen from "../../../assets/hoshenlogo.png";
 
 export default function Fult({
   number,
   ID,
-  f_place,
+  place,
   createdby,
   createdat,
-  net,
-  stats,
+  network,
+  status,
   description,
+  company,
+  actions,
   techname,
   onDelete,
   onClose,
@@ -39,18 +44,30 @@ export default function Fult({
   const [fields, setFields] = useState({
     num: number,
     id:ID,
-    place: f_place,
+    place: place,
     by: createdby,
     created_at: createdat,
-    network: net,
+    network: network,
+    company:company,
+    actions:actions,
     description: description,
-    status: stats,
+    status: status,
     tech: techname,
     last_changed:LastChange,
   });
   const [backdrop, openBackdrop] = useState(false);
-  const status_color = () => {
-    return is_close === true ? "greenstatus" : "redstatus";
+  const getLogoByCompany = () =>{
+    //returns thw logo by the company value
+    switch(company){
+      case "נטקום" :
+        return netcom;
+        
+      case "בינת":
+        return bynet;
+      
+      default :
+        return hoshen;
+    }
   };
   const [expanded, setExpanded] = useState(false);
 
@@ -97,8 +114,8 @@ export default function Fult({
           <Typography className="topogragh"> {fields.num}</Typography>
           <Typography className="topogragh">{fields.place}</Typography>
           <Typography className="topogragh">{fields.network}</Typography>
-          <Typography className="topogragh">{fields.tech}</Typography>
           <Typography className="topogragh">{fields.by}</Typography>
+          <Typography className="topogragh">{fields.status}</Typography>
           <Typography className="topogragh">{fields.created_at}</Typography>
 
           <CardActions disableSpacing className={classes.action}>
@@ -117,7 +134,9 @@ export default function Fult({
                 <AssignmentIcon />
               </Badge>
             </IconButton>
-            <div className={status_color()}></div>
+            <div className="avatar">
+              <img src={getLogoByCompany()} alt="" />
+             </div>
           </CardActions>
         </CardContent>
         <Collapse in={expanded} timeout="auto" unmountOnExit>
@@ -127,6 +146,10 @@ export default function Fult({
                 <Typography component={'span'} className="topogragh_status">
                   תיאור התקלה:
                   <span className = "topogragh_info">{fields.description}</span>
+                </Typography>
+                <Typography component={'span'} className="topogragh_status">
+                  תהליכים שבוצעו:
+                  <span className = "topogragh_info">{fields.actions}</span>
                 </Typography>
                 <Typography component={'span'} className="topogragh_status">
                   סטטוס:

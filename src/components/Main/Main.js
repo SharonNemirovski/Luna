@@ -7,15 +7,16 @@ import Passes from "./Passes/Passes";
 import History from "./History/History";
 import Contact from "./Contact/Contact";
 
+
 export default function Main() {
   return (
     <div className="Main">
       <Switch>
-        <Route path="/fault" component={Faults} />
-        <Route path="/passes" component={Passes} />
-        <Route path="/history" component={History} />
-        <Route path="/contact" component={Contact} />
-        <Redirect to="fault" />
+        <Route path="/Main/fault" component={Faults} />
+        <Route path="/Main/passes" component={Passes} />
+        <Route path="/Main/history" component={History} />
+        <Route path="/Main/contact" component={Contact} />
+        <Redirect to="Main/fault" />
       </Switch>
     </div>
   );

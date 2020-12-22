@@ -12,10 +12,10 @@ export default function FultTopics() {
           <Typography component={'span'} className="topogragh">מספר תקלה:</Typography>
           <Typography component={'span'} className="topogragh">מיקום:</Typography>
           <Typography component={'span'} className="topogragh">רשת:</Typography>
-          <Typography component={'span'} className="topogragh">טכנאי:</Typography>
           <Typography component={'span'} className="topogragh">נוצר על ידי:</Typography>
-          <Typography component={'span'} className="topogragh">בתאריך:</Typography>
           <Typography component={'span'} className="topogragh">סטטוס:</Typography>
+          <Typography component={'span'} className="topogragh">בתאריך:</Typography>
+          <Typography component={'span'} className="topogragh">נפתחה מול:</Typography>
         </CardContent>
       </Card>
     </div>

@@ -4,10 +4,11 @@ import "./App.scss";
 // --- Components
 import SideNav from "./components/SideNav/SideNav";
 import Main from "./components/Main/Main";
-
+import Login from "./components/Main/Login/Login"
 function App() {
   return (
     <div className="App">
+     
       <SideNav />
       <Main />
     </div>
@@ -15,3 +16,5 @@ function App() {
 }
 
 export default App;
+// <Login/>
+//

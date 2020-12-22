@@ -1,0 +1,61 @@
+.loginholder {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 10% 45% 45%;
+  height: 100%;
+  width: 100%;
+  background-color: #dfd5cc;
+
+  .logo {
+    grid-row: 3/4;
+    grid-column: 2/3;
+    padding: 15px;
+    box-sizing: border-box;
+    text-align: center;
+
+    img {
+      height: 100%;
+      width: 100%;
+    }
+  }
+}
+.inputfieldsholder {
+  display: grid;
+  grid-row: 2/3;
+  grid-column: 2/3;
+  grid-template-columns: 20% 60% 20%;
+  grid-template-rows: repeat(4, 1fr);
+  width: 100%;
+  height: 100%;
+  background-color: transparent;
+
+  color: rgba(181, 230, 253, 0.856);
+  box-shadow: 1px 3px 5px rgba(0, 0, 0, 0.3);
+  border: 2px solid #1890ff;
+  border-radius: 8px;
+}
+.inputuser {
+  display: grid;
+  grid-row: 3/4;
+  grid-column: 2/3;
+  width: 100%;
+  height: 100%;
+  justify-self: center;
+  align-self: center;
+}
+.inputpass {
+  display: grid;
+  grid-row: 4/5;
+  grid-column: 2/3;
+  width: 100%;
+  height: 100%;
+  justify-self: center;
+  align-self: center;
+}
+.loginText {
+  grid-row: 1/2;
+  grid-column: 2/3;
+  justify-self: center;
+  align-self: center;
+  font: italic small-caps bold 24px/2 cursive;
+}

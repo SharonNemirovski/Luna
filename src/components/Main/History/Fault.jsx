@@ -39,7 +39,12 @@ export default function Fult({
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
-
+  const getStatus = ()=>{
+    if(is_close == true){
+      return "נפתרה";
+    }
+    return stats;
+};
  
   return (
  
@@ -49,8 +54,8 @@ export default function Fult({
           <Typography  component={'span'} className="topogragh"> {number}</Typography>
           <Typography  component={'span'} className="topogragh">{f_place}</Typography>
           <Typography  component={'span'} className="topogragh">{net}</Typography>
-          <Typography  component={'span'} className="topogragh">{techname}</Typography>
           <Typography  component={'span'} className="topogragh">{createdby}</Typography>
+          <Typography  component={'span'} className="topogragh">{getStatus()}</Typography>
           <Typography  component={'span'} className="topogragh">{createdat}</Typography>
 
           <CardActions disableSpacing className={classes.action}>

@@ -8,8 +8,6 @@ import fetch from "node-fetch";
 import "./Faults.scss";
 
 
-
-
 export default function FultsTable() {
   const [fults, setFults] = useState([]);
   const Swal = require("sweetalert2");
@@ -33,6 +31,8 @@ export default function FultsTable() {
           time: time,
           Network: entity.network,
           Description: entity.description,
+          Company:entity.company,
+          Actions:entity.actions,
           Status: entity.status,
           Tech: entity.emp,
           Id: entity._id,
@@ -55,21 +55,62 @@ export default function FultsTable() {
       confirmButtonText: "הבא",
       showCancelButton: true,
       cancelButtonText: "בטל",
-      progressSteps: ["1", "2", "3", "4", "5"],
     })
       .queue([
         {
           title: "ציין את מיקום התקלה",
         },
         {
-          title: ":שם הטכנאי",
-        },
-        {
           title: ":סיווג הרשת",
           text: "שם הרשת לה שייך הרכיב",
+          
         },
         {
           title: "תיאור התקלה",
+         
+        },
+        {
+          title: "ציין את התהליכים שבוצעו",
+        },
+        {
+          title: "?עבור איזו חברה נפתחה התקלה",
+          input: "radio",
+          inputOptions: {   
+          "נטקום": "נטקום",
+          "בינת": "בינת",
+          "אחר":"אחר"},
+          inputValidator:  (result) =>
+          {
+                  return new Promise(function (resolve, reject) {
+                    if (result) {
+                      resolve();
+                    } 
+                    else {
+                      reject("נא לבחור חברה עבורה נפתחת התקלה");
+                    }
+                  });
+
+          }
+          
+        },
+        {
+          title: "סטטוס נוכחי",
+          input: "radio",
+          inputOptions: {   
+          "מחכים לטפסים": "מחכים לטפסים",
+        "נפתחה תקלה ": "נפתחה תקלה"},
+          inputValidator:  (result) =>
+          {
+                  return new Promise(function (resolve, reject) {
+                    if (result) {
+                      resolve();
+                    } 
+                    else {
+                      reject("נא לבחור סטטוס נוכחי לתקלה");
+                    }
+                  });
+
+          }
         },
         {
           title: "נוצר על ידי",
@@ -78,10 +119,12 @@ export default function FultsTable() {
       .then((result) => {
         if (result.value) {
           const place = result.value[0];
-          const techname = result.value[1];
-          const network = result.value[2];
-          const description = result.value[3];
-          const by = result.value[4];
+          const network = result.value[1];
+          const description = result.value[2];
+          const actions = result.value[3];
+          const company = result.value[4]
+          const current_status = result.value[5];
+          const by = result.value[6];
 
           Swal.fire({
             icon: "warning",
@@ -89,12 +132,16 @@ export default function FultsTable() {
             html: `
             :מיקום
             <pre><code>${place}</code></pre>
-            :שם הטכנאי
-            <pre><code>${techname}</code></pre>
             :רשת
             <pre><code>${network}</code></pre>
             :תיאור
             <pre><code>${description}</code></pre>
+            :תהליכים שבוצעו
+            <pre><code>${actions}</code></pre>
+            :עבור חברת
+            <pre><code>${company}</code></pre>
+            :סטטוס נוכחי
+            <pre><code>${current_status}</code></pre>
             :נוצר על ידי
             <pre><code>${by}</code></pre>
           `,
@@ -109,7 +156,9 @@ export default function FultsTable() {
                 by: String(by),
                 network: String(network),
                 description: String(description),
-                emp: String(techname),
+                actions:String(actions),
+                company :String(company),
+                status:String(current_status),
                 closed: false,
               };
               fetch("http://localhost:4000/luna/addFult", {
@@ -133,9 +182,11 @@ export default function FultsTable() {
                     By: by,
                     time: time,
                     Network: network,
-                    Status: "",
+                    Status: current_status,
+                    Actions:actions,
+                    Company:company,
                     Description: description,
-                    Tech: techname,
+                    Tech:"",
                     Id: fult_id,
                     Is_close: false,
                   };
@@ -159,10 +210,9 @@ export default function FultsTable() {
     }).then((result) => {
       if (result.isConfirmed) {
         const temp_arr = fults.filter((item) => {
-          return item.Num !== id;
+          return item.Num !== id ;
         });
-        //POST req to backend
-        setFults([...fults],temp_arr);
+        setFults(temp_arr);
         fetch(`http://localhost:4000/luna/closeFult/${db_id}`, {
           method: "POST",
         })
@@ -213,12 +263,14 @@ export default function FultsTable() {
               <Fult
                 key={fults.findIndex((element) => element === entity)}
                 number={fults.findIndex((element) => element === entity) + 1}
-                f_place={entity.Place}
+                place={entity.Place}
                 createdby={entity.By}
                 createdat={entity.time}
-                net={entity.Network}
-                stats={entity.Status}
+                network={entity.Network}
+                status={entity.Status}
                 description={entity.Description}
+                company = {entity.Company}
+                actions = {entity.Actions}
                 techname={entity.Tech}
                 ID={entity.Id}
                 is_close={entity.Is_close}
