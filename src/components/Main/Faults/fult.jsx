@@ -102,7 +102,14 @@ export default function Fult({
       openBackdrop(false);
     }
   };
-
+  const IsCompanyFault = () =>{
+    if (company === "אחר"){
+      return false;
+    }
+    else{
+      return true;
+    }
+  };
   return (
     <div>
       {backdrop && (
@@ -155,6 +162,10 @@ export default function Fult({
                   סטטוס:
                   <span className = "topogragh_info">{fields.status}</span>
                 </Typography>
+                {(IsCompanyFault())&&(                <Typography component={'span'} className="topogragh_status">
+                  שם הטכנאי שיוצא לתקלה:
+                  <span className = "topogragh_info">{fields.tech}</span>
+                </Typography>)}
                 <Typography component={'span'} className="topogragh_status">
                   עודכן לאחרונה בתאריך:
                   <span className = "topogragh_info"> {fields.last_changed}</span>

@@ -39,6 +39,7 @@ export default function HistoryTable() {
           time: time,
           Network: entity.network,
           Description: entity.description,
+          Company:entity.company,
           Status: entity.status,
           Tech: entity.emp,
           Id: entity._id,
@@ -165,12 +166,13 @@ export default function HistoryTable() {
             <Fult
               key={ fults.findIndex((element) => element === entity)}
               number={entity.Num}
-              f_place={entity.Place}
+              place={entity.Place}
               createdby={entity.By}
               createdat={entity.time}
-              net={entity.Network}
-              stats={entity.Status}
+              network={entity.Network}
+              status={entity.Status}
               description={entity.Description}
+              company = {entity.Company}
               techname={entity.Tech}
               id={entity.Id}
               is_close={entity.Is_close}

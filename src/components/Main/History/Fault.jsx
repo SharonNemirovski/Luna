@@ -18,13 +18,14 @@ import AssignmentIcon from "@material-ui/icons/Assignment";
 export default function Fult({
   number,
   ID,
-  f_place,
+  place,
   createdby,
   createdat,
-  net,
-  stats,
+  network,
+  status,
   description,
   techname,
+  company,
   onDelete,
   is_close,
   LastChange
@@ -43,17 +44,24 @@ export default function Fult({
     if(is_close == true){
       return "נפתרה";
     }
-    return stats;
+    return status;
 };
- 
+const IsCompanyFault = () =>{
+  if (company === "אחר"){
+    return false;
+  }
+  else{
+    return true;
+  }
+};
   return (
  
         <div className="fult">
       <Card className="card">
         <CardContent className={classes.cardcontant}>
           <Typography  component={'span'} className="topogragh"> {number}</Typography>
-          <Typography  component={'span'} className="topogragh">{f_place}</Typography>
-          <Typography  component={'span'} className="topogragh">{net}</Typography>
+          <Typography  component={'span'} className="topogragh">{place}</Typography>
+          <Typography  component={'span'} className="topogragh">{network}</Typography>
           <Typography  component={'span'} className="topogragh">{createdby}</Typography>
           <Typography  component={'span'} className="topogragh">{getStatus()}</Typography>
           <Typography  component={'span'} className="topogragh">{createdat}</Typography>
@@ -90,7 +98,11 @@ export default function Fult({
                 <Typography  component={'span'} className="topogragh_status">
                   סטטוס:
                   {LastChange}
-                  <Typography  component={'span'} className="topogragh">{stats}</Typography>
+                  <Typography  component={'span'} className="topogragh">{status}</Typography>
+                  {(IsCompanyFault())&&(                <Typography component={'span'} className="topogragh_status">
+                  שם הטכנאי שיוצא לתקלה:
+                  <span className = "topogragh_info">{techname}</span>
+                </Typography>)}
                 </Typography>
 
                 <Typography component={'span'} >
