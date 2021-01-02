@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState , useEffect } from "react";
 import "./Passes.scss";
 import GenCard from "./genCard";
 import "../Animation/anima.scss";
@@ -6,6 +6,7 @@ import Swal from "sweetalert2";
 import malam from "../../../assets/malam.png";
 import binat from "../../../assets/binat.png";
 import TechInfo from "../../Modals/TechInfo/TechInfo";
+import fetch from "node-fetch";
 
 var inputOptions = new Promise(function (resolve) {
   resolve({
@@ -18,17 +19,25 @@ var inputOptions = new Promise(function (resolve) {
 export default function Passes() {
   const [isTechInfoModalOpen, setIsTechInfoModalOpen] = useState(false);
   const [selectedTech, setSelectedTech] = useState(null);
-  const [posts, setPosts] = React.useState([]);
+  const [posts, setPosts] = useState([]);
 
   const openTechInfoModal = (post) => {
     setIsTechInfoModalOpen(true);
     setSelectedTech(post);
   };
 
-  // --- temp until DB is implemented.
+
   const onTechDelete = (id) => {
+    fetch(`http://localhost:4000/luna/DeleteTech/${id}`, {
+          method: "DELETE",
+          headers: {
+            "Content-type": "application/json; charset=UTF-8", // Indicates the content
+          },
+        }).then((res) => res.json())
+        
     setPosts(posts.filter((post) => post.id !== id));
     setIsTechInfoModalOpen(false);
+    
   };
 
   const onTechUpdate = (techObj) => {
@@ -39,36 +48,44 @@ export default function Passes() {
       post.passCode = techObj.passCode;
       return post;
     });
+    
+    fetch(`http://localhost:4000/luna/UpdateTech/${techObj.id}`, {
+      method: "POST",
+      body: JSON.stringify(techObj),
+      headers: { "Content-Type": "application/json" },
+    })
+      .then((res) => res.json())
+      .then(() => {
+        console.log("success fetch");
+      });
     setPosts(updatedPosts);
   };
 
-  React.useEffect(() => {
-    // --- call to BE for data.
-    setPosts([
-      {
-        id: 1,
-        name: 'sharon',
-        car: 'redmazda',
-        carNum: '12345678',
-        phoneNum: '0525826664',
-        numID: '318672201',
-        passCode: '20658020',
 
-        imgUrl: malam,
-      },
-      {
-        id: 2,
-        name: 'sharon',
-        car: 'redmazda',
-        carNum: '12345678',
-        phoneNum: '0525826664',
-        numID: '318672201',
-        passCode: '20658020',
-
-        imgUrl: malam,
-      },
-    ]);
+  useEffect(() => {
+    (async () => {
+      const res = await fetch(`http://localhost:4000/luna/getTechs`);
+      const data = await res.json();
+      let temp_arry = [...posts];
+      data.map((entity) => {
+        let tempTech = {
+        id: entity._id,
+        name: entity.name,
+        car:entity.car,
+        carNum: entity.carNum,
+        phoneNum: entity.phoneNum,
+        numID: entity.numID,
+        passCode: entity.passCode,
+        imgUrl: entity.company === "netcom" ? malam : binat,
+        };
+        temp_arry.push(tempTech);
+      });
+      setPosts(temp_arry);
+    })();
   }, []);
+
+
+
 
   return (
     <div className="Passes DropAnimation">
@@ -98,7 +115,6 @@ export default function Passes() {
               required: true,
             },
             confirmButtonText: "הבא",
-            progressSteps: ["1", "2", "3", "4", "5", "6", "7"],
             customClass: "Swal-wide",
           })
             .queue([
@@ -143,13 +159,26 @@ export default function Passes() {
             ])
             .then((result) => {
               if (result.value) {
-                let nameOfTech = result.value[0];
-                let info = `${result.value[6]} :אישור כניסה`;
                 let newTech = {
-                  title: nameOfTech,
-                  description: info,
-                  imgUrl: result.value[5] === "נטקום" ? malam : binat,
+                  id:"",
+                  name: result.value[0],
+                  phoneNum: result.value[1],
+                  numID: result.value[2],
+                  car:result.value[3],
+                  carNum: result.value[4],
+                  imgUrl: result.value[5] ,
+                  passCode: result.value[6],
                 };
+                fetch("http://localhost:4000/luna/AddTech", {
+                  method: "POST",
+                  body: JSON.stringify(newTech),
+                  headers: { "Content-Type": "application/json" },
+                })
+                  .then((res) => res.json())
+                  .then((json) => {
+                    newTech.id = json._id;//saving the database id has a parameter
+                  });
+                newTech.imgUrl = result[5] ==="נטקום" ? malam : binat;
                 let tempArr = [...posts];
                 tempArr.push(newTech);
                 setPosts(tempArr);
@@ -157,10 +186,6 @@ export default function Passes() {
                 Swal.fire({
                   icon: "success",
                   title: "!הטכנאי הוסף בהצלחה",
-                  html: `
-              :פרטי טכנאי
-              <pre><code>${answers}</code></pre>
-            `,
                   confirmButtonText: "סיים",
                 });
               }

@@ -116,7 +116,7 @@ export default function TechInfo({
                 value={techInfo.car}
               />
             ) : (
-              <p>רכב:{techInfo.car}</p>
+              <p>רכב: {techInfo.car}</p>
             )}
           </div>
           <div className="TechInfoModal_form_item">
@@ -127,7 +127,7 @@ export default function TechInfo({
                 value={techInfo.carNum}
               />
             ) : (
-              <p>מספר רכב:{techInfo.carNum}</p>
+              <p>מספר רכב: {techInfo.carNum}</p>
             )}
           </div>
           <div className="TechInfoModal_form_item">
@@ -138,7 +138,7 @@ export default function TechInfo({
                 value={techInfo.phoneNum}
               />
             ) : (
-              <p>מספר פלאפון:{techInfo.phoneNum}</p>
+              <p>מספר פלאפון: {techInfo.phoneNum}</p>
             )}
           </div>
           <div className="TechInfoModal_form_item">
@@ -149,7 +149,7 @@ export default function TechInfo({
                 value={techInfo.numID}
               />
             ) : (
-              <p>מספר תעודת זהות:{techInfo.numID}</p>
+              <p>מספר תעודת זהות: {techInfo.numID}</p>
             )}
           </div>
           <div className="TechInfoModal_form_item">
@@ -160,7 +160,7 @@ export default function TechInfo({
                 value={techInfo.passCode}
               />
             ) : (
-              <p>אישור כניסה:{techInfo.passCode}</p>
+              <p>אישור כניסה: {techInfo.passCode}</p>
             )}
           </div>
         </div>

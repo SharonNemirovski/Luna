@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Fult from "./Fault";
 import { useStyles, theme } from "./styles";
 import { ThemeProvider } from "@material-ui/core/styles";
-import FultTopics from "../Faults/Tablecontant";
+import FultTopics from "./Taclecontant";
 import SearchIcon from "@material-ui/icons/Search";
 import InputBase from "@material-ui/core/InputBase";
 import fetch from "node-fetch";
@@ -56,6 +56,7 @@ export default function HistoryTable() {
 
 
 
+
   const onDeleteFult = (db_id) => {
     Swal.fire({
       icon: "error",
@@ -66,17 +67,42 @@ export default function HistoryTable() {
       cancelButtonText: "בטל",
     }).then((result) => {
       if (result.isConfirmed) {
-        const temp_arr = fults.filter((item) => {
-          return item.Id !== db_id;
-        });
-        //DELETE req to backend
-        setFults(temp_arr);
         fetch(`http://localhost:4000/luna/DeleteFult/${db_id}`, {
           method: "DELETE",
           headers: {
             "Content-type": "application/json; charset=UTF-8", // Indicates the content
           },
         }).then((res) => res.json());
+        setFults([]);
+        (async () => {
+          const res = await fetch(`http://localhost:4000/luna/getFults`);
+          const data = await res.json();
+          let temp_arry = [];
+          data.map((entity) => {
+            let faultime = entity.created_at;
+            faultime = faultime.split("T");
+            faultime = faultime[0].replace("-", "/").replace("-", "/");
+            faultime = faultime.split("/");
+            const time = faultime[2] + "/" + faultime[1] + "/" + faultime[0];
+            let tempFult = {
+              Place: entity.place,
+              By: entity.by,
+              time: time,
+              Network: entity.network,
+              Description: entity.description,
+              Company:entity.company,
+              Actions:entity.actions,
+              Status: entity.status,
+              Tech: entity.emp,
+              Id: entity._id,
+              Is_close: entity.closed,
+              LastChange:entity.last_changed
+            };
+            temp_arry.push(tempFult);
+          });
+          setFults(temp_arry);
+        })();
+
         Swal.fire({ icon: "success", title: "התקלה נמחקה" });
       }
     });

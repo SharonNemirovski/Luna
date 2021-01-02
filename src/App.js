@@ -10,10 +10,10 @@ import LogIn from './components/logIn/Log';
 function App() {
   return (
     <div className="App">
-       {/* <SideNav /> 
-      <Main /> */}
-      <LogIn /> 
+       {/* <LogIn />  */}
       
+      <SideNav /> 
+      <Main />
     </div>
   );
 }

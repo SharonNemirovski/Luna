@@ -15,7 +15,7 @@ export default function Contact() {
             <h3>זירת נו"צ :</h3>
           </label>
           <label>להתקשר באדום למספר - 017</label>
-          <label>להתקשר למספר אזרחי - 039572111</label>
+          <label>להתקשר למספר אזרחי - 03-9572111</label>
           <label>
             <h3>צוות תרה :</h3>
           </label>
@@ -25,8 +25,8 @@ export default function Contact() {
           <label>
             <h3>במידה וישנה בעיה במערכת יש לפנות לאחד המספרים הבאים:</h3>
           </label>
-          <label>שרון נמירובסקי - 0545826664</label>
-          <label>מתן דבוש - 0509147470</label>
+          <label>שרון נמירובסקי - 054-5826664</label>
+          <label>מתן דאבוש - 050-9147470</label>
         </div>
         <img src={contactIMG} className="imgC"></img>
       </div>

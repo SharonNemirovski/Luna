@@ -3,7 +3,6 @@ import Fult from "./fult";
 import { theme } from "./styles";
 import { ThemeProvider } from "@material-ui/core/styles";
 import FultTopics from "./Tablecontant";
-import AddIcon from "@material-ui/icons/Add";
 import fetch from "node-fetch";
 import "./Faults.scss";
 
@@ -125,7 +124,6 @@ export default function FultsTable() {
           const by = result.value[6];
 
           Swal.fire({
-            icon: "warning",
             title: ":הוספת התקלה הבאה",
             html: `
             :מיקום
@@ -140,8 +138,6 @@ export default function FultsTable() {
             <pre><code>${company}</code></pre>
             :סטטוס נוכחי
             <pre><code>${current_status}</code></pre>
-            :נוצר על ידי
-            <pre><code>${by}</code></pre>
           `,
             confirmButtonText: "הוסף",
             showCancelButton: true,
@@ -207,10 +203,7 @@ export default function FultsTable() {
       cancelButtonText: "בטל",
     }).then((result) => {
       if (result.isConfirmed) {
-        const temp_arr = fults.filter((item) => {
-          return item.Id !== db_id ;
-        });
-        setFults(temp_arr);
+      
         fetch(`http://localhost:4000/luna/closeFult/${db_id}`, {
           method: "POST",
         })
@@ -218,6 +211,35 @@ export default function FultsTable() {
           .then((json) => {
             console.log(json);
           });
+          (async () => {
+            const res = await fetch(`http://localhost:4000/luna/getFults`);
+            const data = await res.json();
+            let temp_arry = [];
+            setFults([]);
+            data.map((entity) => {
+              let faultime = entity.created_at;
+              faultime = faultime.split("T");
+              faultime = faultime[0].replace("-", "/").replace("-", "/");
+              faultime = faultime.split("/");
+              const time = faultime[2] + "/" + faultime[1] + "/" + faultime[0];
+              let tempFult = {
+                Place: entity.place,
+                By: entity.by,
+                time: time,
+                Network: entity.network,
+                Description: entity.description,
+                Company:entity.company,
+                Actions:entity.actions,
+                Status: entity.status,
+                Tech: entity.emp,
+                Id: entity._id,
+                Is_close: entity.closed,
+                LastChange:entity.last_changed
+              };
+              temp_arry.push(tempFult);
+            });
+            setFults(temp_arry);
+          })();
         Swal.fire({ icon: "success", title: "התקלה נסגרה" });
       }
     });
@@ -233,18 +255,42 @@ export default function FultsTable() {
       cancelButtonText: "בטל",
     }).then((result) => {
       if (result.isConfirmed) {
-        const temp_arr = fults.filter((item) => {
-          return item.Id !== db_id ;
-        });
-        setFults(temp_arr);
-        //DELETE req to backend
-        
         fetch(`http://localhost:4000/luna/DeleteFult/${db_id}`, {
           method: "DELETE",
           headers: {
             "Content-type": "application/json; charset=UTF-8", // Indicates the content
           },
         }).then((res) => res.json());
+        setFults([]);
+        (async () => {
+          const res = await fetch(`http://localhost:4000/luna/getFults`);
+          const data = await res.json();
+          let temp_arry = [];
+          data.map((entity) => {
+            let faultime = entity.created_at;
+            faultime = faultime.split("T");
+            faultime = faultime[0].replace("-", "/").replace("-", "/");
+            faultime = faultime.split("/");
+            const time = faultime[2] + "/" + faultime[1] + "/" + faultime[0];
+            let tempFult = {
+              Place: entity.place,
+              By: entity.by,
+              time: time,
+              Network: entity.network,
+              Description: entity.description,
+              Company:entity.company,
+              Actions:entity.actions,
+              Status: entity.status,
+              Tech: entity.emp,
+              Id: entity._id,
+              Is_close: entity.closed,
+              LastChange:entity.last_changed
+            };
+            temp_arry.push(tempFult);
+          });
+          setFults(temp_arry);
+        })();
+
         Swal.fire({ icon: "success", title: "התקלה נמחקה" });
       }
     });
@@ -260,7 +306,7 @@ export default function FultsTable() {
             {fults.map((entity) => (
               <Fult
                 key={fults.findIndex((element) => element === entity)}
-                number={fults.findIndex((element) => element === entity) + 1}
+                number={fults.findIndex((element) => element === entity) }
                 place={entity.Place}
                 createdby={entity.By}
                 createdat={entity.time}
@@ -283,8 +329,8 @@ export default function FultsTable() {
             ))}
           </div>
           <div className="operations">
-            <button variant="outlined" className="button" onClick={AddFult}>
-              <AddIcon style={{ color: "#1562aa" }} />
+            <button  className="addfultbutton" onClick={AddFult}>
+              הוסף תקלה
             </button>
           </div>
         </div>

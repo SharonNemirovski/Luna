@@ -1,7 +1,7 @@
 import React from 'react';
 import './Log.scss';
 import background from '../../../src/assets/BG.svg';
-import logo from '../../assets/logoClear.png';
+import logo from '../../assets/login.png';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
@@ -41,7 +41,7 @@ export default function LogIn() {
                   <AccountKey />
                 </Grid>
                 <Grid item>
-                  <TextField id="input-with-icon-grid" label=" סיסמה " />
+                  <TextField type = "password" id="input-with-icon-grid" label=" סיסמה " />
                 </Grid>
               </Grid>
               <Grid

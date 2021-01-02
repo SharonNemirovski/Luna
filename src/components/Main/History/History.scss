@@ -39,12 +39,7 @@
   justify-self: center;
   align-self: center;
 }
-.operation_holder {
-  width: 100%;
-  margin-top: 10px;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-}
+
 .topogragh_status {
   text-align: right;
   font-size: 14;
@@ -52,6 +47,13 @@
   margin-left: 10px;
   direction: rtl;
 }
+.operation_holder {
+  width: 100%;
+  margin-top: 10px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+}
+
 .table {
   margin-top: 20px;
   grid-row: 3/4;

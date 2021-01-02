@@ -119,11 +119,7 @@ export default function Fult({
         headers: { "Content-Type": "application/json" },
       })
         .then((res) => res.json())
-        .then(() => {
-          console.log("success fetch");
-        });
-        //backend update works ^^^
-        Swal.fire({confirmButtonText: "אישור" , title :"!התקלה עודכנה בהצלחה" ,icon:"success"});
+      Swal.fire({confirmButtonText: "אישור" , title :"!התקלה עודכנה בהצלחה" ,icon:"success"});
       setExpanded(false);
       openBackdrop(false);
     }
