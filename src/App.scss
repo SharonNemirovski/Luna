@@ -15,5 +15,7 @@
 .App {
   display: flex;
   height: 100vh;
+  width: 100vw;
   direction: rtl;
+  position: relative;
 }

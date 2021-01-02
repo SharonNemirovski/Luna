@@ -4,13 +4,15 @@ import './App.scss';
 // --- Components
 import SideNav from './components/SideNav/SideNav';
 import Main from './components/Main/Main';
+import LogIn from './components/logIn/Log';
+
 
 function App() {
   return (
     <div className="App">
-
-      <SideNav />
-      <Main />
+       {/* <SideNav /> 
+      <Main /> */}
+      <LogIn /> 
       
     </div>
   );

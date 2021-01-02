@@ -1,0 +1,69 @@
+html,
+body {
+  height: 100%;
+  margin: 0;
+  background-color: #caf0f8;
+}
+
+.back {
+  height: 100vh;
+  width: 100vw;
+  .svg {
+    height: 100%;
+    width: 100%;
+  }
+  img {
+    width: 100%;
+    height: 100%;
+  }
+  .form {
+    background-color: #fafafa;
+    top: 50%;
+    left: 50%;
+    margin-top: -37.5vh;
+    margin-left: -18.5vw;
+    height: 75vh;
+    width: 37vw;
+    position: absolute;
+    z-index: 100;
+    opacity: 1;
+    border-radius: 7px;
+    display: flex;
+    justify-content: center;
+    .imgRapper {
+      position: absolute;
+      img {
+        margin-top: -13vh;
+        width: 16vw;
+        height: 28vh;
+        display: block;
+      }
+    }
+    .inputs {
+      direction: rtl;
+      margin-top: 15vh;
+      position: relative;
+      label {
+        display: rtl;
+      }
+      .connect1 {
+        display: flex;
+        justify-content: center;
+        margin-top: 5vh;
+        margin-right: 1.5vw;
+        font-size: 22.5px;
+        color: whitesmoke;
+        background-color: #519baa;
+        width: 170px;
+        border-radius: 7px;
+        opacity: 0.5;
+        transition: 0.3s;
+        z-index: 100000;
+
+      }
+      .connect1:hover {
+        opacity: 1;
+      }
+    }
+  }
+}
