@@ -6,6 +6,17 @@
 .wrap{
   height: 100%;
   position: relative;
+  .data{
+    margin-top: 5vh;
+    margin-right: 5vh;
+  }
+  .data label{
+    display: block;
+  }
+  .data h3{
+    padding-top: 2vh;
+  }
+
 }
 .imgC{
   margin-left: auto;
