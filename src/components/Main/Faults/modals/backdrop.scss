@@ -14,9 +14,73 @@
     background-color: #fff;
     border-radius: 8px;
     height: 350px;
+    width: 460px;
+    margin-top: 10%;
+    padding: 15px;
+    border: 3px solid #1890ff;
+    img {
+      height: 150px;
+      width: 150px;
+    }
+
+    .BackDropModal_form {
+      display: flex;
+      flex-grow: 1;
+      flex-direction: column;
+      margin-top: 20px;
+    }
+
+    .BackDropModal_actions {
+      padding-top: 15px;
+      button {
+        border: none;
+        border-radius: 4px;
+        padding: 4px 8px;
+        font-size: 17px;
+        letter-spacing: 2px;
+        margin: 2px 4px;
+        cursor: pointer;
+        width: 80px;
+        outline: none;
+
+        &:nth-child(1) {
+          color: #fff;
+          background-color: #3e91f7;
+        }
+
+        &:nth-child(2) {
+          color: #fff;
+          background-color: rgb(80, 155, 20);
+        }
+
+        &:nth-child(3) {
+          color: #fff;
+          background-color: rgb(212, 50, 50);
+        }
+      }
+    }
+  }
+}
+.BackDropModalCompany {
+  position: fixed;
+  z-index: 1111111;
+  top: 0;
+  left: 0;
+  height: 100vmax;
+  width: 100vmax;
+  background-color: rgba(0, 0, 0, 0.3);
+  display: flex;
+  text-align: center;
+  justify-content: center;
+
+  .BackDropModal_content {
+    background-color: #fff;
+    border-radius: 8px;
+    height: 450px;
     width: 500px;
     margin-top: 10%;
     padding: 15px;
+    border: 3px solid #1890ff;
 
     img {
       height: 150px;
@@ -25,6 +89,7 @@
 
     .BackDropModal_form {
       display: flex;
+      flex-grow: 1;
       flex-direction: column;
       margin-top: 20px;
     }

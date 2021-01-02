@@ -24,8 +24,6 @@ export default function FultsTable() {
         faultime = faultime.split("/");
         const time = faultime[2] + "/" + faultime[1] + "/" + faultime[0];
         let tempFult = {
-          Num: data.findIndex((element) => element === entity) + 1,
-          key: entity.id,
           Place: entity.place,
           By: entity.by,
           time: time,
@@ -199,7 +197,7 @@ export default function FultsTable() {
         }
       });
   };
-  const onClosingFult = (id, db_id) => {
+  const onClosingFult = ( db_id) => {
     Swal.fire({
       icon: "warning",
       title: "?סגירת תקלה",
@@ -210,7 +208,7 @@ export default function FultsTable() {
     }).then((result) => {
       if (result.isConfirmed) {
         const temp_arr = fults.filter((item) => {
-          return item.Num !== id ;
+          return item.Id !== db_id ;
         });
         setFults(temp_arr);
         fetch(`http://localhost:4000/luna/closeFult/${db_id}`, {
@@ -225,7 +223,7 @@ export default function FultsTable() {
     });
   };
 
-  const onDeleteFult = (id, db_id) => {
+  const onDeleteFult = (db_id) => {
     Swal.fire({
       icon: "error",
       title: "?מחיקת תקלה",
@@ -236,7 +234,7 @@ export default function FultsTable() {
     }).then((result) => {
       if (result.isConfirmed) {
         const temp_arr = fults.filter((item) => {
-          return item.Num !== id ;
+          return item.Id !== db_id ;
         });
         setFults(temp_arr);
         //DELETE req to backend
@@ -276,10 +274,10 @@ export default function FultsTable() {
                 is_close={entity.Is_close}
                 LastChange = {entity.LastChange}
                 onClose={() => {
-                  onClosingFult(entity.Num, entity.Id);
+                  onClosingFult(entity.Id);
                 }}
                 onDelete={() => {
-                  onDeleteFult(entity.Num, entity.Id);
+                  onDeleteFult(entity.Id);
                 }}
               />
             ))}

@@ -9,13 +9,13 @@ export default function FultTopics() {
     <div className="fultitle">
       <Card className="contantholder">
         <CardContent className="fultcontant">
-          <Typography component={'span'} className="topogragh">מספר תקלה:</Typography>
-          <Typography component={'span'} className="topogragh">מיקום:</Typography>
-          <Typography component={'span'} className="topogragh">רשת:</Typography>
-          <Typography component={'span'} className="topogragh">נוצר על ידי:</Typography>
-          <Typography component={'span'} className="topogragh">סטטוס:</Typography>
-          <Typography component={'span'} className="topogragh">בתאריך:</Typography>
-          <Typography component={'span'} className="topogragh">נפתחה מול:</Typography>
+          <Typography component={'span'} className="topograghForTableContant">מספר תקלה:</Typography>
+          <Typography component={'span'} className="topograghForTableContant">מיקום:</Typography>
+          <Typography component={'span'} className="topograghForTableContant">רשת:</Typography>
+          <Typography component={'span'} className="topograghForTableContant">נוצר על ידי:</Typography>
+          <Typography component={'span'} className="topograghForTableContant">סטטוס:</Typography>
+          <Typography component={'span'} className="topograghForTableContant">בתאריך:</Typography>
+          <Typography component={'span'} className="topograghForTableContant">נפתחה מול:</Typography>
         </CardContent>
       </Card>
     </div>

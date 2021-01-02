@@ -19,7 +19,6 @@ tr {
 .card {
   display: flex;
   flex-direction: column;
-
   border-radius: 10px;
 }
 .expend_fult {
@@ -39,6 +38,15 @@ tr {
 .contant {
   display: grid;
   text-align: right;
+}
+.topograghtopograghForTableContant {
+  text-align: right;
+  font-size: 14;
+  margin-right: 10px;
+  margin-left: 10px;
+  justify-self: center;
+  align-self: center;
+  font: italic small-caps bold 24px/2 cursive;
 }
 .topogragh {
   text-align: right;

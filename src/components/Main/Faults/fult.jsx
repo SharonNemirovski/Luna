@@ -21,6 +21,7 @@ import Backdrop from "./modals/backdrop";
 import netcom from "../../../assets/netcomlogo.png";
 import bynet from "../../../assets/bynetlogo.png";
 import hoshen from "../../../assets/hoshenlogo.png";
+import Uploadfile from "./modals/uploadbackdrop"
 
 export default function Fult({
   number,
@@ -37,7 +38,8 @@ export default function Fult({
   onDelete,
   onClose,
   is_close,
-  LastChange
+  LastChange,
+  files
 }) {
   const classes = useStyles();
   const Swal = require("sweetalert2");
@@ -56,6 +58,7 @@ export default function Fult({
     last_changed:LastChange,
   });
   const [backdrop, openBackdrop] = useState(false);
+  const [filebackdrop, openfileBackdrop] = useState(false);
   const getLogoByCompany = () =>{
     //returns thw logo by the company value
     switch(company){
@@ -79,13 +82,40 @@ export default function Fult({
     openBackdrop(true);
   };
 
-  const UpdateFault = (new_status) => {
-    if (new_status !== "") {
-      const fultStatus = { status: String(new_status) };
-      const changetime = Date.now;
+  const UpdateFault = (new_status , tech_name) => {
+    let fultbody ={};
+    const changetime = Date.now;
+    if ((new_status !== "")){
+      if((tech_name !== ""))
+      {
+        fultbody = { status: String(new_status) , emp: String(tech_name) };
+        setFields({...fields ,tech:tech_name,status:new_status , last_changed:changetime});
+      }
+      else
+      {
+        fultbody ={ status: String(new_status) };
+        setFields({...fields ,status:new_status, last_changed:changetime});
+  
+      } 
+    } 
+    else 
+    {
+      if ((tech_name !== "")){
+       fultbody = { emp: String(tech_name) };
+       setFields({...fields ,tech:tech_name , last_changed:changetime});
+      }
+    }
+
+    if((new_status ==="")&&(tech_name ==="")){
+      Swal.fire({confirmButtonText: "אישור" , title:"לא עודכן אף שדה" ,icon:"info"});
+      openBackdrop(false);
+      
+    }
+    else{
+      
       fetch(`http://localhost:4000/luna/UpdateFult/${ID}`, {
         method: "POST",
-        body: JSON.stringify(fultStatus),
+        body: JSON.stringify(fultbody),
         headers: { "Content-Type": "application/json" },
       })
         .then((res) => res.json())
@@ -93,14 +123,12 @@ export default function Fult({
           console.log("success fetch");
         });
         //backend update works ^^^
-      setFields({...fields ,status:new_status , last_changed:changetime});
-      Swal.fire("!סטטוס התקלה עודכן", "  ", "success");
-      openBackdrop(false);
-      
-    } 
-    else {
+        Swal.fire({confirmButtonText: "אישור" , title :"!התקלה עודכנה בהצלחה" ,icon:"success"});
+      setExpanded(false);
       openBackdrop(false);
     }
+
+
   };
   const IsCompanyFault = () =>{
     if (company === "אחר"){
@@ -110,20 +138,32 @@ export default function Fult({
       return true;
     }
   };
+  const OnUploadFile = () =>{
+    openfileBackdrop(true);
+  };
+  const UploadFiles = () =>{
+    console.log("implement the post req for backend")
+    openfileBackdrop(false);
+  };
+  const DownloadFiles = () =>{
+    console.log("implement the get req for downloading the files from db")
+  };
   return (
     <div>
       {backdrop && (
-          <Backdrop onClose={() => openBackdrop(false)} onEdit={UpdateFault} />
+          <Backdrop onClose={() => openBackdrop(false)} onEdit={UpdateFault} company ={company} />
+        )}
+          {filebackdrop && (<Uploadfile onSubmit = {UploadFiles} onClose = {()=>openfileBackdrop(false)}/>
         )}
         <div className="fult">
       <Card className="card">
-        <CardContent className={classes.cardcontant}>
-          <Typography className="topogragh"> {fields.num}</Typography>
-          <Typography className="topogragh">{fields.place}</Typography>
-          <Typography className="topogragh">{fields.network}</Typography>
-          <Typography className="topogragh">{fields.by}</Typography>
-          <Typography className="topogragh">{fields.status}</Typography>
-          <Typography className="topogragh">{fields.created_at}</Typography>
+        <CardContent  className={classes.cardcontant}>
+          <Typography component={'span'} className="topogragh"> {fields.num}</Typography>
+          <Typography component={'span'} className="topogragh">{fields.place}</Typography>
+          <Typography component={'span'} className="topogragh">{fields.network}</Typography>
+          <Typography component={'span'} className="topogragh">{fields.by}</Typography>
+          <Typography component={'span'} className="topogragh">{fields.status}</Typography>
+          <Typography component={'span'} className="topogragh">{fields.created_at}</Typography>
 
           <CardActions disableSpacing className={classes.action}>
             <IconButton
@@ -136,7 +176,7 @@ export default function Fult({
             >
               <ExpandMoreIcon />
             </IconButton>
-            <IconButton color="primary">
+            <IconButton color="primary" onClick = {DownloadFiles}>
               <Badge badgeContent={2} color="secondary" variant="dot">
                 <AssignmentIcon />
               </Badge>
@@ -162,7 +202,7 @@ export default function Fult({
                   סטטוס:
                   <span className = "topogragh_info">{fields.status}</span>
                 </Typography>
-                {(IsCompanyFault())&&(                <Typography component={'span'} className="topogragh_status">
+                {(IsCompanyFault())&&(<Typography component={'span'} className="topogragh_status">
                   שם הטכנאי שיוצא לתקלה:
                   <span className = "topogragh_info">{fields.tech}</span>
                 </Typography>)}
@@ -188,7 +228,7 @@ export default function Fult({
                       onDelete();}}>
                       <DeleteIcon style={{ color: "#1562aa" }} />
                     </IconButton>
-                    <IconButton>
+                    <IconButton onClick = {OnUploadFile}>
                       <AttachFileIcon style={{ color: "#1562aa" }} />
                     </IconButton>
                   </div>

@@ -13,6 +13,7 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import Badge from "@material-ui/core/Badge";
 import "./History.scss";
 import AssignmentIcon from "@material-ui/icons/Assignment";
+import RestorePageIcon from '@material-ui/icons/RestorePage';
 
 
 export default function Fult({
@@ -28,23 +29,45 @@ export default function Fult({
   company,
   onDelete,
   is_close,
-  LastChange
+  LastChange,
+
 }) {
   const classes = useStyles();
+  const Swal = require("sweetalert2");
+  const [fields , setfields] = useState({
+    isclose:is_close,
+    status: is_close ===true? "נפתרה":status,
+    StatusColor: is_close === true ? "greenstatus" : "redstatus",
+  }
+  );
 
-  const status_color = () => {
-    return is_close === true ? "greenstatus" : "redstatus";
-  };
   const [expanded, setExpanded] = useState(false);
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
-  const getStatus = ()=>{
-    if(is_close == true){
-      return "נפתרה";
+
+const Reopen = () =>{
+  Swal.fire({
+    icon: "info",
+    title: "?פתיחה מחדש",
+    footer: "לחצ/י אישור לפתיחת התקלה מחדש",
+    confirmButtonText: "אישור",
+    showCancelButton: true,
+    cancelButtonText: "בטל",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      fetch(`http://localhost:4000/luna//ReopenFult/${ID}`, {
+        method: "POST",
+      })
+        .then((res) => res.json())
+        .then((json) => {
+          console.log(json);
+          });
+      setfields({...fields ,status:status , isclose:false});
+      Swal.fire({ icon: "success", title: "התקלה נפתחה" });
     }
-    return status;
+  });
 };
 const IsCompanyFault = () =>{
   if (company === "אחר"){
@@ -55,7 +78,6 @@ const IsCompanyFault = () =>{
   }
 };
   return (
- 
         <div className="fult">
       <Card className="card">
         <CardContent className={classes.cardcontant}>
@@ -63,7 +85,7 @@ const IsCompanyFault = () =>{
           <Typography  component={'span'} className="topogragh">{place}</Typography>
           <Typography  component={'span'} className="topogragh">{network}</Typography>
           <Typography  component={'span'} className="topogragh">{createdby}</Typography>
-          <Typography  component={'span'} className="topogragh">{getStatus()}</Typography>
+          <Typography  component={'span'} className="topogragh">{fields.status}</Typography>
           <Typography  component={'span'} className="topogragh">{createdat}</Typography>
 
           <CardActions disableSpacing className={classes.action}>
@@ -82,7 +104,8 @@ const IsCompanyFault = () =>{
                 <AssignmentIcon />
               </Badge>
             </IconButton>
-            <div className={status_color()}></div>
+            {fields.isclose===true? <div className="greenstatus"></div>:<div className="redstatus"></div>}
+            
           </CardActions>
         </CardContent>
         <Collapse in={expanded} timeout="auto" unmountOnExit>
@@ -99,11 +122,13 @@ const IsCompanyFault = () =>{
                   סטטוס:
                   {LastChange}
                   <Typography  component={'span'} className="topogragh">{status}</Typography>
-                  {(IsCompanyFault())&&(                <Typography component={'span'} className="topogragh_status">
+                </Typography>
+
+                {(IsCompanyFault())&&(                
+                <Typography component={'span'} className="topogragh_status">
                   שם הטכנאי שיוצא לתקלה:
                   <span className = "topogragh_info">{techname}</span>
                 </Typography>)}
-                </Typography>
 
                 <Typography component={'span'} >
                   <div className="operation_holder">
@@ -112,6 +137,12 @@ const IsCompanyFault = () =>{
                       onDelete();}}>
                       <DeleteIcon style={{ color: "#1562aa" }} />
                     </IconButton>
+                    {is_close &&                     
+                    <IconButton onClick={()=>{ 
+                      setExpanded(false);
+                      Reopen();}}>
+                      <RestorePageIcon style={{ color: "#1562aa" }} />
+                    </IconButton>}
 
                   </div>
                 </Typography>

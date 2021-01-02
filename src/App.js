@@ -8,13 +8,14 @@ import Login from "./components/Main/Login/Login"
 function App() {
   return (
     <div className="App">
-     
-      <SideNav />
-      <Main />
+    <SideNav />
+    <Main />
+    
+   
     </div>
   );
 }
 
 export default App;
-// <Login/>
-//
+//   <Login/>
+

@@ -16,6 +16,7 @@ import Select from "@material-ui/core/Select";
 export default function HistoryTable() {
   const classes = useStyles();
   const [fults, setFults] = useState([]);
+ 
   const [fults_search, setFultssearch] = useState([]);
   const Swal = require("sweetalert2");
   const [searchBY, setSearch] = useState("");
@@ -55,7 +56,7 @@ export default function HistoryTable() {
 
 
 
-  const onDeleteFult = (id, db_id) => {
+  const onDeleteFult = (db_id) => {
     Swal.fire({
       icon: "error",
       title: "?מחיקת תקלה",
@@ -66,7 +67,7 @@ export default function HistoryTable() {
     }).then((result) => {
       if (result.isConfirmed) {
         const temp_arr = fults.filter((item) => {
-          return item.Num !== id;
+          return item.Id !== db_id;
         });
         //DELETE req to backend
         setFults(temp_arr);
@@ -105,7 +106,7 @@ export default function HistoryTable() {
 
       case "place":
         console.log("place");
-        tempy_arr = fults_search.filter((item) => {
+         tempy_arr = fults_search.filter((item) => {
           return item.Place.search(search_p) !== -1;
         });
         setFults(tempy_arr);
@@ -165,7 +166,7 @@ export default function HistoryTable() {
           {fults.map((entity) => (
             <Fult
               key={ fults.findIndex((element) => element === entity)}
-              number={entity.Num}
+              number={ fults.findIndex((element) => element === entity)}
               place={entity.Place}
               createdby={entity.By}
               createdat={entity.time}
@@ -174,10 +175,10 @@ export default function HistoryTable() {
               description={entity.Description}
               company = {entity.Company}
               techname={entity.Tech}
-              id={entity.Id}
+              ID={entity.Id}
               is_close={entity.Is_close}
               onDelete={() => {
-                onDeleteFult(entity.Num, entity.Id);
+                onDeleteFult(entity.Id);
               }}
             />
           ))}
