@@ -5,7 +5,10 @@ import Table from "./HistoryTable";
 export default function History() {
   return (
     <div className="History DropAnimation">
+      <div className="HistoryTableHolder">
       <Table />
+      </div>
+      
     </div>
   );
 }

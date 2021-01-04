@@ -1,7 +1,7 @@
 .SideNav {
   flex: 1;
   height: 100%;
-  background-color: #F0EDEA;
+  background-color: #dbe5e3;
   position: relative;
   min-width: 350px;
 
@@ -20,7 +20,7 @@
     padding-right: 15px;
     display: block;
     font-size: 19px;
-    transition: all .3s ease;
+    transition: all 0.3s ease;
     height: 50px;
     display: flex;
     align-items: center;
@@ -40,14 +40,14 @@
       position: relative;
 
       &::after {
-        content: '';
-        transition: all .3s ease;
+        content: "";
+        transition: all 0.3s ease;
         position: absolute;
         top: 0;
         right: 0;
         height: 100%;
         width: 3px;
-        background-color: #1890FF;
+        background-color: #1890ff;
       }
     }
 

@@ -78,7 +78,7 @@ const IsCompanyFault = () =>{
   }
 };
   return (
-        <div className="fult">
+        <div >
       <Card className="card">
         <CardContent className={classes.cardcontant}>
           <Typography  component={'span'} className="topogragh"> {number}</Typography>

@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Fult from "./Fault";
 import { useStyles, theme } from "./styles";
-import { ThemeProvider } from "@material-ui/core/styles";
-import FultTopics from "./Taclecontant";
+import FultTopics from "./Tablecontant";
 import SearchIcon from "@material-ui/icons/Search";
 import InputBase from "@material-ui/core/InputBase";
 import fetch from "node-fetch";
@@ -53,9 +52,6 @@ export default function HistoryTable() {
       setFultssearch(temp_arry);
     })();
   }, []);
-
-
-
 
   const onDeleteFult = (db_id) => {
     Swal.fire({
@@ -109,41 +105,32 @@ export default function HistoryTable() {
   };
 
   const search = (pattern) => {
-    console.log("pattern is: ");
-    const search_p = pattern.target.value;
-    console.log(search_p);
-    console.log("that was the pattern");
+    const search_p = String(pattern.target.value);
+    let temp_arr = []
     switch (searchBY) {
       case "network":
-        console.log("network");
-        let tempy_arr = fults_search.filter((item) => {
+        temp_arr = fults_search.filter((item) => {
           return item.Network.search(search_p) !== -1;
         });
-        setFults(tempy_arr);
+        setFults(temp_arr);
         break;
 
-      case "tech":
-        console.log("tech");
-        tempy_arr = fults_search.filter((item) => {
-          return item.Tech.search(search_p) !== -1;
+      case "created_at":
+        temp_arr = fults_search.filter((item) => {
+          return item.time.search(search_p) !== -1;
         });
-        setFults(tempy_arr);
+        setFults(temp_arr);
         break;
 
       case "place":
-        console.log("place");
-         tempy_arr = fults_search.filter((item) => {
+         temp_arr = fults_search.filter((item) => {
           return item.Place.search(search_p) !== -1;
         });
-        setFults(tempy_arr);
+        setFults(temp_arr);
         break;
 
       default:
-        console.log("default");
     }
-
-    console.log("end here");
-    console.log(fults);
   };
 
   //handle the search value
@@ -151,9 +138,9 @@ export default function HistoryTable() {
     setSearch(event.target.value);
   };
   return (
-    <ThemeProvider theme={theme}>
-      <div className="fultstable">
-        <div className="operations">
+
+      <div className="Historyparenttable">
+        <div className="TopHistoryBar">
           <FormControl required variant="outlined" className="formControl">
             <InputLabel id="demo-simple-select-outlined-label">
               חפש לפי
@@ -167,7 +154,7 @@ export default function HistoryTable() {
             >
               <MenuItem value={"place"}>מיקום</MenuItem>
               <MenuItem value={"network"}>רשת</MenuItem>
-              <MenuItem value={"tech"}>טכנאי</MenuItem>
+              <MenuItem value={"created_at"}>תאריך</MenuItem>
             </Select>
           </FormControl>
 
@@ -186,12 +173,11 @@ export default function HistoryTable() {
             />
           </div>
         </div>
-
-        <FultTopics className="FultTopics" />
-        <div className="table">
+        <FultTopics />
+        <div className="Historytable">
           {fults.map((entity) => (
             <Fult
-              key={ fults.findIndex((element) => element === entity)}
+              key={ fults.findIndex((element) => element === entity)+1}
               number={ fults.findIndex((element) => element === entity)}
               place={entity.Place}
               createdby={entity.By}
@@ -210,6 +196,5 @@ export default function HistoryTable() {
           ))}
         </div>
       </div>
-    </ThemeProvider>
   );
 }

@@ -39,7 +39,6 @@ export const useStyles = makeStyles((theme) => ({
     display: "grid",
     gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr 1fr 1fr",
     gridTemplateRows: "1fr",
-
     textAlign: "right",
     justifyContent: "flex-end",
   },

@@ -298,14 +298,14 @@ export default function FultsTable() {
 
 
   return (
-    <ThemeProvider theme={theme}>
-      
-        <div className="fultstable">
-          <FultTopics className="FultTopics" />
+
+        <div className="parenttable">
+
+            <FultTopics/>
           <div className="table">
             {fults.map((entity) => (
               <Fult
-                key={fults.findIndex((element) => element === entity)}
+                key={fults.findIndex((element) => element === entity)+1}
                 number={fults.findIndex((element) => element === entity) }
                 place={entity.Place}
                 createdby={entity.By}
@@ -328,12 +328,12 @@ export default function FultsTable() {
               />
             ))}
           </div>
-          <div className="operations">
-            <button  className="addfultbutton" onClick={AddFult}>
+          
+          <div className="button_holder">
+          <button  className="addfultbutton" onClick={AddFult}>
               הוסף תקלה
             </button>
           </div>
         </div>
-    </ThemeProvider>
   );
 }

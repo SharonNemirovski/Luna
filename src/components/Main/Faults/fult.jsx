@@ -151,8 +151,7 @@ export default function Fult({
         )}
           {filebackdrop && (<Uploadfile onSubmit = {UploadFiles} onClose = {()=>openfileBackdrop(false)}/>
         )}
-        <div className="fult">
-      <Card className="card">
+      <Card className="fultcard">
         <CardContent  className={classes.cardcontant}>
           <Typography component={'span'} className="topogragh"> {fields.num}</Typography>
           <Typography component={'span'} className="topogragh">{fields.place}</Typography>
@@ -234,7 +233,6 @@ export default function Fult({
           </CardContent>
         </Collapse>
       </Card>
-    </div>
     </div>
     
   );

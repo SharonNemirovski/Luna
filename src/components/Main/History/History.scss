@@ -10,8 +10,10 @@
 .card {
   display: flex;
   flex-direction: column;
-
   border-radius: 10px;
+  box-shadow: 1px 3px 5px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(0, 0, 0, 0.171);
+  margin: 3px;
 }
 .expend_fult {
   display: grid;
@@ -19,14 +21,7 @@
   grid-template-columns: 1fr;
   width: 100%;
 }
-.fult {
-  display: grid;
-  margin-top: 20px;
-  width: 100%;
-  border-radius: 10px;
-  box-shadow: 1px 3px 5px rgba(0, 0, 0, 0.3);
-  border: 1px solid rgba(0, 0, 0, 0.171);
-}
+
 .contant {
   display: grid;
   text-align: right;
@@ -39,60 +34,18 @@
   justify-self: center;
   align-self: center;
 }
-
-.topogragh_status {
-  text-align: right;
-  font-size: 14;
-  margin-right: 10px;
-  margin-left: 10px;
-  direction: rtl;
-}
 .operation_holder {
   width: 100%;
   margin-top: 10px;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
 }
-
-.table {
-  margin-top: 20px;
-  grid-row: 3/4;
-  grid-column: 2/3;
-  display: grid;
-  grid-template-rows: 1fr 1fr 1fr 1fr;
-  margin-left: auto;
-  margin-right: auto;
-  width: 100%;
-  border-radius: 10px;
-  max-height: 453px;
-  overflow-y: scroll;
-}
-.table::-webkit-scrollbar {
-  width: 0 !important;
-}
-.operations {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  grid-column: 2/3;
-  grid-row: 1/2;
-  margin-bottom: 15px;
-}
-
-.fultitle {
-  margin-top: 20px;
-  width: 100%;
-  grid-row: 2/3;
-  border-radius: 10px;
-  margin-left: 30px;
-  grid-column: 2/3;
-}
-.fultstable {
-  margin-top: 10px;
-  display: grid;
-  grid-template-rows: 8% 12% 80%;
-  grid-template-columns: 2% 96% 2%;
-  width: 100%;
-  justify-content: center;
+.topogragh_status {
+  text-align: right;
+  font-size: 14;
+  margin-right: 10px;
+  margin-left: 10px;
+  direction: rtl;
 }
 
 .fultcontant {
@@ -122,10 +75,6 @@
   grid-column: 5/6;
   border-color: #1562aa;
 }
-.FultTopics {
-  margin-top: 15px;
-  height: 25px;
-}
 
 .redstatus {
   background-color: rgb(201, 35, 35);
@@ -142,4 +91,47 @@
   margin-right: 8px;
   height: 20px;
   width: 20px;
+}
+
+//fults table by parent to child order
+.HistoryTableHolder {
+  margin-left: 15px;
+  display: grid;
+  height: 100%;
+  width: 100%;
+  overflow-y: hidden;
+}
+.Historyparenttable {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  padding: 10px;
+  overflow-y: scroll;
+  background-color: #dbe5e3;
+}
+.Historyparenttable::-webkit-scrollbar {
+  width: 0 !important;
+}
+.Historytable {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  overflow-y: scroll;
+}
+.Historytable::-webkit-scrollbar {
+  width: 0 !important;
+}
+//search bar holder
+.TopHistoryBar {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  margin-bottom: 5px;
+}
+
+//table head
+.fultitle {
+  border-radius: 10px;
+  margin-bottom: 8px;
 }
