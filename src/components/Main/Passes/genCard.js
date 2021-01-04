@@ -5,21 +5,21 @@ import CardActionArea from '@material-ui/core/CardActionArea';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
+import './genCard.scss';
 
 const useStyles = makeStyles({
   root: {
-    width: 295,
-    margin: 25,
-    height: 250,
+    textAlign: 'center',
+    position: 'relative',
+    height: 270,
   },
   media: {
     height: 170,
   },
 });
 
-export default function GenCard({ title,passCode,imgUrl }) {
+export default function GenCard({ title, passCode, imgUrl }) {
   const classes = useStyles();
-  //const {  } = description;
   return (
     <Card className={classes.root}>
       <CardActionArea>
@@ -30,7 +30,6 @@ export default function GenCard({ title,passCode,imgUrl }) {
           </Typography>
           <Typography variant="body2" color="textSecondary" component="p">
             {passCode}
-            
           </Typography>
         </CardContent>
       </CardActionArea>

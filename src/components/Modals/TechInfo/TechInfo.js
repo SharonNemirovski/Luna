@@ -72,7 +72,7 @@ export default function TechInfo({
   const onnumIDChange = (value) => {
     setTechInfo({
       ...techInfo,
-      numIDChange: value,
+      numID: value,
     });
   };
   //passCode
@@ -84,8 +84,11 @@ export default function TechInfo({
   };
 
   const onSubmit = () => {
+    if (isEditMode) {
+      onSave(techInfo);
+      return;
+    }
     setIsEditMode((prevValue) => !prevValue);
-    onSave(techInfo);
   };
 
   return (
