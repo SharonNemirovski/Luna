@@ -21,7 +21,7 @@ import Backdrop from "./modals/backdrop";
 import netcom from "../../../assets/netcomlogo.png";
 import bynet from "../../../assets/bynetlogo.png";
 import hoshen from "../../../assets/hoshenlogo.png";
-import Uploadfile from "./modals/uploadbackdrop"
+import Uploadfile from "./modals/Uloadbackdrop"
 
 export default function Fult({
   number,
@@ -137,10 +137,7 @@ export default function Fult({
   const OnUploadFile = () =>{
     openfileBackdrop(true);
   };
-  const UploadFiles = () =>{
-    console.log("implement the post req for backend")
-    openfileBackdrop(false);
-  };
+
   const DownloadFiles = () =>{
     console.log("implement the get req for downloading the files from db")
   };
@@ -149,7 +146,7 @@ export default function Fult({
       {backdrop && (
           <Backdrop onClose={() => openBackdrop(false)} onEdit={UpdateFault} company ={company} />
         )}
-          {filebackdrop && (<Uploadfile onSubmit = {UploadFiles} onClose = {()=>openfileBackdrop(false)}/>
+          {filebackdrop && (<Uploadfile  onClose = {()=>openfileBackdrop(false)}/>
         )}
       <Card className="fultcard">
         <CardContent  className={classes.cardcontant}>

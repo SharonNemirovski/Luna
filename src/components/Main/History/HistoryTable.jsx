@@ -105,7 +105,7 @@ export default function HistoryTable() {
   };
 
   const search = (pattern) => {
-    const search_p = String(pattern.target.value);
+    const search_p = pattern.target.value;
     let temp_arr = []
     switch (searchBY) {
       case "network":
