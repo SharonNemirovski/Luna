@@ -168,24 +168,52 @@ const onTechAdding = () =>{
     })
 };
 
+const onTechSubmit = async (techObj) => {
+  // update the tech
+  await onTechUpdate(techObj);
+  // loading started.
+  setLoading(true);
+  // close modal
+  setIsTechInfoModalOpen(false);
+  // fetch the data for all Tech again.
+  // stop loading
+  setLoading(false);
+};
+
+  const badgeStyleFromExpiration = (expiration) => {
+    // logic to figure out how much time left.
+    return 'badge-warning';
+  };
 
   return (
     <div className="Passes DropAnimation">
       <div className="CardHolder">
-        {posts.map((post, index) => (
-          <div className="animationForAddCard">
-            <div key={post.id} onClick={() => openTechInfoModal(post)}>
-              <div>
-                <GenCard
-                  key={index}
-                  imgUrl={post.imgUrl}
-                  title={post.name}
-                  passCode={post.passCode}
-                />
+        {loading ? (
+          <div>Loading...</div>
+        ) : (
+          posts.map((post, index) => (
+            <div className="animationForAddCard">
+              <div key={post.id} onClick={() => openTechInfoModal(post)}>
+                <div style={{ position: 'relative' }}>
+                  <div
+                    className={[
+                      'badge',
+                      badgeStyleFromExpiration(post.expiration),
+                    ].join(' ')}
+                  >
+                    30
+                  </div>
+                  <GenCard
+                    key={index}
+                    imgUrl={post.imgUrl}
+                    title={post.name}
+                    passCode={post.passCode}
+                  />
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))
+        )}
       </div>
       <div
         className="fab"
@@ -197,7 +225,7 @@ const onTechAdding = () =>{
 
       {isTechInfoModalOpen && (
         <TechInfo
-          onSave={onTechUpdate}
+          onSave={onTechSubmit}
           onDelete={onTechDelete}
           onClose={() => setIsTechInfoModalOpen(false)}
           selectedTech={selectedTech}

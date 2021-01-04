@@ -1,33 +1,29 @@
-.Contact{
+.Contact {
   height: 100%;
-  box-shadow: 1px 3px 5px rgba(0,0,0,.3);
+  box-shadow: 1px 3px 5px rgba(0, 0, 0, 0.3);
   border: 1px solid rgba(0, 0, 0, 0.171);
 }
-.wrap{
+.wrap {
   height: 100%;
   position: relative;
-  .data{
+  .data {
     margin-top: 5vh;
     margin-right: 5vh;
   }
-  .data label{
+  .data label {
     display: block;
   }
-  .data h3{
+  .data h3 {
     padding-top: 2vh;
   }
-
 }
-.imgC{
+.imgC {
   margin-left: auto;
   margin-right: auto;
   display: block;
   bottom: 0;
   position: absolute;
   left: 0;
-  width: 700px;
-  
+  width: 50vw;
+  height: 60vh;
 }
-
-
-

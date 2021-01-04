@@ -20,7 +20,6 @@ export default function LogIn() {
   return (
     <div>
       <div className="back">
-        {/* <svg src={background} className="svg"></svg> */}
         <img src={background} alt="background"></img>
         <div className="form">
           <div className="imgRapper">

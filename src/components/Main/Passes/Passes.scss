@@ -9,7 +9,7 @@ body {
 }
 .Passes {
   height: 100%;
-  width: 100%;
+  width: auto;
   box-shadow: 1px 3px 5px rgba(0, 0, 0, 0.3);
   border: 1px solid rgba(0, 0, 0, 0.171);
   position: relative;
@@ -19,26 +19,24 @@ body {
 .CardHolder {
   height: 100%;
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-row-gap: 8px;
-  overflow-y: scroll;
-}
-.CardHolder::-webkit-scrollbar {
-  width: 0 !important;
+  grid-template-columns: repeat(4, 1fr);
+  grid-column-gap: 13px;
+  grid-gap: 50px;
+  overflow-y: auto;
+  width: auto;
+  padding: 20px;
 }
 .fab {
-  z-index: 1000000000;
+  z-index: 10000;
   width: 70px;
   height: 70px;
   background-color: rgb(62, 145, 247);
   border-radius: 50%;
   box-shadow: 0 6px 10px 0 #666;
-
   font-size: 50px;
   line-height: 70px;
   color: white;
   text-align: center;
-
   position: sticky;
   right: 90%;
   bottom: 50px;
