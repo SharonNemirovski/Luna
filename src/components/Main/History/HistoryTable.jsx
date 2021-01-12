@@ -12,25 +12,34 @@ import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 
 
-export default function HistoryTable() {
+export default function HistoryTable({token}) {
   const classes = useStyles();
   const [fults, setFults] = useState([]);
- 
+  const pharseDate = (oldDate) =>{
+    if (oldDate !== "סטטוס לא עודכן מעולם"){
+      let newtime = oldDate.split("T");
+      newtime = newtime[0].replace("-", "/").replace("-", "/");
+      newtime = newtime.split("/");
+      return newtime[2] + "/" + newtime[1] + "/" + newtime[0];
+    }
+    return "סטטוס לא עודכן מעולם";
+  };
   const [fults_search, setFultssearch] = useState([]);
   const Swal = require("sweetalert2");
   const [searchBY, setSearch] = useState("");
 
   useEffect(() => {
     (async () => {
-      const res = await fetch(`http://localhost:4000/luna/getAllFults`);
+      const res = await fetch(`http://localhost:4000/luna/getAllFults/${token}`,{
+        headers: {
+          "Content-type": "application/json; charset=UTF-8", // Indicates the content
+          "authorization" : "Bearer " + token
+        }});
       const data = await res.json();
       let temp_arry = [...fults];
       data.map((entity) => {
-        let faultime = entity.created_at;
-        faultime = faultime.split("T");
-        faultime = faultime[0].replace("-", "/").replace("-", "/");
-        faultime = faultime.split("/");
-        const time = faultime[2] + "/" + faultime[1] + "/" + faultime[0];
+        const time = pharseDate(entity.created_at);
+        const updatetime = pharseDate(entity.last_changed);
         let tempFult = {
           Num: data.findIndex((element) => element === entity) + 1,
           key: entity.id,
@@ -44,7 +53,8 @@ export default function HistoryTable() {
           Tech: entity.emp,
           Id: entity._id,
           Is_close: entity.closed,
-          LastChange:entity.last_changed
+          LastChange:updatetime,
+          Actions: entity.actions
         };
         temp_arry.push(tempFult);
       });
@@ -63,15 +73,16 @@ export default function HistoryTable() {
       cancelButtonText: "בטל",
     }).then((result) => {
       if (result.isConfirmed) {
-        fetch(`http://localhost:4000/luna/DeleteFult/${db_id}`, {
+        fetch(`http://localhost:4000/luna/DeleteFult/${db_id}/${token}`, {
           method: "DELETE",
           headers: {
             "Content-type": "application/json; charset=UTF-8", // Indicates the content
+            "authorization" : "Bearer " + token
           },
         }).then((res) => res.json());
         setFults([]);
         (async () => {
-          const res = await fetch(`http://localhost:4000/luna/getFults`);
+          const res = await fetch(`http://localhost:4000/luna/getFults/${token}`);
           const data = await res.json();
           let temp_arry = [];
           data.map((entity) => {
@@ -110,21 +121,21 @@ export default function HistoryTable() {
     switch (searchBY) {
       case "network":
         temp_arr = fults_search.filter((item) => {
-          return item.Network.search(search_p) !== -1;
+          return item.Network.includes(search_p);
         });
         setFults(temp_arr);
         break;
 
       case "created_at":
         temp_arr = fults_search.filter((item) => {
-          return item.time.search(search_p) !== -1;
+          return item.time.includes(search_p);
         });
         setFults(temp_arr);
         break;
 
       case "place":
          temp_arr = fults_search.filter((item) => {
-          return item.Place.search(search_p) !== -1;
+          return item.Place.includes(search_p);
         });
         setFults(temp_arr);
         break;
@@ -177,6 +188,7 @@ export default function HistoryTable() {
         <div className="Historytable">
           {fults.map((entity) => (
             <Fult
+              token = {token}
               key={ fults.findIndex((element) => element === entity)+1}
               number={ fults.findIndex((element) => element === entity)}
               place={entity.Place}
@@ -188,7 +200,9 @@ export default function HistoryTable() {
               company = {entity.Company}
               techname={entity.Tech}
               ID={entity.Id}
+              LastChange = {entity.LastChange}
               is_close={entity.Is_close}
+              actions = {entity.Actions}
               onDelete={() => {
                 onDeleteFult(entity.Id);
               }}

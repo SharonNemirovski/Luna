@@ -18,7 +18,7 @@ const useStyles = makeStyles({
   },
 });
 
-export default function GenCard({ title, passCode, imgUrl }) {
+export default function GenCard({ title, passCode, imgUrl ,company }) {
   const classes = useStyles();
   return (
     <Card className={classes.root}>
@@ -30,6 +30,9 @@ export default function GenCard({ title, passCode, imgUrl }) {
           </Typography>
           <Typography variant="body2" color="textSecondary" component="p">
             {passCode}
+          </Typography>
+          <Typography variant="body2" color="textSecondary" component="p">
+            {company}
           </Typography>
         </CardContent>
       </CardActionArea>

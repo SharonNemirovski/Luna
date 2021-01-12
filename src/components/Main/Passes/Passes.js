@@ -16,16 +16,20 @@ var inputOptions = new Promise(function (resolve) {
 });
 
 
-export default function Passes() {
+export default function Passes({token}) {
   const [isTechInfoModalOpen, setIsTechInfoModalOpen] = useState(false);
   const [selectedTech, setSelectedTech] = useState(null);
   const [posts, setPosts] = useState([]);
-
+  const [loading , setLoading] = useState(false);
   useEffect(() => {
     (async () => {
-      const res = await fetch(`http://localhost:4000/luna/getTechs`);
+      const res = await fetch(`http://localhost:4000/luna/getTechs/${token}`,       
+      {headers: {
+          "Content-type": "application/json; charset=UTF-8", // Indicates the content
+          "authorization" : "Bearer " + token
+        }});
       const data = await res.json();
-      let temp_arry = [...posts];
+      let temp_arry = [];
       data.map((entity) => {
         let tempTech = {
         id: entity._id,
@@ -35,6 +39,7 @@ export default function Passes() {
         phoneNum: entity.phoneNum,
         numID: entity.numID,
         passCode: entity.passCode,
+        passExpdays : entity.expired_in,
         imgUrl: entity.company === "netcom" ? malam : binat,
         };
         temp_arry.push(tempTech);
@@ -50,10 +55,11 @@ export default function Passes() {
 
 
   const onTechDelete = (id) => {
-    fetch(`http://localhost:4000/luna/DeleteTech/${id}`, {
+    fetch(`http://localhost:4000/luna/DeleteTech/${id}/${token}`, {
           method: "DELETE",
           headers: {
             "Content-type": "application/json; charset=UTF-8", // Indicates the content
+            "authorization" : "Bearer " + token
           },
         }).then((res) => res.json())
         
@@ -71,10 +77,12 @@ export default function Passes() {
       return post;
     });
     
-    fetch(`http://localhost:4000/luna/UpdateTech/${techObj.id}`, {
+    fetch(`http://localhost:4000/luna/UpdateTech/${techObj.id}/${token}`, {
       method: "POST",
       body: JSON.stringify(techObj),
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-type": "application/json; charset=UTF-8", // Indicates the content
+        "authorization" : "Bearer " + token}
     })
       .then((res) => res.json())
       .then(() => {
@@ -144,15 +152,20 @@ const onTechAdding = () =>{
           carNum: result.value[4],
           imgUrl: result.value[5] ,
           passCode: result.value[6],
+          passExpdays :30
         };
-        fetch("http://localhost:4000/luna/AddTech", {
+        fetch(`http://localhost:4000/luna/AddTech/${token}`, {
           method: "POST",
           body: JSON.stringify(newTech),
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-type": "application/json; charset=UTF-8", // Indicates the content
+            "authorization" : "Bearer " + token
+          }
         })
           .then((res) => res.json())
           .then((json) => {
             newTech.id = json._id;//saving the database id has a parameter
+
           });
         newTech.imgUrl = result[5] ==="נטקום" ? malam : binat;
         let tempArr = [...posts];
@@ -175,14 +188,39 @@ const onTechSubmit = async (techObj) => {
   setLoading(true);
   // close modal
   setIsTechInfoModalOpen(false);
-  // fetch the data for all Tech again.
+  const res = await fetch(`http://localhost:4000/luna/getTechs/${token}`,
+  {headers: {
+    "Content-type": "application/json; charset=UTF-8", // Indicates the content
+    "authorization" : "Bearer " + token
+  }});
+  const data = await res.json();
+  let temp_arry = [];
+  data.map((entity) => {
+    let tempTech = {
+    id: entity._id,
+    name: entity.name,
+    car:entity.car,
+    carNum: entity.carNum,
+    phoneNum: entity.phoneNum,
+    numID: entity.numID,
+    passCode: entity.passCode,
+    passExpdays : entity.expired_in,
+    imgUrl: entity.company === "netcom" ? malam : binat,
+    };
+    temp_arry.push(tempTech);
+  });
+  setPosts(temp_arry);
   // stop loading
   setLoading(false);
 };
 
-  const badgeStyleFromExpiration = (expiration) => {
-    // logic to figure out how much time left.
-    return 'badge-warning';
+  const badgeStyleFromExpiration = (days_left) => {
+    // by the pass experation change the color , the value being fetch from the backend
+    if((days_left < 20) && (days_left >=10 ))
+      return 'badge-warning';
+    else if (days_left<10)
+    return 'badge-critical';
+    else return 'badge';
   };
 
   return (
@@ -198,16 +236,17 @@ const onTechSubmit = async (techObj) => {
                   <div
                     className={[
                       'badge',
-                      badgeStyleFromExpiration(post.expiration),
+                      badgeStyleFromExpiration(post.passExpdays),
                     ].join(' ')}
                   >
-                    30
+                    {post.passExpdays }
                   </div>
                   <GenCard
                     key={index}
                     imgUrl={post.imgUrl}
                     title={post.name}
                     passCode={post.passCode}
+                    company = {post.imgUrl === binat ? "נטקום" : "בינת"}
                   />
                 </div>
               </div>

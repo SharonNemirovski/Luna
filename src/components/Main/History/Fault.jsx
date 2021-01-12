@@ -17,6 +17,7 @@ import RestorePageIcon from '@material-ui/icons/RestorePage';
 
 
 export default function Fult({
+  token,
   number,
   ID,
   place,
@@ -30,11 +31,22 @@ export default function Fult({
   onDelete,
   is_close,
   LastChange,
+ actions
 
 }) {
   const classes = useStyles();
+  const pharseDate = (oldDate) =>{
+    if (oldDate !== "סטטוס לא עודכן מעולם"){
+      let newtime = oldDate.split("T");
+      newtime = newtime[0].replace("-", "/").replace("-", "/");
+      newtime = newtime.split("/");
+      return newtime[2] + "/" + newtime[1] + "/" + newtime[0];
+    }
+    return "סטטוס לא עודכן מעולם";
+  };
   const Swal = require("sweetalert2");
   const [fields , setfields] = useState({
+    last_changed:LastChange,
     isclose:is_close,
     status: is_close ===true? "נפתרה":status,
     StatusColor: is_close === true ? "greenstatus" : "redstatus",
@@ -57,15 +69,19 @@ const Reopen = () =>{
     cancelButtonText: "בטל",
   }).then((result) => {
     if (result.isConfirmed) {
-      fetch(`http://localhost:4000/luna//ReopenFult/${ID}`, {
+      fetch(`http://localhost:4000/luna//ReopenFult/${ID}/${token}`, {
         method: "POST",
+        headers: {
+          "Content-type": "application/json; charset=UTF-8", // Indicates the content
+          "authorization" : "Bearer " + token
+        }
       })
         .then((res) => res.json())
         .then((json) => {
           console.log(json);
           });
       setfields({...fields ,status:status , isclose:false});
-      Swal.fire({ icon: "success", title: "התקלה נפתחה" });
+      Swal.fire({ icon: "success", title: "התקלה נפתחה",confirmButtonText: "אישור" });
     }
   });
 };
@@ -114,22 +130,28 @@ const IsCompanyFault = () =>{
               <div className="expend_fult">
                 <Typography  component={'span'} className="topogragh_status">
                   תיאור התקלה:
-                  <Typography  component={'span'} className="topogragh">
+                  <span  className="topogragh_info">
                     {description}
-                  </Typography>
+                  </span>
+                </Typography>
+                <Typography component={'span'} className="topogragh_status">
+                  תהליכים שבוצעו:
+                  <span className = "topogragh_info">{actions}</span>
                 </Typography>
                 <Typography  component={'span'} className="topogragh_status">
                   סטטוס:
-                  {LastChange}
-                  <Typography  component={'span'} className="topogragh">{status}</Typography>
+                  <span className="topogragh_info">{status}</span>
                 </Typography>
 
                 {(IsCompanyFault())&&(                
                 <Typography component={'span'} className="topogragh_status">
                   שם הטכנאי שיוצא לתקלה:
-                  <span className = "topogragh_info">{techname}</span>
+                  <span className = "topogragh_info">{techname === ""? "לא ידוע":techname}</span>
                 </Typography>)}
-
+                <Typography component={'span'} className="topogragh_status">
+                  עודכן לאחרונה בתאריך:
+                  <span className = "topogragh_info"> {fields.last_changed}</span>
+                </Typography>
                 <Typography component={'span'} >
                   <div className="operation_holder">
                   <IconButton onClick={()=>{ 

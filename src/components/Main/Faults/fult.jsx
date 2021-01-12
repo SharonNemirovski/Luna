@@ -24,6 +24,7 @@ import hoshen from "../../../assets/hoshenlogo.png";
 import Uploadfile from "./modals/Uloadbackdrop"
 
 export default function Fult({
+  token,
   number,
   ID,
   place,
@@ -42,6 +43,12 @@ export default function Fult({
   files
 }) {
   const classes = useStyles();
+  const pharseDate = (oldDate) =>{
+    let newtime = oldDate.split("T");
+    newtime = newtime[0].replace("-", "/").replace("-", "/");
+    newtime = newtime.split("/");
+    return newtime[2] + "/" + newtime[1] + "/" + newtime[0];
+  };
   const Swal = require("sweetalert2");
   const [fields, setFields] = useState({
     num: number,
@@ -84,17 +91,17 @@ export default function Fult({
 
   const UpdateFault = (new_status , tech_name) => {
     let fultbody ={};
-    const changetime = Date.now;
+    let currentDate = new Date();
     if ((new_status !== "")){
       if((tech_name !== ""))
       {
         fultbody = { status: String(new_status) , emp: String(tech_name) };
-        setFields({...fields ,tech:tech_name,status:new_status , last_changed:changetime});
+        setFields({...fields ,tech:tech_name,status:new_status ,last_changed : pharseDate(currentDate.toISOString())});
       }
       else
       {
         fultbody ={ status: String(new_status) };
-        setFields({...fields ,status:new_status, last_changed:changetime});
+        setFields({...fields ,status:new_status,last_changed : pharseDate(currentDate.toISOString())});
   
       } 
     } 
@@ -102,7 +109,7 @@ export default function Fult({
     {
       if ((tech_name !== "")){
        fultbody = { emp: String(tech_name) };
-       setFields({...fields ,tech:tech_name , last_changed:changetime});
+       setFields({...fields ,tech:tech_name,last_changed : pharseDate(currentDate.toISOString()) });
       }
     }
 
@@ -113,13 +120,16 @@ export default function Fult({
     }
     else{
       
-      fetch(`http://localhost:4000/luna/UpdateFult/${ID}`, {
+      fetch(`http://localhost:4000/luna/UpdateFult/${ID}/${token}`, {
         method: "POST",
         body: JSON.stringify(fultbody),
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-type": "application/json; charset=UTF-8", // Indicates the content
+          "authorization" : "Bearer " + token
+        }
       })
         .then((res) => res.json())
-      Swal.fire({confirmButtonText: "אישור" , title :"!התקלה עודכנה בהצלחה" ,icon:"success"});
+      Swal.fire({confirmButtonText: "אישור" , title :"!התקלה עודכנה בהצלחה" ,icon:"success"});     
       setExpanded(false);
       openBackdrop(false);
     }
@@ -146,7 +156,7 @@ export default function Fult({
       {backdrop && (
           <Backdrop onClose={() => openBackdrop(false)} onEdit={UpdateFault} company ={company} />
         )}
-          {filebackdrop && (<Uploadfile  onClose = {()=>openfileBackdrop(false)}/>
+          {filebackdrop && (<Uploadfile token = {token} onClose = {()=>openfileBackdrop(false)}/>
         )}
       <Card className="fultcard">
         <CardContent  className={classes.cardcontant}>
@@ -196,7 +206,7 @@ export default function Fult({
                 </Typography>
                 {(IsCompanyFault())&&(<Typography component={'span'} className="topogragh_status">
                   שם הטכנאי שיוצא לתקלה:
-                  <span className = "topogragh_info">{fields.tech}</span>
+                  <span className = "topogragh_info">{techname === ""? "לא ידוע":fields.tech}</span>
                 </Typography>)}
                 <Typography component={'span'} className="topogragh_status">
                   עודכן לאחרונה בתאריך:

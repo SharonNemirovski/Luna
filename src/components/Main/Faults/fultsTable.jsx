@@ -1,27 +1,34 @@
 import React, { useEffect, useState } from "react";
 import Fult from "./fult";
-import { theme } from "./styles";
-import { ThemeProvider } from "@material-ui/core/styles";
 import FultTopics from "./Tablecontant";
 import fetch from "node-fetch";
 import "./Faults.scss";
 
 
-export default function FultsTable() {
+export default function FultsTable({token}) {
   const [fults, setFults] = useState([]);
   const Swal = require("sweetalert2");
-
+  const pharseDate = (oldDate) =>{
+    if (oldDate !== "סטטוס לא עודכן מעולם"){
+      let newtime = oldDate.split("T");
+      newtime = newtime[0].replace("-", "/").replace("-", "/");
+      newtime = newtime.split("/");
+      return newtime[2] + "/" + newtime[1] + "/" + newtime[0];
+    }
+    return "סטטוס לא עודכן מעולם";
+  };
   useEffect(() => {
     (async () => {
-      const res = await fetch(`http://localhost:4000/luna/getFults`);
+      const res = await fetch(`http://localhost:4000/luna/getFults/${token}`,      
+      {
+        headers: {
+        "Content-type": "application/json", // Indicates the content
+      }});
       const data = await res.json();
       let temp_arry = [...fults];
       data.map((entity) => {
-        let faultime = entity.created_at;
-        faultime = faultime.split("T");
-        faultime = faultime[0].replace("-", "/").replace("-", "/");
-        faultime = faultime.split("/");
-        const time = faultime[2] + "/" + faultime[1] + "/" + faultime[0];
+        const time = pharseDate(entity.created_at);
+        const updatetime = pharseDate(entity.last_changed);
         let tempFult = {
           Place: entity.place,
           By: entity.by,
@@ -34,7 +41,7 @@ export default function FultsTable() {
           Tech: entity.emp,
           Id: entity._id,
           Is_close: entity.closed,
-          LastChange:entity.last_changed
+          LastChange:updatetime
         };
         temp_arry.push(tempFult);
       });
@@ -155,10 +162,13 @@ export default function FultsTable() {
                 status:String(current_status),
                 closed: false,
               };
-              fetch("http://localhost:4000/luna/addFult", {
+              fetch(`http://localhost:4000/luna/addFult/${token}`, {
                 method: "POST",
                 body: JSON.stringify(fultbody),
-                headers: { "Content-Type": "application/json" },
+                headers: {
+                  "Content-type": "application/json; charset=UTF-8", // Indicates the content
+                  "authorization" : "Bearer " + token
+                }
               })
                 .then((res) => res.json())
                 .then((json) => {
@@ -204,15 +214,23 @@ export default function FultsTable() {
     }).then((result) => {
       if (result.isConfirmed) {
       
-        fetch(`http://localhost:4000/luna/closeFult/${db_id}`, {
+        fetch(`http://localhost:4000/luna/closeFult/${db_id}/${token}`, {
           method: "POST",
+          headers: {
+            "Content-type": "application/json; charset=UTF-8", // Indicates the content
+            "authorization" : "Bearer " + token
+          }
         })
           .then((res) => res.json())
           .then((json) => {
             console.log(json);
           });
           (async () => {
-            const res = await fetch(`http://localhost:4000/luna/getFults`);
+            const res = await fetch(`http://localhost:4000/luna/getFults/${token}`,      
+            {
+              headers: {
+              "Content-type": "application/json", // Indicates the content
+            }});
             const data = await res.json();
             let temp_arry = [];
             setFults([]);
@@ -255,15 +273,15 @@ export default function FultsTable() {
       cancelButtonText: "בטל",
     }).then((result) => {
       if (result.isConfirmed) {
-        fetch(`http://localhost:4000/luna/DeleteFult/${db_id}`, {
+        fetch(`http://localhost:4000/luna/DeleteFult/${db_id}/${token}`, {
           method: "DELETE",
           headers: {
-            "Content-type": "application/json; charset=UTF-8", // Indicates the content
-          },
+            "Content-type": "application/json" // Indicates the content"
+          }
         }).then((res) => res.json());
         setFults([]);
         (async () => {
-          const res = await fetch(`http://localhost:4000/luna/getFults`);
+          const res = await fetch(`http://localhost:4000/luna/getFults/${token}`);
           const data = await res.json();
           let temp_arry = [];
           data.map((entity) => {
@@ -305,6 +323,7 @@ export default function FultsTable() {
           <div className="table">
             {fults.map((entity) => (
               <Fult
+                token = {token}
                 key={fults.findIndex((element) => element === entity)+1}
                 number={fults.findIndex((element) => element === entity) }
                 place={entity.Place}

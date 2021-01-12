@@ -19,7 +19,6 @@ export default function TechInfo({
   onDelete,
   onSave,
 }) {
-  const classes = useStyles();
   const [isEditMode, setIsEditMode] = useState(isEditModeSet);
   const {
     name,

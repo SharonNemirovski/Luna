@@ -2,7 +2,7 @@ import React,{useState} from 'react'
 import "./uploadbackdrop.scss"
 import axios from "axios";
 import Progressui from "./progressui";
-export default function Uploadbackdrop({ onClose}) {
+export default function Uploadbackdrop({ onClose ,token}) {
   const [uploaded,setFiles] = useState('');
   const [nameoffiles,setfilename] = useState('');
   const [precent , setprogress] = useState(0);
@@ -12,15 +12,16 @@ export default function Uploadbackdrop({ onClose}) {
     formData.append('FualtFiles' ,uploaded);
 
     try{
-      const res = await axios.post('http://localhost:4000/luna/upload', formData , {
+      const res = await axios.post(`http://localhost:4000/luna/upload/${token}`, formData , {
         headers:{
-          'Content-Type':'multipart/form-data'
+          'Content-Type':'multipart/form-data',
+          "authorization" : "Bearer " + token
         },
         onUploadProgress: ProgressEvent =>{
           setprogress(parseInt(Math.round((ProgressEvent.loaded *100)/ProgressEvent.total)));
           setTimeout(() => {
           setprogress(0);
-          }, 5000);
+          }, 3000);
         }
         //clear progress
         
