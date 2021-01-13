@@ -82,7 +82,10 @@ export default function HistoryTable({token}) {
         }).then((res) => res.json());
         setFults([]);
         (async () => {
-          const res = await fetch(`http://localhost:4000/luna/getFults/${token}`);
+          const res = await fetch(`http://localhost:4000/luna/getAllFults/${token}`,{
+            headers: {
+              "Content-type": "application/json; charset=UTF-8", // Indicates the content
+            }});
           const data = await res.json();
           let temp_arry = [];
           data.map((entity) => {

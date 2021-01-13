@@ -22,7 +22,8 @@ import netcom from "../../../assets/netcomlogo.png";
 import bynet from "../../../assets/bynetlogo.png";
 import hoshen from "../../../assets/hoshenlogo.png";
 import Uploadfile from "./modals/Uloadbackdrop"
-
+import Fileviewer from "./modals/FileViewer"
+import file from "../../../assets/text.docx"
 export default function Fult({
   token,
   number,
@@ -64,6 +65,7 @@ export default function Fult({
     tech: techname,
     last_changed:LastChange,
   });
+  const [showFile , setFileshowflag] = useState(false);
   const [backdrop, openBackdrop] = useState(false);
   const [filebackdrop, openfileBackdrop] = useState(false);
   const getLogoByCompany = () =>{
@@ -149,14 +151,16 @@ export default function Fult({
   };
 
   const DownloadFiles = () =>{
-    console.log("implement the get req for downloading the files from db")
-  };
+
+  }
+  
   return (
     <div>
+      {showFile && <Fileviewer FilePath = "C:\Users\dabush\Desktop\development\LunaFrontest\src\assets\netcomlogo.png" FileType = "png" onclosingview = {() =>{setFileshowflag(false)}}/>}
       {backdrop && (
           <Backdrop onClose={() => openBackdrop(false)} onEdit={UpdateFault} company ={company} />
         )}
-          {filebackdrop && (<Uploadfile token = {token} onClose = {()=>openfileBackdrop(false)}/>
+          {filebackdrop && (<Uploadfile fualtid = {ID} token = {token} onClose = {()=>openfileBackdrop(false)}/>
         )}
       <Card className="fultcard">
         <CardContent  className={classes.cardcontant}>
@@ -178,7 +182,7 @@ export default function Fult({
             >
               <ExpandMoreIcon />
             </IconButton>
-            <IconButton color="primary" onClick = {DownloadFiles}>
+            <IconButton color="primary" target="_blank" href = {file}>
               <Badge badgeContent={2} color="secondary" variant="dot">
                 <AssignmentIcon />
               </Badge>

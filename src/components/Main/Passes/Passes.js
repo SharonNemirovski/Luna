@@ -150,16 +150,17 @@ const onTechAdding = () =>{
           numID: result.value[2],
           car:result.value[3],
           carNum: result.value[4],
-          imgUrl: result.value[5] ,
+          imgUrl: result.value[5] ==="netcom" ? "netcom" : "binat",
           passCode: result.value[6],
           passExpdays :30
         };
+        console.log("company is" + result.value[5])
+        console.log(newTech.imgUrl)
         fetch(`http://localhost:4000/luna/AddTech/${token}`, {
           method: "POST",
           body: JSON.stringify(newTech),
           headers: {
             "Content-type": "application/json; charset=UTF-8", // Indicates the content
-            "authorization" : "Bearer " + token
           }
         })
           .then((res) => res.json())
@@ -167,7 +168,9 @@ const onTechAdding = () =>{
             newTech.id = json._id;//saving the database id has a parameter
 
           });
-        newTech.imgUrl = result[5] ==="נטקום" ? malam : binat;
+
+
+        newTech.imgUrl = result.value[5] ==="netcom" ? malam : binat;
         let tempArr = [...posts];
         tempArr.push(newTech);
         setPosts(tempArr);
@@ -246,7 +249,7 @@ const onTechSubmit = async (techObj) => {
                     imgUrl={post.imgUrl}
                     title={post.name}
                     passCode={post.passCode}
-                    company = {post.imgUrl === binat ? "נטקום" : "בינת"}
+                    company = {post.imgUrl === binat ? "בינת" : "נטקום"}//upsidedown couse hebrew
                   />
                 </div>
               </div>
