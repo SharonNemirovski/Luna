@@ -12,7 +12,6 @@ import { ThemeProvider } from "@material-ui/core/styles";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 import DoneIcon from "@material-ui/icons/Done";
-import AttachFileIcon from "@material-ui/icons/AttachFile";
 import Badge from "@material-ui/core/Badge";
 import "./Faults.scss";
 import AssignmentIcon from "@material-ui/icons/Assignment";
@@ -22,8 +21,10 @@ import netcom from "../../../assets/netcomlogo.png";
 import bynet from "../../../assets/bynetlogo.png";
 import hoshen from "../../../assets/hoshenlogo.png";
 import Uploadfile from "./modals/Uloadbackdrop"
-import Fileviewer from "./modals/FileViewer"
-import file from "../../../assets/text.docx"
+import CollectionsIcon from '@material-ui/icons/Collections';
+import PostAddIcon from '@material-ui/icons/PostAdd';
+import ListAltIcon from '@material-ui/icons/ListAlt';
+import axios from "axios";
 export default function Fult({
   token,
   number,
@@ -41,7 +42,8 @@ export default function Fult({
   onClose,
   is_close,
   LastChange,
-  files
+  filetype,
+  providerfiletype
 }) {
   const classes = useStyles();
   const pharseDate = (oldDate) =>{
@@ -65,9 +67,15 @@ export default function Fult({
     tech: techname,
     last_changed:LastChange,
   });
-  const [showFile , setFileshowflag] = useState(false);
+  const [expanded, setExpanded] = useState(false);
+  const [isfileexist , setFileflag] = useState(filetype);
+  const [isProviderFileExist , setProviderFileFlag] = useState(providerfiletype)
   const [backdrop, openBackdrop] = useState(false);
   const [filebackdrop, openfileBackdrop] = useState(false);
+  const [Providerfilebackdrop, openProviderfileBackdrop] = useState(false);
+
+
+
   const getLogoByCompany = () =>{
     //returns thw logo by the company value
     switch(company){
@@ -81,16 +89,12 @@ export default function Fult({
         return hoshen;
     }
   };
-  const [expanded, setExpanded] = useState(false);
-
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
-
   const handleEdit = () =>{
     openBackdrop(true);
   };
-
   const UpdateFault = (new_status , tech_name) => {
     let fultbody ={};
     let currentDate = new Date();
@@ -147,20 +151,101 @@ export default function Fult({
     }
   };
   const OnUploadFile = () =>{
-    openfileBackdrop(true);
+    if(isfileexist==="")
+      openfileBackdrop(true);
+    else
+    Swal.fire({confirmButtonText: "אישור" , title:"לתקלה כבר קיים קובץ מצורף" ,icon:"info"});
   };
-
+  const OnUploadProviderFile = () =>{
+    if(isProviderFileExist==="")
+    openProviderfileBackdrop(true);
+    else
+    Swal.fire({confirmButtonText: "אישור" , title:"לתקלה כבר צורפה תעודת ספק" ,icon:"info"});
+  };
   const DownloadFiles = () =>{
+    if(isfileexist ===""){
+      if (company === "אחר"){
+        Swal.fire({confirmButtonText: "אישור" , title:"לא צורף שרטוט לתקלה" ,icon:"info"});
+      }
+      else{
+        Swal.fire({confirmButtonText: "אישור" , title:"לא צורף טופס לתקלה" ,icon:"info"});
+      }
+    }
+    else{
+      axios.get(`http://localhost:4000/luna/getfiles/${ID}/${token}`,
+      {
+          headers: {
+              'Content-Type': 'application/json',
+              'Accept': `application/pdf`
+          },
+          responseType: "blob"
+      }).then((response) => {
+          const blob = new Blob([response.data], { type: isfileexist})
+          const objectUrl = URL.createObjectURL(blob)
+          window.open(objectUrl)
+      }).catch((error) => { alert(error) })
+    }
+    }
+  const DownloadProviderFiles = () =>{
+      if(isProviderFileExist ===""){
+        Swal.fire({confirmButtonText: "אישור" , title:"לא צורפה תעודת ספק לתקלה" ,icon:"info"});
+      }
+      else{
+        axios.get(`http://localhost:4000/luna/getProviderfiles/${ID}/${token}`,
+        {
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': `application/pdf`
+            },
+            responseType: "blob"
+        }).then((response) => {
+            const blob = new Blob([response.data], { type: isProviderFileExist})
+            const objectUrl = URL.createObjectURL(blob)
+            window.open(objectUrl)
+        }).catch((error) => { alert(error) })
+      }
+      }
 
+  const GetOperationStyle = () => {
+    if (company === "אחר"){
+      return "operation_hold_for_pluga";
+    }
+    else{
+      return "operation_hold_for_copmany";
+    }
   }
-  
+
   return (
     <div>
-      {showFile && <Fileviewer FilePath = "C:\Users\dabush\Desktop\development\LunaFrontest\src\assets\netcomlogo.png" FileType = "png" onclosingview = {() =>{setFileshowflag(false)}}/>}
       {backdrop && (
           <Backdrop onClose={() => openBackdrop(false)} onEdit={UpdateFault} company ={company} />
         )}
-          {filebackdrop && (<Uploadfile fualtid = {ID} token = {token} onClose = {()=>openfileBackdrop(false)}/>
+          {filebackdrop && (<Uploadfile fualtid = {ID} token = {token} IsProviderFile = {false}
+            doneupload={()=>{
+
+              fetch(`http://localhost:4000/luna/getfiletype/${ID}/${token}`, {
+                headers: { 'Content-Type': 'application/json' },
+              })
+                .then((res) => res.json())
+                .then((json) => {
+                  setFileflag(json.Filetype)
+                  console.log("res is " + json.Filetype)
+                }).catch((error) => { alert(error) });
+
+            }} 
+            onClose = {()=>openfileBackdrop(false)}/>
+        )}
+        {Providerfilebackdrop && (<Uploadfile fualtid = {ID} token = {token} IsProviderFile = {true}
+            doneupload={()=>{
+              fetch(`http://localhost:4000/luna/getProviderfiletype/${ID}/${token}`, {
+                headers: { 'Content-Type': 'application/json' },
+              })
+                .then((res) => res.json())
+                .then((json) => {
+                  setProviderFileFlag(json.Filetype)
+                }).catch((error) => { alert(error) });
+            }} 
+            onClose = {()=>openProviderfileBackdrop(false)}/>
         )}
       <Card className="fultcard">
         <CardContent  className={classes.cardcontant}>
@@ -182,11 +267,19 @@ export default function Fult({
             >
               <ExpandMoreIcon />
             </IconButton>
-            <IconButton color="primary" target="_blank" href = {file}>
-              <Badge badgeContent={2} color="secondary" variant="dot">
+            {!IsCompanyFault()&&<div className = "spacer"><span></span></div>}
+            <IconButton color="primary" onClick ={DownloadFiles}>
+              <Badge badgeContent={isfileexist ==="" ? 0:1} color="secondary">
                 <AssignmentIcon />
               </Badge>
             </IconButton>
+
+              {IsCompanyFault()&&<IconButton color="primary" onClick ={DownloadProviderFiles}>
+              <Badge badgeContent={isProviderFileExist ==="" ? 0:1} color="secondary">
+                <ListAltIcon />
+              </Badge>
+            </IconButton>}
+
             <div className="avatar">
               <img src={getLogoByCompany()} alt="" />
              </div>
@@ -218,7 +311,7 @@ export default function Fult({
                 </Typography>
 
                 <Typography component={'span'}>
-                  <div className="operation_holder">
+                  <div className={GetOperationStyle()}>
                     <IconButton onClick={handleEdit}>
                       <EditIcon style={{ color: "#1562aa" }} />
                     </IconButton>
@@ -234,9 +327,13 @@ export default function Fult({
                       onDelete();}}>
                       <DeleteIcon style={{ color: "#1562aa" }} />
                     </IconButton>
+
                     <IconButton onClick = {OnUploadFile}>
-                      <AttachFileIcon style={{ color: "#1562aa" }} />
+                      <CollectionsIcon style={{ color: "#1562aa" }} />
                     </IconButton>
+                    {IsCompanyFault()&&<IconButton onClick = {OnUploadProviderFile}>
+                      <PostAddIcon  style={{ color: "#1562aa" }} />
+                    </IconButton>}
                   </div>
                 </Typography>
               </div>

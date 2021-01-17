@@ -14,8 +14,8 @@ import Badge from "@material-ui/core/Badge";
 import "./History.scss";
 import AssignmentIcon from "@material-ui/icons/Assignment";
 import RestorePageIcon from '@material-ui/icons/RestorePage';
-
-
+import axios from "axios";
+import ListAltIcon from '@material-ui/icons/ListAlt';
 export default function Fult({
   token,
   number,
@@ -31,10 +31,14 @@ export default function Fult({
   onDelete,
   is_close,
   LastChange,
- actions
-
+ actions,
+ filetype,
+ providerfiletype
 }) {
   const classes = useStyles();
+  const [expanded, setExpanded] = useState(false);
+  const [isfileexist , setFileflag] = useState(filetype);
+  const [isProviderFileExist , setProviderFileFlag] = useState(providerfiletype)
   const pharseDate = (oldDate) =>{
     if (oldDate !== "סטטוס לא עודכן מעולם"){
       let newtime = oldDate.split("T");
@@ -51,14 +55,49 @@ export default function Fult({
     status: is_close ===true? "נפתרה":status,
     StatusColor: is_close === true ? "greenstatus" : "redstatus",
   }
-  );
-
-  const [expanded, setExpanded] = useState(false);
-
-  const handleExpandClick = () => {
+);
+const handleExpandClick = () => {
     setExpanded(!expanded);
-  };
-
+};
+const DownloadFiles = () =>{
+    if(isfileexist ===""){
+      Swal.fire({confirmButtonText: "אישור" , title:"לא צורף קובץ לתקלה" ,icon:"info"});
+    }
+    else{
+      axios.get(`http://localhost:4000/luna/getfiles/${ID}/${token}`,
+      {
+          headers: {
+              'Content-Type': 'application/json',
+              'Accept': `application/pdf`
+          },
+          responseType: "blob"
+      }).then((response) => {
+          const blob = new Blob([response.data], { type: isfileexist})
+          const objectUrl = URL.createObjectURL(blob)
+          window.open(objectUrl)
+      }).catch((error) => { alert(error) })
+    }
+}
+const DownloadProviderFiles = () =>{
+        if(isProviderFileExist ===""){
+          Swal.fire({confirmButtonText: "אישור" , title:"לא צורפה תעודת ספק לתקלה" ,icon:"info"});
+        }
+        else{
+          axios.get(`http://localhost:4000/luna/getProviderfiles/${ID}/${token}`,
+          {
+              headers: {
+                  'Content-Type': 'application/json',
+                  'Accept': `application/pdf`
+              },
+              responseType: "blob"
+          }).then((response) => {
+              const blob = new Blob([response.data], { type: isProviderFileExist})
+              const objectUrl = URL.createObjectURL(blob)
+              window.open(objectUrl)
+          }).catch((error) => { alert(error) })
+        }
+}
+  
 const Reopen = () =>{
   Swal.fire({
     icon: "info",
@@ -115,11 +154,18 @@ const IsCompanyFault = () =>{
             >
               <ExpandMoreIcon />
             </IconButton>
-            <IconButton color="primary">
-              <Badge badgeContent={2} color="secondary" variant="dot">
+            {!IsCompanyFault()&&<div className = "spacer"><span></span></div>}
+            <IconButton color="primary" onClick = {DownloadFiles}>
+              <Badge badgeContent={isfileexist ==="" ? 0:1} color="primary" variant = "dot">
                 <AssignmentIcon />
               </Badge>
             </IconButton>
+            
+            {IsCompanyFault()&&<IconButton color="primary" onClick ={DownloadProviderFiles}>
+              <Badge badgeContent={isProviderFileExist ==="" ? 0:1} color="primary" variant = "dot">
+                <ListAltIcon />
+              </Badge>
+            </IconButton>}
             {fields.isclose===true? <div className="greenstatus"></div>:<div className="redstatus"></div>}
             
           </CardActions>

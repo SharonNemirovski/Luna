@@ -35,7 +35,8 @@ export default function HistoryTable({token}) {
           "Content-type": "application/json; charset=UTF-8", // Indicates the content
           "authorization" : "Bearer " + token
         }});
-      const data = await res.json();
+      let data = [];
+      data = await res.json();
       let temp_arry = [...fults];
       data.map((entity) => {
         const time = pharseDate(entity.created_at);
@@ -54,7 +55,9 @@ export default function HistoryTable({token}) {
           Id: entity._id,
           Is_close: entity.closed,
           LastChange:updatetime,
-          Actions: entity.actions
+          Actions: entity.actions,
+          filetype:entity.filetype,
+          providerfiletype:entity.providertypefile
         };
         temp_arry.push(tempFult);
       });
@@ -206,6 +209,8 @@ export default function HistoryTable({token}) {
               LastChange = {entity.LastChange}
               is_close={entity.Is_close}
               actions = {entity.Actions}
+              filetype = {entity.filetype}
+              providerfiletype = {entity.providerfiletype}
               onDelete={() => {
                 onDeleteFult(entity.Id);
               }}

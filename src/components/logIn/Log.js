@@ -60,7 +60,7 @@ export default function LogIn({ onconnect }) {
                 <Grid item>
                   <TextField
                     error={iserror}
-                    id="input-with-icon-grid"
+                    id="input-with-icon-grid-pass"
                     label=" שם משתמש "
                     onChange={(e) => setuser(e.target.value)}
                   />

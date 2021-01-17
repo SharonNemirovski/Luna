@@ -50,7 +50,7 @@ tr {
 .topograghtopograghForTableContant {
   text-align: center;
   font-size: 14;
-  margin-right: 10px;
+  margin-right: 5px;
   margin-left: 10px;
   justify-self: center;
   align-self: center;
@@ -134,11 +134,15 @@ tr {
   margin-bottom: 5px;
   margin-top: 5px;
 }
-
-.operation_holder {
+.operation_hold_for_pluga {
   width: 100%;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
+}
+.operation_hold_for_copmany {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
 }
 .addfultbutton {
   margin-top: 5px;
@@ -174,4 +178,8 @@ tr {
     height: 100%;
     width: 100%;
   }
+}
+
+.spacer {
+  width: 46px;
 }

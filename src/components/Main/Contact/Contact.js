@@ -15,7 +15,7 @@ export default function Contact() {
             <h3>זירת נו"צ :</h3>
           </label>
           <label>להתקשר באדום למספר - 017</label>
-          <label>להתקשר למספר אזרחי - 03-9572111</label>
+          <label>להתקשר למספר אזרחי - 03-9574494</label>
           <label>
             <h3>צוות תרה :</h3>
           </label>

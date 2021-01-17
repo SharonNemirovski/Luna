@@ -24,9 +24,11 @@ export default function FultsTable({token}) {
         headers: {
         "Content-type": "application/json", // Indicates the content
       }});
-      const data = await res.json();
+      let data = [];
+      data = await res.json();
       let temp_arry = [...fults];
       data.map((entity) => {
+        console.log(entity.providerfiletype);
         const time = pharseDate(entity.created_at);
         const updatetime = pharseDate(entity.last_changed);
         let tempFult = {
@@ -41,7 +43,9 @@ export default function FultsTable({token}) {
           Tech: entity.emp,
           Id: entity._id,
           Is_close: entity.closed,
-          LastChange:updatetime
+          LastChange:updatetime,
+          filetype:entity.filetype,
+          providerfiletype:entity.providertypefile
         };
         temp_arry.push(tempFult);
       });
@@ -193,6 +197,10 @@ export default function FultsTable({token}) {
                     Tech:"",
                     Id: fult_id,
                     Is_close: false,
+                    LastChange:"סטטוס לא עודכן מעולם",
+                    filetype :"",
+                    providerfiletype:"",
+
                   };
                   let temparry = [...fults];
                   temparry.push(tempFult);
@@ -252,17 +260,17 @@ export default function FultsTable({token}) {
                 Tech: entity.emp,
                 Id: entity._id,
                 Is_close: entity.closed,
-                LastChange:entity.last_changed
+                LastChange:entity.last_changed,
+                files:entity.filepath
               };
               temp_arry.push(tempFult);
             });
             setFults(temp_arry);
           })();
-        Swal.fire({ icon: "success", title: "התקלה נסגרה" });
+        Swal.fire({ icon: "success", title: "התקלה נסגרה" ,confirmButtonText: "אישור"});
       }
     });
   };
-
   const onDeleteFult = (db_id) => {
     Swal.fire({
       icon: "error",
@@ -302,14 +310,15 @@ export default function FultsTable({token}) {
               Tech: entity.emp,
               Id: entity._id,
               Is_close: entity.closed,
-              LastChange:entity.last_changed
+              LastChange:entity.last_changed,
+              files:entity.filepath
             };
             temp_arry.push(tempFult);
           });
           setFults(temp_arry);
         })();
 
-        Swal.fire({ icon: "success", title: "התקלה נמחקה" });
+        Swal.fire({ icon: "success", title: "התקלה נמחקה" ,confirmButtonText: "אישור"});
       }
     });
   };
@@ -338,6 +347,8 @@ export default function FultsTable({token}) {
                 ID={entity.Id}
                 is_close={entity.Is_close}
                 LastChange = {entity.LastChange}
+                filetype = {entity.filetype}
+                providerfiletype = {entity.providerfiletype}
                 onClose={() => {
                   onClosingFult(entity.Id);
                 }}
