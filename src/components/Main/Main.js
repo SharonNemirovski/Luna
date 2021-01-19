@@ -8,26 +8,26 @@ import History from "./History/History";
 import Contact from "./Contact/Contact";
 
 
-export default function Main({token}) {
+export default function Main({token , IsEditor}) {
   return (
     <div className="Main">
       <Switch>
       <Route 
         path="/Main/fault" 
         render = {(props) => {
-        return <Faults {...props} token = {token}/>
+        return <Faults {...props} token = {token} IsEditor ={IsEditor}/>
       }}/>
 
       <Route 
         path="/Main/passes" 
         render = {(props) => {
-        return <Passes {...props} token = {token}/>
+        return <Passes {...props} token = {token} IsEditor ={IsEditor}/>
       }}/>
 
       <Route 
         path="/Main/history" 
         render = {(props) => {
-        return <History {...props} token = {token}/>
+        return <History {...props} token = {token} IsEditor ={IsEditor}/>
       }}/>
 
       <Route 

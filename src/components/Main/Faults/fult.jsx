@@ -27,6 +27,7 @@ import ListAltIcon from '@material-ui/icons/ListAlt';
 import axios from "axios";
 export default function Fult({
   token,
+  IsEditor,
   number,
   ID,
   place,
@@ -43,7 +44,8 @@ export default function Fult({
   is_close,
   LastChange,
   filetype,
-  providerfiletype
+  providerfiletype,
+  avanch_num
 }) {
   const classes = useStyles();
   const pharseDate = (oldDate) =>{
@@ -66,6 +68,7 @@ export default function Fult({
     status: status,
     tech: techname,
     last_changed:LastChange,
+    avanch_num : avanch_num
   });
   const [expanded, setExpanded] = useState(false);
   const [isfileexist , setFileflag] = useState(filetype);
@@ -95,52 +98,81 @@ export default function Fult({
   const handleEdit = () =>{
     openBackdrop(true);
   };
-  const UpdateFault = (new_status , tech_name) => {
+  const UpdateFault = (new_status , tech_name , avnachNUM) => {
     let fultbody ={};
     let currentDate = new Date();
-    if ((new_status !== "")){
-      if((tech_name !== ""))
+    if ((new_status !== ""))
+    {
+      if(tech_name !== "")
       {
-        fultbody = { status: String(new_status) , emp: String(tech_name) };
-        setFields({...fields ,tech:tech_name,status:new_status ,last_changed : pharseDate(currentDate.toISOString())});
+          if(avnachNUM !== "")
+          {
+            fultbody = { status: String(new_status) , emp: String(tech_name) , avanch_num:String(avnachNUM) };
+            setFields({...fields , avanch_num: avnachNUM ,  tech:tech_name ,  status:new_status  ,last_changed : pharseDate(currentDate.toISOString())});
+          }
+          else
+          {
+            fultbody = { status: String(new_status) , emp: String(tech_name)  };
+            setFields({...fields ,  tech:tech_name ,  status:new_status  ,last_changed : pharseDate(currentDate.toISOString())});
+          }
       }
       else
       {
-        fultbody ={ status: String(new_status) };
-        setFields({...fields ,status:new_status,last_changed : pharseDate(currentDate.toISOString())});
-  
-      } 
-    } 
-    else 
-    {
-      if ((tech_name !== "")){
-       fultbody = { emp: String(tech_name) };
-       setFields({...fields ,tech:tech_name,last_changed : pharseDate(currentDate.toISOString()) });
+          if(avnachNUM !== "")
+            {
+              fultbody = { status: String(new_status) , avanch_num:String(avnachNUM) };
+              setFields({...fields , avanch_num: avnachNUM  ,  status:new_status  ,last_changed : pharseDate(currentDate.toISOString())});
+            }
+          else
+            {
+              fultbody = { status: String(new_status)  };
+              setFields({...fields ,  status:new_status  ,last_changed : pharseDate(currentDate.toISOString())});
+            }
       }
     }
-
-    if((new_status ==="")&&(tech_name ==="")){
-      Swal.fire({confirmButtonText: "אישור" , title:"לא עודכן אף שדה" ,icon:"info"});
-      openBackdrop(false);
-      
-    }
-    else{
-      
-      fetch(`http://localhost:4000/luna/UpdateFult/${ID}/${token}`, {
-        method: "POST",
-        body: JSON.stringify(fultbody),
-        headers: {
-          "Content-type": "application/json; charset=UTF-8", // Indicates the content
-          "authorization" : "Bearer " + token
+    else
+    {
+        if(tech_name !== "")
+        {
+            if(avnachNUM !== "")
+            {
+                fultbody = { emp: String(tech_name) , avanch_num:String(avnachNUM) };
+                setFields({...fields , avanch_num: avnachNUM ,  tech:tech_name   ,last_changed : pharseDate(currentDate.toISOString())});
+            }
+            else
+            {
+                fultbody = { emp: String(tech_name)  };
+                setFields({...fields ,  tech:tech_name , last_changed : pharseDate(currentDate.toISOString())});
+            }
         }
-      })
-        .then((res) => res.json())
-      Swal.fire({confirmButtonText: "אישור" , title :"!התקלה עודכנה בהצלחה" ,icon:"success"});     
-      setExpanded(false);
-      openBackdrop(false);
+        else
+        {
+            if(avnachNUM !== "")
+            {
+                fultbody = {avanch_num:String(avnachNUM) };
+                setFields({...fields , avanch_num: avnachNUM  ,last_changed : pharseDate(currentDate.toISOString())});
+            }
+            else
+            {
+              openBackdrop(false);
+              Swal.fire({confirmButtonText: "אישור" , title:"לא עודכן אף שדה" ,icon:"info"});
+              return;
+            }
+        
+        }  
     }
-
-
+    fetch(`http://localhost:4000/luna/UpdateFult/${ID}/${token}`, {
+      method: "POST",
+      body: JSON.stringify(fultbody),
+      headers: {
+        "Content-type": "application/json; charset=UTF-8", // Indicates the content
+        "authorization" : "Bearer " + token
+      }
+    })
+      .then((res) => res.json())
+    Swal.fire({confirmButtonText: "אישור" , title :"!התקלה עודכנה בהצלחה" ,icon:"success"});     
+    setExpanded(false);
+    openBackdrop(false);
   };
   const IsCompanyFault = () =>{
     if (company === "אחר"){
@@ -229,7 +261,6 @@ export default function Fult({
                 .then((res) => res.json())
                 .then((json) => {
                   setFileflag(json.Filetype)
-                  console.log("res is " + json.Filetype)
                 }).catch((error) => { alert(error) });
 
             }} 
@@ -242,7 +273,7 @@ export default function Fult({
               })
                 .then((res) => res.json())
                 .then((json) => {
-                  setProviderFileFlag(json.Filetype)
+                  setProviderFileFlag(json.Filetype);
                 }).catch((error) => { alert(error) });
             }} 
             onClose = {()=>openProviderfileBackdrop(false)}/>
@@ -253,7 +284,7 @@ export default function Fult({
           <Typography component={'span'} className="topogragh">{fields.place}</Typography>
           <Typography component={'span'} className="topogragh">{fields.network}</Typography>
           <Typography component={'span'} className="topogragh">{fields.by}</Typography>
-          <Typography component={'span'} className="topogragh">{fields.status}</Typography>
+          <Typography component={'span'} className="topogragh">{fields.avanch_num}</Typography>
           <Typography component={'span'} className="topogragh">{fields.created_at}</Typography>
 
           <CardActions disableSpacing className={classes.action}>
@@ -267,15 +298,15 @@ export default function Fult({
             >
               <ExpandMoreIcon />
             </IconButton>
-            {!IsCompanyFault()&&<div className = "spacer"><span></span></div>}
+            
             <IconButton color="primary" onClick ={DownloadFiles}>
-              <Badge badgeContent={isfileexist ==="" ? 0:1} color="secondary">
+              <Badge badgeContent={isfileexist ==="" ? 0:1} color="secondary" variant="dot">
                 <AssignmentIcon />
               </Badge>
             </IconButton>
-
+            {!IsCompanyFault()&&<div className = "spacer"><span></span></div>}
               {IsCompanyFault()&&<IconButton color="primary" onClick ={DownloadProviderFiles}>
-              <Badge badgeContent={isProviderFileExist ==="" ? 0:1} color="secondary">
+              <Badge badgeContent={isProviderFileExist ==="" ? 0:1} color="secondary"  variant="dot">
                 <ListAltIcon />
               </Badge>
             </IconButton>}
@@ -311,7 +342,7 @@ export default function Fult({
                 </Typography>
 
                 <Typography component={'span'}>
-                  <div className={GetOperationStyle()}>
+                  {IsEditor&&(<div className={GetOperationStyle()}>
                     <IconButton onClick={handleEdit}>
                       <EditIcon style={{ color: "#1562aa" }} />
                     </IconButton>
@@ -334,7 +365,7 @@ export default function Fult({
                     {IsCompanyFault()&&<IconButton onClick = {OnUploadProviderFile}>
                       <PostAddIcon  style={{ color: "#1562aa" }} />
                     </IconButton>}
-                  </div>
+                  </div>)}
                 </Typography>
               </div>
             </ThemeProvider>

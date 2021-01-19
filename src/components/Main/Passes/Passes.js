@@ -16,7 +16,7 @@ var inputOptions = new Promise(function (resolve) {
 });
 
 
-export default function Passes({token}) {
+export default function Passes({token , IsEditor}) {
   const [isTechInfoModalOpen, setIsTechInfoModalOpen] = useState(false);
   const [selectedTech, setSelectedTech] = useState(null);
   const [posts, setPosts] = useState([]);
@@ -92,96 +92,97 @@ export default function Passes({token}) {
   };
 
 const onTechAdding = () =>{
-  Swal.mixin({
-    validationMessage: "שדה זה הוא חובה",
-    input: "text",
-    inputAttributes: {
-      required: true,
-    },
-    confirmButtonText: "הבא",
-    customClass: "Swal-wide",
-  })
-    .queue([
-      {
-        title: "הוספת טכנאי",
-        text: ":שם טכנאי",
+  if(IsEditor===true){
+    Swal.mixin({
+      validationMessage: "שדה זה הוא חובה",
+      input: "text",
+      inputAttributes: {
+        required: true,
       },
-      {
-        title: "הוספת טכנאי",
-        text: ":מספר פלאפון",
-      },
-      {
-        title: "הוספת טכנאי",
-        text: ':מספר ת"ז',
-      },
-      {
-        title: "הוספת טכנאי",
-        text: ":סוג רכב וצבע",
-      },
-      {
-        title: "הוספת טכנאי",
-        text: ":מספר רכב",
-      },
-      {
-        title: "הוספת טכנאי",
-        input: "radio",
-        inputOptions: inputOptions,
-        inputValidator: function (result) {
-          return new Promise(function (resolve, reject) {
-            if (result) {
-              resolve();
-            } else {
-              reject("נא לבחור חברת טכנאי");
-            }
-          });
-        },
-      },
-      {
-        title: "הוספת טכנאי",
-        text: ":אישור כניסה",
-      },
-    ])
-    .then((result) => {
-      if (result.value) {
-        let newTech = {
-          id:"",
-          name: result.value[0],
-          phoneNum: result.value[1],
-          numID: result.value[2],
-          car:result.value[3],
-          carNum: result.value[4],
-          imgUrl: result.value[5] ==="netcom" ? "netcom" : "binat",
-          passCode: result.value[6],
-          passExpdays :30
-        };
-        console.log("company is" + result.value[5])
-        console.log(newTech.imgUrl)
-        fetch(`http://localhost:4000/luna/AddTech/${token}`, {
-          method: "POST",
-          body: JSON.stringify(newTech),
-          headers: {
-            "Content-type": "application/json; charset=UTF-8", // Indicates the content
-          }
-        })
-          .then((res) => res.json())
-          .then((json) => {
-            newTech.id = json._id;//saving the database id has a parameter
-
-          });
-
-
-        newTech.imgUrl = result.value[5] ==="netcom" ? malam : binat;
-        let tempArr = [...posts];
-        tempArr.push(newTech);
-        setPosts(tempArr);
-        const answers = JSON.stringify(result.value);
-        Swal.fire({
-          icon: "success",
-          title: "!הטכנאי הוסף בהצלחה",
-          confirmButtonText: "סיים",
-        });
-      }
+      confirmButtonText: "הבא",
+      customClass: "Swal-wide",
     })
+      .queue([
+        {
+          title: "הוספת טכנאי",
+          text: ":שם טכנאי",
+        },
+        {
+          title: "הוספת טכנאי",
+          text: ":מספר פלאפון",
+        },
+        {
+          title: "הוספת טכנאי",
+          text: ':מספר ת"ז',
+        },
+        {
+          title: "הוספת טכנאי",
+          text: ":סוג רכב וצבע",
+        },
+        {
+          title: "הוספת טכנאי",
+          text: ":מספר רכב",
+        },
+        {
+          title: "הוספת טכנאי",
+          input: "radio",
+          inputOptions: inputOptions,
+          inputValidator: function (result) {
+            if(!result){
+              return "נא לבחור באחת מן האפשרויות שצויינו"
+            }
+          },
+        },
+        {
+          title: "הוספת טכנאי",
+          text: ":אישור כניסה",
+        },
+      ])
+      .then((result) => {
+        if (result.value) {
+          let newTech = {
+            id:"",
+            name: result.value[0],
+            phoneNum: result.value[1],
+            numID: result.value[2],
+            car:result.value[3],
+            carNum: result.value[4],
+            imgUrl: result.value[5] ==="netcom" ? "netcom" : "binat",
+            passCode: result.value[6],
+            passExpdays :30
+          };
+          console.log("company is" + result.value[5])
+          console.log(newTech.imgUrl)
+          fetch(`http://localhost:4000/luna/AddTech/${token}`, {
+            method: "POST",
+            body: JSON.stringify(newTech),
+            headers: {
+              "Content-type": "application/json; charset=UTF-8", // Indicates the content
+            }
+          })
+            .then((res) => res.json())
+            .then((json) => {
+              newTech.id = json._id;//saving the database id has a parameter
+  
+            });
+  
+  
+          newTech.imgUrl = result.value[5] ==="netcom" ? malam : binat;
+          let tempArr = [...posts];
+          tempArr.push(newTech);
+          setPosts(tempArr);
+          const answers = JSON.stringify(result.value);
+          Swal.fire({
+            icon: "success",
+            title: "!הטכנאי הוסף בהצלחה",
+            confirmButtonText: "סיים",
+          });
+        }
+      })
+  }
+  else{
+    Swal.fire({confirmButtonText: "אישור" , title:"למשתמש זה אין הרשאות עריכה" ,icon:"error"});
+  }
 };
 
 const onTechSubmit = async (techObj) => {
@@ -257,13 +258,13 @@ const onTechSubmit = async (techObj) => {
           ))
         )}
       </div>
-      <div
+      {IsEditor&&(<div
         className="fab"
         onClick={onTechAdding}
       >
         {" "}
         +{" "}
-      </div>
+      </div>)}
 
       {isTechInfoModalOpen && (
         <TechInfo
@@ -271,6 +272,7 @@ const onTechSubmit = async (techObj) => {
           onDelete={onTechDelete}
           onClose={() => setIsTechInfoModalOpen(false)}
           selectedTech={selectedTech}
+          IsEditor = {IsEditor}
         />
       )}
     </div>

@@ -6,43 +6,55 @@ export default function Uploadbackdrop({ onClose ,token , fualtid ,doneupload , 
   const [uploaded,setFiles] = useState('');
   const [nameoffiles,setfilename] = useState('');
   const [precent , setprogress] = useState(0);
+  const [isLoaded , setLoadedFlag] = useState(false);
+  const [iserror, seterror] = useState(false);
+  const [twicepresserror, settwicepresserror] = useState(false);
+  const [isAlreadyUploaded , setAlreadyuploadeded] = useState(false);
   const submit = async(e) => {
-    e.preventDefault();
-    const formData = new FormData();
-    formData.append('FualtFiles' ,uploaded);
-    let isprovider = ""
-    if(IsProviderFile === true){
-      isprovider ="yes"
+    if(isLoaded === true){
+      if(isAlreadyUploaded === false){
+        e.preventDefault();
+        const formData = new FormData();
+        formData.append('FualtFiles' ,uploaded);
+        let isprovider = ""
+        if(IsProviderFile === true){
+          isprovider ="yes"
+        }
+        else{
+          isprovider ="no"
+        }
+        try{
+          const res = await axios.post(`http://localhost:4000/luna/upload/${isprovider}/${fualtid}/${token}`, formData , {
+            headers:{
+              'Content-Type':'multipart/form-data',
+            },
+            onUploadProgress: ProgressEvent =>{
+              setprogress(parseInt(Math.round((ProgressEvent.loaded *100)/ProgressEvent.total)));
+            }
+            //clear progress
+          
+          });
+          setAlreadyuploadeded(true);
+        }
+        catch(err){
+          console.log(err);
+        };
+      }
+      else
+      {
+        settwicepresserror(true);
+      }
     }
     else{
-      isprovider ="no"
+      seterror(true);
     }
-    try{
-      const res = await axios.post(`http://localhost:4000/luna/upload/${isprovider}/${fualtid}/${token}`, formData , {
-        headers:{
-          'Content-Type':'multipart/form-data',
-        },
-        onUploadProgress: ProgressEvent =>{
-          setprogress(parseInt(Math.round((ProgressEvent.loaded *100)/ProgressEvent.total)));
-          setTimeout(() => {
-          setprogress(0);
-          doneupload()
-          },  4);
-        }
-        //clear progress
-        
-      });
-      
-    }
-    catch(err){
-      console.log(err);
-    };
-    
   };
 
   const onupload = e =>{
     setFiles(e.target.files[0]);
     setfilename(e.target.files[0].name);
+    setLoadedFlag(true);
+    seterror(false);
   };
     return (
         <div className="Modal">
@@ -56,11 +68,21 @@ export default function Uploadbackdrop({ onClose ,token , fualtid ,doneupload , 
             </div>
 
             <div className="Modal_form_item">
-            <Progressui props = {precent} value = {precent}/>
+            <Progressui props = {precent} value = {precent} loadingdone = {()=>{doneupload()}}/>
             </div>
             
-            <h3>{nameoffiles === ''? " בחר או גרור להעלאת קובץ " : " הקובץ שנבחר הינו  " + nameoffiles }</h3>
+            {!iserror && !twicepresserror&& <h3>{nameoffiles === ''? " בחר או גרור להעלאת קובץ " : " הקובץ שנבחר הינו  " + nameoffiles }</h3>}
+            {iserror && !twicepresserror&&
+                  <h4>
+                    לא נבחר קובץ להעלאה
+                  </h4>}
+
+                  {!iserror && twicepresserror&&
+                  <h4>
+                    כבר בוצעה העלאת קובץ לתקלה זו
+                  </h4>}
           </div>
+
           <div className="Modal_actions">
             <button onClick = {onClose}>סגירה</button>
             <button onClick = {submit}>העלאה</button>

@@ -18,6 +18,7 @@ import axios from "axios";
 import ListAltIcon from '@material-ui/icons/ListAlt';
 export default function Fult({
   token,
+  IsEditor,
   number,
   ID,
   place,
@@ -33,7 +34,8 @@ export default function Fult({
   LastChange,
  actions,
  filetype,
- providerfiletype
+ providerfiletype,
+ avanch_num 
 }) {
   const classes = useStyles();
   const [expanded, setExpanded] = useState(false);
@@ -54,6 +56,7 @@ export default function Fult({
     isclose:is_close,
     status: is_close ===true? "נפתרה":status,
     StatusColor: is_close === true ? "greenstatus" : "redstatus",
+    avanch_num : avanch_num
   }
 );
 const handleExpandClick = () => {
@@ -116,11 +119,8 @@ const Reopen = () =>{
         }
       })
         .then((res) => res.json())
-        .then((json) => {
-          console.log(json);
-          });
       setfields({...fields ,status:status , isclose:false});
-      Swal.fire({ icon: "success", title: "התקלה נפתחה",confirmButtonText: "אישור" });
+      Swal.fire({ icon: "success", title: "התקלה נפתחה מחדש",confirmButtonText: "אישור" });
     }
   });
 };
@@ -132,15 +132,23 @@ const IsCompanyFault = () =>{
     return true;
   }
 };
+
+const BorderColorByStatus = () =>{
+  if(fields.isclose===true)
+  {
+    return "cardForGreenStatus"
+  }
+  return "cardForRedStatus"
+}
   return (
         <div >
-      <Card className="card">
+      <Card className={BorderColorByStatus()}>
         <CardContent className={classes.cardcontant}>
           <Typography  component={'span'} className="topogragh"> {number}</Typography>
           <Typography  component={'span'} className="topogragh">{place}</Typography>
           <Typography  component={'span'} className="topogragh">{network}</Typography>
           <Typography  component={'span'} className="topogragh">{createdby}</Typography>
-          <Typography  component={'span'} className="topogragh">{fields.status}</Typography>
+          <Typography  component={'span'} className="topogragh">{avanch_num}</Typography>
           <Typography  component={'span'} className="topogragh">{createdat}</Typography>
 
           <CardActions disableSpacing className={classes.action}>
@@ -154,20 +162,18 @@ const IsCompanyFault = () =>{
             >
               <ExpandMoreIcon />
             </IconButton>
-            {!IsCompanyFault()&&<div className = "spacer"><span></span></div>}
+      
             <IconButton color="primary" onClick = {DownloadFiles}>
-              <Badge badgeContent={isfileexist ==="" ? 0:1} color="primary" variant = "dot">
+              <Badge badgeContent={isfileexist ==="" ? 0:1} color="secondary" variant = "dot">
                 <AssignmentIcon />
               </Badge>
             </IconButton>
-            
+            {!IsCompanyFault()&&<div className = "spacer"><span></span></div>}
             {IsCompanyFault()&&<IconButton color="primary" onClick ={DownloadProviderFiles}>
-              <Badge badgeContent={isProviderFileExist ==="" ? 0:1} color="primary" variant = "dot">
+              <Badge badgeContent={isProviderFileExist ==="" ? 0:1} color="secondary" variant = "dot">
                 <ListAltIcon />
               </Badge>
             </IconButton>}
-            {fields.isclose===true? <div className="greenstatus"></div>:<div className="redstatus"></div>}
-            
           </CardActions>
         </CardContent>
         <Collapse in={expanded} timeout="auto" unmountOnExit>
@@ -199,20 +205,20 @@ const IsCompanyFault = () =>{
                   <span className = "topogragh_info"> {fields.last_changed}</span>
                 </Typography>
                 <Typography component={'span'} >
-                  <div className="operation_holder">
+                  {IsEditor&&(<div className="operation_holder">
                   <IconButton onClick={()=>{ 
                       setExpanded(false);
                       onDelete();}}>
                       <DeleteIcon style={{ color: "#1562aa" }} />
                     </IconButton>
-                    {is_close &&                     
+                    {fields.isclose &&                     
                     <IconButton onClick={()=>{ 
                       setExpanded(false);
                       Reopen();}}>
                       <RestorePageIcon style={{ color: "#1562aa" }} />
                     </IconButton>}
 
-                  </div>
+                  </div>)}
                 </Typography>
               </div>
             </ThemeProvider>

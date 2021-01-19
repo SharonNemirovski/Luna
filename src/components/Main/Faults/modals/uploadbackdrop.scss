@@ -18,7 +18,7 @@
     border-radius: 8px;
     height: 360px;
     width: 450px;
-    margin-top: 10%;
+    align-self: center;
     padding: 10px;
 
     img {
@@ -30,7 +30,15 @@
       flex-grow: 1;
       flex-direction: column;
     }
-
+    h3 {
+      font-size: 17px;
+    }
+    h4 {
+      font-size: 17px;
+      display: rtl;
+      color: #ec2e2e;
+      animation: shake 0.45s cubic-bezier(0.15, 0.06, 0.19, 0.57) both;
+    }
     .Modal_actions {
       padding-top: 1px;
       button {
@@ -105,4 +113,27 @@ form button:active {
 .progresscircle {
   margin-top: 8px;
   margin-bottom: 5px;
+}
+
+@keyframes shake {
+  10%,
+  90% {
+    transform: translate3d(-1px, 0, 0);
+  }
+
+  20%,
+  80% {
+    transform: translate3d(2px, 0, 0);
+  }
+
+  30%,
+  50%,
+  70% {
+    transform: translate3d(-4px, 0, 0);
+  }
+
+  40%,
+  60% {
+    transform: translate3d(4px, 0, 0);
+  }
 }

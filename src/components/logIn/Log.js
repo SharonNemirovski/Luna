@@ -38,7 +38,7 @@ export default function LogIn({ onconnect }) {
           setbadpass(false);
           setbadpass(true);
         } else {
-          onconnect(json.token);
+          onconnect(json.token , json.IsEditor);
         }
       });
   };

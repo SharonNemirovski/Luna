@@ -6,8 +6,9 @@ import edit from "../../../../assets/edit.png";
 export default function Backdrop({ onClose, onEdit ,company }) {
   const [status_value, setValue] = useState("");
   const [tech_name, setname] = useState("");
+  const [avnachNum, setNum] = useState("");
   const onSubmit = () => {
-    onEdit(status_value , tech_name);
+    onEdit(status_value , tech_name,avnachNum);
   };
 
   const IsCompanyFault = () =>{
@@ -29,6 +30,13 @@ export default function Backdrop({ onClose, onEdit ,company }) {
               label="לחצ\י לעדכון"
             />
             <h3>עדכנ\י סטטוס התקלה</h3>
+          </div>
+          <div className="BackDropModal_form_item">
+            <TextField
+              onChange={(e) => setNum(e.target.value)}
+              label="לחצ\י לעדכון"
+            />
+            <h3>עדכנ\י מספר אבנ"ח\תקלה</h3>
           </div>
           {IsCompanyFault()&& 
           (<div className="BackDropModal_form_item">

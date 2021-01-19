@@ -1,6 +1,6 @@
 import React from 'react'
 import { Redirect, Route } from "react-router-dom";
-function ProtectedRoute({isAuth:isAuth , component:Component , token,disconnecting , ...rest}) {
+function ProtectedRoute({isAuth:isAuth , component:Component ,IsEditor, token,disconnecting , ...rest}) {
     const handledisconnect = () =>{
         disconnecting();
     }
@@ -10,7 +10,7 @@ function ProtectedRoute({isAuth:isAuth , component:Component , token,disconnecti
          {...rest} 
         render = {(props)=>{
             if(isAuth){
-                return <Component {...props } disconnect = {handledisconnect} token = {token}/>
+                return <Component {...props } disconnect = {handledisconnect} IsEditor ={IsEditor} token = {token}/>
             }
             else
             {

@@ -11,13 +11,14 @@ const useStyles = makeStyles((theme) => ({
     },
   },
 }));
-
+const Swal = require("sweetalert2");
 export default function TechInfo({
   isEditModeSet = false,
   selectedTech,
   onClose,
   onDelete,
   onSave,
+  IsEditor
 }) {
   const [isEditMode, setIsEditMode] = useState(isEditModeSet);
   const {
@@ -83,11 +84,11 @@ export default function TechInfo({
   };
 
   const onSubmit = () => {
-    if (isEditMode) {
-      onSave(techInfo);
-      return;
-    }
-    setIsEditMode((prevValue) => !prevValue);
+      if (isEditMode) {
+        onSave(techInfo);
+        return;
+      }
+      setIsEditMode((prevValue) => !prevValue);
   };
 
   return (
@@ -168,8 +169,8 @@ export default function TechInfo({
         </div>
         <div className="TechInfoModal_actions">
           <button onClick={onClose}>סגור</button>
-          <button onClick={() => onDelete(id)}>מחיקה</button>
-          <button onClick={onSubmit}> {isEditMode ? 'שמירה' : 'עריכה'} </button>
+          {IsEditor&&(<button onClick={() => {onDelete(id)}}>מחיקה </button>)}
+          {IsEditor&&(<button onClick={onSubmit}> {isEditMode ? 'שמירה' : 'עריכה'} </button>)}
         </div>
       </div>
     </div>

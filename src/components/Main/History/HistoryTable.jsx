@@ -12,7 +12,7 @@ import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 
 
-export default function HistoryTable({token}) {
+export default function HistoryTable({token , IsEditor}) {
   const classes = useStyles();
   const [fults, setFults] = useState([]);
   const pharseDate = (oldDate) =>{
@@ -57,7 +57,8 @@ export default function HistoryTable({token}) {
           LastChange:updatetime,
           Actions: entity.actions,
           filetype:entity.filetype,
-          providerfiletype:entity.providertypefile
+          providerfiletype:entity.providertypefile,
+          avanch_num:entity.avanch_num
         };
         temp_arry.push(tempFult);
       });
@@ -65,7 +66,6 @@ export default function HistoryTable({token}) {
       setFultssearch(temp_arry);
     })();
   }, []);
-
   const onDeleteFult = (db_id) => {
     Swal.fire({
       icon: "error",
@@ -79,24 +79,21 @@ export default function HistoryTable({token}) {
         fetch(`http://localhost:4000/luna/DeleteFult/${db_id}/${token}`, {
           method: "DELETE",
           headers: {
-            "Content-type": "application/json; charset=UTF-8", // Indicates the content
-            "authorization" : "Bearer " + token
-          },
-        }).then((res) => res.json());
-        setFults([]);
-        (async () => {
-          const res = await fetch(`http://localhost:4000/luna/getAllFults/${token}`,{
+            "Content-type": "application/json" // Indicates the content"
+          }
+        }).then((async () => {
+          const res = await fetch(`http://localhost:4000/luna/getFults/${token}`,      
+          {
             headers: {
-              "Content-type": "application/json; charset=UTF-8", // Indicates the content
-            }});
-          const data = await res.json();
+            "Content-type": "application/json", // Indicates the content
+          }});
+          let data = [];
+          setFults([])
+          data = await res.json();
           let temp_arry = [];
           data.map((entity) => {
-            let faultime = entity.created_at;
-            faultime = faultime.split("T");
-            faultime = faultime[0].replace("-", "/").replace("-", "/");
-            faultime = faultime.split("/");
-            const time = faultime[2] + "/" + faultime[1] + "/" + faultime[0];
+            const time = pharseDate(entity.created_at);
+            const updatetime = pharseDate(entity.last_changed);
             let tempFult = {
               Place: entity.place,
               By: entity.by,
@@ -109,20 +106,22 @@ export default function HistoryTable({token}) {
               Tech: entity.emp,
               Id: entity._id,
               Is_close: entity.closed,
-              LastChange:entity.last_changed
+              LastChange:updatetime,
+              filetype:entity.filetype,
+              providerfiletype:entity.providertypefile,
+              avanch_num :entity.avanch_num
             };
             temp_arry.push(tempFult);
           });
           setFults(temp_arry);
-        })();
-
-        Swal.fire({ icon: "success", title: "התקלה נמחקה" });
+          Swal.fire({ icon: "success", title: " התקלה נמחקה בהצלחה!" ,confirmButtonText: "אישור"});
+        }));     
       }
     });
   };
-
   const search = (pattern) => {
     const search_p = pattern.target.value;
+    let temp_arry = []
     let temp_arr = []
     switch (searchBY) {
       case "network":
@@ -146,7 +145,15 @@ export default function HistoryTable({token}) {
         setFults(temp_arr);
         break;
 
+      case "avnach":
+        temp_arr = fults_search.filter((item) => {
+          return item.avanch_num.includes(search_p);
+        });
+        setFults(temp_arr);
+        break;
+
       default:
+        break;
     }
   };
 
@@ -170,8 +177,9 @@ export default function HistoryTable({token}) {
               label="חפש לפי"
             >
               <MenuItem value={"place"}>מיקום</MenuItem>
-              <MenuItem value={"network"}>רשת</MenuItem>
               <MenuItem value={"created_at"}>תאריך</MenuItem>
+              <MenuItem value={"network"}>רשת</MenuItem>
+              <MenuItem value={"avnach"}>מספר אבנ"ח/תקלה</MenuItem>
             </Select>
           </FormControl>
 
@@ -196,7 +204,7 @@ export default function HistoryTable({token}) {
             <Fult
               token = {token}
               key={ fults.findIndex((element) => element === entity)+1}
-              number={ fults.findIndex((element) => element === entity)}
+              number={ fults.findIndex((element) => element === entity)+1}
               place={entity.Place}
               createdby={entity.By}
               createdat={entity.time}
@@ -211,6 +219,8 @@ export default function HistoryTable({token}) {
               actions = {entity.Actions}
               filetype = {entity.filetype}
               providerfiletype = {entity.providerfiletype}
+              avanch_num = {entity.avanch_num}
+              IsEditor = {IsEditor}
               onDelete={() => {
                 onDeleteFult(entity.Id);
               }}

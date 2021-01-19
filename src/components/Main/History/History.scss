@@ -7,12 +7,20 @@
   box-shadow: 1px 3px 5px rgba(0, 0, 0, 0.3);
   border: 1px solid rgba(0, 0, 0, 0.171);
 }
-.card {
+.cardForGreenStatus {
   display: flex;
   flex-direction: column;
   border-radius: 10px;
-  box-shadow: 1px 3px 5px rgba(0, 0, 0, 0.3);
-  border: 1px solid rgba(0, 0, 0, 0.171);
+  box-shadow: 4px 3px 5px rgb(59, 228, 163);
+  border: 2px solid rgb(76, 235, 124);
+  margin: 3px;
+}
+.cardForRedStatus {
+  display: flex;
+  flex-direction: column;
+  border-radius: 10px;
+  box-shadow: 4px 3px 5px rgb(218, 83, 83);
+  border: 2px solid rgb(235, 98, 98);
   margin: 3px;
 }
 .expend_fult {
@@ -74,23 +82,6 @@
 .formControl {
   grid-column: 5/6;
   border-color: #1562aa;
-}
-
-.redstatus {
-  background-color: rgb(201, 35, 35);
-  color: rgb(201, 35, 35);
-  border-radius: 50%;
-  margin-right: 8px;
-  height: 20px;
-  width: 20px;
-}
-.greenstatus {
-  color: rgb(32, 207, 61);
-  background-color: rgb(32, 207, 61);
-  border-radius: 50%;
-  margin-right: 8px;
-  height: 20px;
-  width: 20px;
 }
 
 //fults table by parent to child order

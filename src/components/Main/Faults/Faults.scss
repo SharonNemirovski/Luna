@@ -16,8 +16,8 @@ tr {
   display: flex;
   flex-direction: column;
   border-radius: 10px;
-  box-shadow: 1px 3px 5px rgba(0, 0, 0, 0.3);
-  border: 1px solid rgba(0, 0, 0, 0.171);
+  box-shadow: 1px 3px 5px rgba(241, 48, 48, 0.966);
+  border: 1px solid rgba(248, 48, 48, 0.171);
   margin: 3px;
 }
 .expend_fult {
@@ -79,6 +79,21 @@ tr {
   margin-left: 10px;
   direction: rtl;
   max-width: 300px;
+  /* These are technically the same, but use both */
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+
+  -ms-word-break: break-all;
+  /* This is the dangerous one in WebKit, as it breaks things wherever */
+  word-break: break-all;
+  /* Instead use this non-standard one: */
+  word-break: break-word;
+
+  /* Adds a hyphen where the word breaks, if supported (No Blink) */
+  -ms-hyphens: auto;
+  -moz-hyphens: auto;
+  -webkit-hyphens: auto;
+  hyphens: auto;
 }
 
 //parent fultstable holder : holds : table , tabletopics , button holder
@@ -133,6 +148,8 @@ tr {
   width: 100%;
   margin-bottom: 5px;
   margin-top: 5px;
+  padding-left: 95px;
+  padding-right: 95px;
 }
 .operation_hold_for_pluga {
   width: 100%;
@@ -152,11 +169,13 @@ tr {
   width: 100%;
   color: whitesmoke;
   background-color: rgb(62, 145, 247);
-  border-radius: 25px;
+  border-radius: 30px;
   border-color: transparent;
   cursor: pointer;
   transition: all 0.1s ease-in-out;
   font-size: 19px;
+  text-align: center;
+  padding-top: 8px;
 }
 .addfultbutton:hover {
   box-shadow: 0 6px 14px 0 #666;

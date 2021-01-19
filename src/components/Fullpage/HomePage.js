@@ -5,14 +5,14 @@ import "./Homepage.scss";
 import SideNav from "../SideNav/SideNav"
 import Main from '../Main/Main';
 
-function HomePage({token , disconnect}) {
+function HomePage({token , disconnect , IsEditor}) {
   const handledissconnect = () =>{
   disconnect();
   };
   return (
     <div className="HomePage">
       <SideNav ondisconnect = {handledissconnect}/>
-      <Main token = {token}/>
+      <Main token = {token} IsEditor={IsEditor}/>
     </div>
   );
 }

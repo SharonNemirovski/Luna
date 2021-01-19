@@ -10,6 +10,7 @@ import {useHistory, Redirect, Route, Switch } from "react-router-dom";
 function App() {
   const [isLoged , setLogin] = useState(false);
   const [token , setToken] = useState(true);
+  const [IsEditor , setprivilige] = useState(false);
   const  history = useHistory();
   return (
     <div className="App">
@@ -18,14 +19,15 @@ function App() {
         path="/login" 
         render = {(props) => {
           return  <LogIn 
-          {...props} onconnect = {(Token)=>{
+          {...props} onconnect = {(Token,ISeditor)=>{
             setLogin(true);
             setToken(Token);
+            setprivilige(ISeditor)
             history.push("/Main");
           }}/>    
         }} 
         />
-        <ProtectedRoute path="/Main" token = {token} component ={HomePage} disconnecting = {() => {setLogin(false)}} isAuth = {isLoged}/>
+        <ProtectedRoute path="/Main" token = {token} IsEditor ={IsEditor} component ={HomePage} disconnecting = {() => {setLogin(false)}} isAuth = {isLoged}/>
         <Redirect to="/login"/>
       </Switch>
     </div>
