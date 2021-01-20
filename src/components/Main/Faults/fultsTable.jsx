@@ -355,7 +355,7 @@ export default function FultsTable({token,IsEditor}) {
           
           <div className="button_holder">
           {IsEditor&&(<div  className="addfultbutton" onClick={AddFult}>
-              הוסף תקלה
+              הוסף  תקלה
             </div>)}
           </div>
         </div>
