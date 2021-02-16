@@ -16,6 +16,12 @@ import AssignmentIcon from "@material-ui/icons/Assignment";
 import RestorePageIcon from '@material-ui/icons/RestorePage';
 import axios from "axios";
 import ListAltIcon from '@material-ui/icons/ListAlt';
+import Tooltip from '@material-ui/core/Tooltip';
+import { green} from '@material-ui/core/colors';
+import { createMuiTheme } from '@material-ui/core/styles';
+const plugatext = "לחץ לצפייה בשרטוט";
+const companytext = "לחץ לצפייה בטפסי הלקוח";
+
 export default function Fult({
   token,
   IsEditor,
@@ -35,9 +41,21 @@ export default function Fult({
  actions,
  filetype,
  providerfiletype,
- avanch_num 
+ avanch_num,
+ lastUpdateBy,
+ future_actions,
+ hold_time,
+ closed_at,
+ pre_status
 }) {
   const classes = useStyles();
+  const innerTheme = createMuiTheme({
+    palette: {
+      primary: {
+        main: green[400],
+      },
+    },
+  });
   const [expanded, setExpanded] = useState(false);
   const [isfileexist , setFileflag] = useState(filetype);
   const [isProviderFileExist , setProviderFileFlag] = useState(providerfiletype)
@@ -53,8 +71,9 @@ export default function Fult({
   const Swal = require("sweetalert2");
   const [fields , setfields] = useState({
     last_changed:LastChange,
+    lastUpdateBy:lastUpdateBy,
     isclose:is_close,
-    status: is_close ===true? "נפתרה":status,
+    status: status,
     StatusColor: is_close === true ? "greenstatus" : "redstatus",
     avanch_num : avanch_num
   }
@@ -99,9 +118,9 @@ const DownloadProviderFiles = () =>{
               window.open(objectUrl)
           }).catch((error) => { alert(error) })
         }
-}
-  
+}  
 const Reopen = () =>{
+  let newtime ="";
   Swal.fire({
     icon: "info",
     title: "?פתיחה מחדש",
@@ -119,7 +138,10 @@ const Reopen = () =>{
         }
       })
         .then((res) => res.json())
-      setfields({...fields ,status:status , isclose:false});
+        .then((res) => {newtime = res.newtime})
+      setfields({...fields ,status:status , isclose:false ,lastUpdateBy:"תקלה זו לא עודכנה מעולם" });
+      hold_time =0;
+      is_close = false;
       Swal.fire({ icon: "success", title: "התקלה נפתחה מחדש",confirmButtonText: "אישור" });
     }
   });
@@ -133,16 +155,27 @@ const IsCompanyFault = () =>{
   }
 };
 
-const BorderColorByStatus = () =>{
-  if(fields.isclose===true)
+const GetBorderByHoldTime = () =>{
+  if(fields.is_close===true)
   {
     return "cardForGreenStatus"
   }
-  return "cardForRedStatus"
+  if(hold_time<=3){
+    return "faultcard"
+  }
+  if((hold_time>3)&&(hold_time<=7)){
+    return "faultcard fault-hold"
+  }
+  if((hold_time>7)&&(hold_time<=15)){
+    return "faultcard fault-warning"
+  }
+  if(hold_time>15){
+    return "faultcard fault-critical"
+  }
 }
   return (
         <div >
-      <Card className={BorderColorByStatus()}>
+      <Card className={GetBorderByHoldTime()}>
         <CardContent className={classes.cardcontant}>
           <Typography  component={'span'} className="topogragh"> {number}</Typography>
           <Typography  component={'span'} className="topogragh">{place}</Typography>
@@ -162,17 +195,25 @@ const BorderColorByStatus = () =>{
             >
               <ExpandMoreIcon />
             </IconButton>
-      
-            <IconButton color="primary" onClick = {DownloadFiles}>
-              <Badge badgeContent={isfileexist ==="" ? 0:1} color="secondary" variant = "dot">
+            <IconButton color="primary" onClick ={DownloadFiles}>
+            <ThemeProvider theme={innerTheme}>
+            <Tooltip disableFocusListener disableTouchListener title={company === "אחר" ? plugatext : companytext}  >
+            <Badge badgeContent={1} color={isfileexist ==="" ? "secondary":"primary"} variant="dot">
                 <AssignmentIcon />
               </Badge>
+              </Tooltip>
+            </ThemeProvider>
             </IconButton>
+
             {!IsCompanyFault()&&<div className = "spacer"><span></span></div>}
             {IsCompanyFault()&&<IconButton color="primary" onClick ={DownloadProviderFiles}>
-              <Badge badgeContent={isProviderFileExist ==="" ? 0:1} color="secondary" variant = "dot">
+            <ThemeProvider theme={innerTheme}>
+            <Tooltip disableFocusListener disableTouchListener title="לחץ לצפיה בתעודת ספק"  >
+            <Badge badgeContent={1} color={isProviderFileExist ==="" ? "secondary":"primary"} variant = "dot">
                 <ListAltIcon />
               </Badge>
+              </Tooltip>
+              </ThemeProvider>
             </IconButton>}
           </CardActions>
         </CardContent>
@@ -190,6 +231,16 @@ const BorderColorByStatus = () =>{
                   תהליכים שבוצעו:
                   <span className = "topogragh_info">{actions}</span>
                 </Typography>
+
+                <Typography component={'span'} className="topogragh_status">
+                  תהליכים שנדרש לבצע:
+                  <span className = "topogragh_info">{future_actions}</span>
+                </Typography>
+
+                <Typography  component={'span'} className="topogragh_status">
+             סטטוס קודם:
+                  <span className="topogragh_info">{pre_status}</span>
+                </Typography>
                 <Typography  component={'span'} className="topogragh_status">
                   סטטוס:
                   <span className="topogragh_info">{status}</span>
@@ -204,19 +255,42 @@ const BorderColorByStatus = () =>{
                   עודכן לאחרונה בתאריך:
                   <span className = "topogragh_info"> {fields.last_changed}</span>
                 </Typography>
+
+                {is_close&&(
+                <Typography component={'span'} className="topogragh_status">
+                  נסגרה בתאריך:
+                  <span className = "topogragh_info">{closed_at}</span>
+                </Typography>)}
+
+                <Typography component={'span'} className="topogragh_status">
+                  עודכן לאחרונה על ידי:
+                  <span className = "topogragh_info">{fields.lastUpdateBy}</span>
+                </Typography>
                 <Typography component={'span'} >
                   {IsEditor&&(<div className="operation_holder">
-                  <IconButton onClick={()=>{ 
-                      setExpanded(false);
-                      onDelete();}}>
-                      <DeleteIcon style={{ color: "#1562aa" }} />
-                    </IconButton>
-                    {fields.isclose &&                     
-                    <IconButton onClick={()=>{ 
+
+ 
+                  <Tooltip disableFocusListener disableTouchListener title="לחץ למחיקת התקלה"  >
+                        <div className = "iconButton"
+                          onClick={()=>{ 
+                          setExpanded(false);
+                          onDelete();}}
+                        >
+                          <h1>מחיקת תקלה</h1>
+                          <DeleteIcon/>
+                        </div>
+                        </Tooltip>
+
+
+                    {fields.isclose && 
+                    <Tooltip disableFocusListener disableTouchListener title="לחץ לפתיחת התקלה מחדש"  >
+                    <div className = "iconButton" onClick={()=>{ 
                       setExpanded(false);
                       Reopen();}}>
-                      <RestorePageIcon style={{ color: "#1562aa" }} />
-                    </IconButton>}
+                        <h1>פתיחה מחדש</h1>
+                        <RestorePageIcon style={{ color: "#1562aa" }} />
+                    </div>
+                    </Tooltip>}
 
                   </div>)}
                 </Typography>

@@ -7,8 +7,13 @@ export default function Backdrop({ onClose, onEdit ,company }) {
   const [status_value, setValue] = useState("");
   const [tech_name, setname] = useState("");
   const [avnachNum, setNum] = useState("");
+  const [user, setusername] = useState("");
+  const [inputError , setError] = useState(false);
   const onSubmit = () => {
-    onEdit(status_value , tech_name,avnachNum);
+    if(user !== "")
+      onEdit(status_value , tech_name,avnachNum , user);
+    else
+      setError(true);
   };
 
   const IsCompanyFault = () =>{
@@ -46,6 +51,15 @@ export default function Backdrop({ onClose, onEdit ,company }) {
             />
             <h3>שם הטכנאי שיוצא לתקלה</h3>
           </div>)}
+          <div className="BackDropModal_form_item">
+            <TextField
+              error={inputError}
+              onChange={(e) => setusername(e.target.value)}
+              label="לחצ\י לעדכון"
+            />
+            {inputError&&<h1>שדה זה הוא חובה</h1>}
+            {!inputError&&<h3>שם הטכנאי המעדכן</h3>}
+          </div>
         </div>
         <div className="BackDropModal_actions">
           <button onClick={onClose}>סגור</button>

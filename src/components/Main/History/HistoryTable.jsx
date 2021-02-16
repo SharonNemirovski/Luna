@@ -10,14 +10,18 @@ import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
-
+import GenFile from "./modals/GenFile"
 
 export default function HistoryTable({token , IsEditor}) {
   const classes = useStyles();
   const [fults, setFults] = useState([]);
+  const [IsSummery , setSumerry] = useState(false);
   const pharseDate = (oldDate) =>{
+    if ((oldDate)===""){
+      return ""
+    }
     if (oldDate !== "סטטוס לא עודכן מעולם"){
-      let newtime = oldDate.split("T");
+      let newtime = oldDate.split("T" );
       newtime = newtime[0].replace("-", "/").replace("-", "/");
       newtime = newtime.split("/");
       return newtime[2] + "/" + newtime[1] + "/" + newtime[0];
@@ -41,6 +45,7 @@ export default function HistoryTable({token , IsEditor}) {
       data.map((entity) => {
         const time = pharseDate(entity.created_at);
         const updatetime = pharseDate(entity.last_changed);
+        const closedate = pharseDate(entity.closed_at)
         let tempFult = {
           Num: data.findIndex((element) => element === entity) + 1,
           key: entity.id,
@@ -58,7 +63,13 @@ export default function HistoryTable({token , IsEditor}) {
           Actions: entity.actions,
           filetype:entity.filetype,
           providerfiletype:entity.providertypefile,
-          avanch_num:entity.avanch_num
+          avanch_num:entity.avanch_num,
+          lastUpdateBy : entity.lastUpdateBy,
+          future_actions : entity.future_actions,
+          hold_time: entity.hold_time,
+          closed_at:closedate,
+          pre_status:entity.pre_status
+          
         };
         temp_arry.push(tempFult);
       });
@@ -94,6 +105,7 @@ export default function HistoryTable({token , IsEditor}) {
           data.map((entity) => {
             const time = pharseDate(entity.created_at);
             const updatetime = pharseDate(entity.last_changed);
+            const closedate = pharseDate(entity.closed_at)
             let tempFult = {
               Place: entity.place,
               By: entity.by,
@@ -109,19 +121,23 @@ export default function HistoryTable({token , IsEditor}) {
               LastChange:updatetime,
               filetype:entity.filetype,
               providerfiletype:entity.providertypefile,
-              avanch_num :entity.avanch_num
+              avanch_num :entity.avanch_num,
+              lastUpdateBy : entity.lastUpdateBy,
+              future_actions : entity.future_actions,
+              hold_time: entity.hold_time,
+              closed_at:closedate,
+              pre_status:entity.pre_status
             };
             temp_arry.push(tempFult);
           });
           setFults(temp_arry);
-          Swal.fire({ icon: "success", title: " התקלה נמחקה בהצלחה!" ,confirmButtonText: "אישור"});
+          Swal.fire({ icon: "success", title: "!התקלה נמחקה בהצלחה" ,confirmButtonText: "אישור"});
         }));     
       }
     });
   };
   const search = (pattern) => {
     const search_p = pattern.target.value;
-    let temp_arry = []
     let temp_arr = []
     switch (searchBY) {
       case "network":
@@ -153,6 +169,14 @@ export default function HistoryTable({token , IsEditor}) {
         break;
 
       default:
+        temp_arr = fults_search.filter((item) => {
+          return item.avanch_num.includes(search_p)
+          ||item.Place.includes(search_p)
+          ||item.time.includes(search_p)
+          ||item.Network.includes(search_p)
+          ||item.By.includes(search_p);
+        });
+        setFults(temp_arr);
         break;
     }
   };
@@ -163,7 +187,8 @@ export default function HistoryTable({token , IsEditor}) {
   };
   return (
 
-      <div className="Historyparenttable">
+      <div className="Holderparenttable">
+        {IsSummery && (<GenFile token = {token} onClose ={()=>{setSumerry(false)}}/>)}
         <div className="TopHistoryBar">
           <FormControl required variant="outlined" className="formControl">
             <InputLabel id="demo-simple-select-outlined-label">
@@ -221,11 +246,21 @@ export default function HistoryTable({token , IsEditor}) {
               providerfiletype = {entity.providerfiletype}
               avanch_num = {entity.avanch_num}
               IsEditor = {IsEditor}
+              lastUpdateBy= {entity.lastUpdateBy}
+              future_actions= {entity.future_actions}
+              hold_time = {entity.hold_time}
+              closed_at = {entity.closed_at}
+              pre_status = {entity.pre_status}
               onDelete={() => {
                 onDeleteFult(entity.Id);
               }}
             />
           ))}
+        </div>
+        <div className = "GenButHolder ">
+        <div className = "generateButton" onClick = {()=>{setSumerry(true)}}>
+              לחץ לסיכום תקלות
+          </div>
         </div>
       </div>
   );

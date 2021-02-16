@@ -1,0 +1,30 @@
+.Recent {
+  height: 100%;
+  box-shadow: 1px 3px 5px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(0, 0, 0, 0.171);
+  background-color: #dbe5e3;
+}
+.RecentCardHolder {
+  height: 100%;
+  background-color: #dbe5e3;
+}
+
+.Recentparenttable {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  padding: 10px;
+  background-color: #dbe5e3;
+}
+.Recenttable {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+
+  overflow-y: scroll;
+}
+.Recenttable::-webkit-scrollbar {
+  width: 0 !important;
+}

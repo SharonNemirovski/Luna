@@ -18,44 +18,52 @@ export default function FultsTable({token,IsEditor}) {
     return "סטטוס לא עודכן מעולם";
   };
   useEffect(() => {
-    (async () => {
-      const res = await fetch(`http://localhost:4000/luna/getFults/${token}`,      
-      {
-        headers: {
-        "Content-type": "application/json", // Indicates the content
-      }});
-      let data = [];
-      data = await res.json();
-      let temp_arry = [...fults];
-      data.map((entity) => {
-        const time = pharseDate(entity.created_at);
-        const updatetime = pharseDate(entity.last_changed);
-        let tempFult = {
-          Place: entity.place,
-          By: entity.by,
-          time: time,
-          Network: entity.network,
-          Description: entity.description,
-          Company:entity.company,
-          Actions:entity.actions,
-          Status: entity.status,
-          Tech: entity.emp,
-          Id: entity._id,
-          Is_close: entity.closed,
-          LastChange:updatetime,
-          filetype:entity.filetype,
-          providerfiletype:entity.providertypefile,
-          avanch_num :entity.avanch_num
-        };
-        temp_arry.push(tempFult);
-      });
-      setFults(temp_arry);
-    })();
-  }, []);
-
+    try{
+      (async () => {
+        const res = await fetch(`http://localhost:4000/luna/getFults/${token}`,      
+        {
+          headers: {
+          "Content-type": "application/json", // Indicates the content
+        }});
+        let data = [];
+        data = await res.json();
+        let temp_arry = [...fults];
+        data.map((entity) => {
+          const time = pharseDate(entity.created_at);
+          const updatetime = pharseDate(entity.last_changed);
+          let tempFult = {
+            Place: entity.place,
+            By: entity.by,
+            time: time,
+            Network: entity.network,
+            Description: entity.description,
+            Company:entity.company,
+            Actions:entity.actions,
+            Status: entity.status,
+            Tech: entity.emp,
+            Id: entity._id,
+            Is_close: entity.closed,
+            LastChange:updatetime,
+            filetype:entity.filetype,
+            providerfiletype:entity.providertypefile,
+            avanch_num :entity.avanch_num,
+            hold_time :entity.hold_time,
+            lastUpdateBy : entity.lastUpdateBy,
+            future_actions : entity.future_actions,
+            pre_status : entity.pre_status
+          };
+          temp_arry.push(tempFult);
+        });
+        setFults(temp_arry);
+      })();
+    }
+    catch
+    {
+      alert("server error");
+    }}, []);
   const AddFult = () => {
+    try{
       Swal.mixin({
-        input: "text",
         inputAttributes: {
           required: true,
         },
@@ -67,11 +75,63 @@ export default function FultsTable({token,IsEditor}) {
         .queue([
           {
             title: "ציין את מיקום התקלה",
+            input: "text",
           },
           {
-            title: ":סיווג הרשת",
-            text: "שם הרשת לה שייך הרכיב",
-            
+            html: `
+            <div 
+            style = 
+            "
+            display : flex ;
+            flex-direction: column;
+            width: 100%;
+            hight:auto;
+            align-self : center;
+            align-items: center;
+            ">
+            <h1 class="form-label select-label">לחץ ובחר את שם הרשת</h1>
+              <select 
+              id="mySelectElement" 
+              style="
+              font-weight: 700;
+              color: #444;
+              padding-left: 8px;
+              width: 50%;
+              height: 40px;
+              margin-top:10px;
+              box-sizing: border-box;
+              border: 2.5px solid rgb(62, 145, 247);
+              border-radius: .7em;
+              cursor: pointer;
+              direction: rtl;
+              unicode-bidi: bidi-override;
+              text-align: right;
+              outline: 1px solid rgba(255,255,255,1);
+              ">
+               <option value="נהר איתן">נהר איתן</option>
+                <option value="סודי ביותר">סודי ביותר</option> 
+                <option value="ROIP">ROIP</option>
+                <option value=טקטית">טקטית</option>
+                <option value="זוהרים">זוהרים</option>
+                <option value="DCNET RED">DCNET RED</option>
+                <option value="DCNET BLK">DCNET BLK</option>
+                <option value="שחורה זהב">שחורה זהב</option>
+                <option value="שחורה כסף">שחורה כסף</option>
+                <option value="תקשל">תקשל</option>
+                <option value="מאמין">מאמין</option>
+                <option value="רואי">רואי</option>
+                <option value="אינטרנט מבצעי">אינטרנט מבצעי</option>
+                <option value=סיגל">סיגל</option>
+
+              </select>
+            </div>
+         `,
+         focusConfirm: false,
+         preConfirm: () => {
+           return [
+                      document.getElementById('mySelectElement').value,
+                  ]
+               }
           },
           {
             input:'textarea',
@@ -82,6 +142,11 @@ export default function FultsTable({token,IsEditor}) {
           {
             input:'textarea',
             title: "ציין את התהליכים שבוצעו",
+            inputAutoTrim:true,
+          },
+          {
+            input:'textarea',
+            title: "ציין את התהליכים שיש לבצע",
             inputAutoTrim:true,
           },
           {
@@ -114,6 +179,7 @@ export default function FultsTable({token,IsEditor}) {
           },
           {
             title: "נוצר על ידי",
+            input: "text",
           },
         ])
         .then((result) => {
@@ -122,197 +188,318 @@ export default function FultsTable({token,IsEditor}) {
             const network = result.value[1];
             const description = result.value[2];
             const actions = result.value[3];
-            const company = result.value[4]
-            const current_status = result.value[5];
-            const by = result.value[6];
-  
-            Swal.fire({
-              title: ":הוספת התקלה הבאה",
-              html: `
-              :מיקום
-              <pre><code>${place}</code></pre>
-              :רשת
-              <pre><code>${network}</code></pre>
-              :תיאור
-              <pre><code>${description}</code></pre>
-              :תהליכים שבוצעו
-              <pre><code>${actions}</code></pre>
-              :עבור חברת
-              <pre><code>${company}</code></pre>
-              :סטטוס נוכחי
-              <pre><code>${current_status}</code></pre>
-            `,
-              confirmButtonText: "הוסף",
-              showCancelButton: true,
-              cancelButtonText: "בטל",
-            }).then((result) => {
-              if (result.isConfirmed) {
-                Swal.fire("!התקלה נוספה בהצלחה", "  ", "success");
-                const fultbody = {
-                  place: String(place),
-                  by: String(by),
-                  network: String(network),
-                  description: String(description),
-                  actions:String(actions),
-                  company :String(company),
-                  status:String(current_status),
-                  closed: false,
-                };
-                fetch(`http://localhost:4000/luna/addFult/${token}`, {
-                  method: "POST",
-                  body: JSON.stringify(fultbody),
-                  headers: {
-                    "Content-type": "application/json; charset=UTF-8", // Indicates the content
-                    "authorization" : "Bearer " + token
-                  }
-                })
-                  .then((res) => res.json())
-                  .then((json) => {
-                    const fult_id = json._id;
-                    const date = json.created_at;
-                    let faultime = date;
-                    faultime = faultime.split("T");
-                    faultime = faultime[0].replace("-", "/").replace("-", "/");
-                    faultime = faultime.split("/");
-                    const time =
-                      faultime[2] + "/" + faultime[1] + "/" + faultime[0];
-                    let tempFult = {
-                      Num: fults.length + 1,
-                      Place: place,
-                      By: by,
-                      time: time,
-                      Network: network,
-                      Status: current_status,
-                      Actions:actions,
-                      Company:company,
-                      Description: description,
-                      Tech:"",
-                      Id: fult_id,
-                      Is_close: false,
-                      LastChange:"סטטוס לא עודכן מעולם",
-                      filetype :"",
-                      providerfiletype:"",
-                      avanch_num:"נא לעדכן מספר"
-  
-                    };
-                    let temparry = [...fults];
-                    temparry.push(tempFult);
-                    setFults(temparry);
-                  });
-              }
-            });
+            const future_actions = result.value[4];
+            const company = result.value[5]
+            const current_status = result.value[6];
+            const by = result.value[7];
+            fetch(`http://localhost:4000/luna/getFults/${token}`,      
+              {
+                headers: {
+                "Content-type": "application/json", // Indicates the content
+              }})
+              .then(res => res.json())
+              .then((json)=>{
+                const existing_Faults = json;
+                let matchingFaults = existing_Faults.filter((item)=>{
+                return place === item.place;});
+                if(matchingFaults.length > 0 )
+                {
+                  Swal.fire({
+                    title: "כבר קיימת תקלה באתר שצויין",
+                    html: `
+                    ?האם להמשיך
+                  `,
+                    confirmButtonText: "המשך",
+                    showCancelButton: true,
+                    cancelButtonText: "בטל",
+                  }).then((result) => {
+                    if (result.isConfirmed) {
+                      Swal.fire({
+                        title: ":הוספת התקלה הבאה",
+                        html: `
+                        :מיקום
+                        <pre><code>${place}</code></pre>
+                        :רשת
+                        <pre><code>${network}</code></pre>
+                        :תיאור
+                        <pre><code>${description}</code></pre>
+                        :עבור חברת
+                        <pre><code>${company}</code></pre>
+                        :סטטוס נוכחי
+                        <pre><code>${current_status}</code></pre>
+                      `,
+                        confirmButtonText: "הוסף",
+                        showCancelButton: true,
+                        cancelButtonText: "בטל",
+                      }).then((result) => {
+                        if (result.isConfirmed) {
+                          Swal.fire("!התקלה נוספה בהצלחה", "  ", "success");
+                          const fultbody = {
+                            place: String(place),
+                            by: String(by),
+                            network: String(network),
+                            description: String(description),
+                            actions:String(actions),
+                            future_actions:String(future_actions),
+                            company :String(company),
+                            status:String(current_status),
+                            closed: false,
+                          };
+                          fetch(`http://localhost:4000/luna/addFult/${token}`, {
+                            method: "POST",
+                            body: JSON.stringify(fultbody),
+                            headers: {
+                              "Content-type": "application/json; charset=UTF-8", // Indicates the content
+                              "authorization" : "Bearer " + token
+                            }
+                          })
+                            .then((res) => res.json())
+                            .then((json) => {
+                              const fult_id = json._id;
+                              const time = pharseDate(json.created_at)
+                              let tempFult = {
+                                Num: fults.length + 1,
+                                Place: place,
+                                By: by,
+                                time: time,
+                                Network: network,
+                                Status: current_status,
+                                Actions:actions,
+                                Company:company,
+                                Description: description,
+                                Tech:"",
+                                Id: fult_id,
+                                Is_close: false,
+                                LastChange:"סטטוס לא עודכן מעולם",
+                                filetype :"",
+                                providerfiletype:"",
+                                avanch_num:"נא לעדכן מספר",
+                                future_actions: future_actions,
+                                lastUpdateBy : "תקלה זו לא עודכנה מעולם",
+                                pre_status : "-",
+                                hold_time:0
+                              };
+                              let temparry = [...fults];
+                              temparry.push(tempFult);
+                              setFults(temparry);
+                            });
+                        }
+                      });      
+                    }});
+                }
+                else
+                {
+                  Swal.fire({
+                    title: ":הוספת התקלה הבאה",
+                    html: `
+                    :מיקום
+                    <pre><code>${place}</code></pre>
+                    :רשת
+                    <pre><code>${network}</code></pre>
+                    :תיאור
+                    <pre><code>${description}</code></pre>
+                    :עבור חברת
+                    <pre><code>${company}</code></pre>
+                    :סטטוס נוכחי
+                    <pre><code>${current_status}</code></pre>
+                  `,
+                    confirmButtonText: "הוסף",
+                    showCancelButton: true,
+                    cancelButtonText: "בטל",
+                  }).then((result) => {
+                    if (result.isConfirmed) {
+                      Swal.fire("!התקלה נוספה בהצלחה", "  ", "success");
+                      const fultbody = {
+                        place: String(place),
+                        by: String(by),
+                        network: String(network),
+                        description: String(description),
+                        actions:String(actions),
+                        future_actions:String(future_actions),
+                        company :String(company),
+                        status:String(current_status),
+                        closed: false,
+                      };
+                      fetch(`http://localhost:4000/luna/addFult/${token}`, {
+                        method: "POST",
+                        body: JSON.stringify(fultbody),
+                        headers: {
+                          "Content-type": "application/json; charset=UTF-8", // Indicates the content
+                          "authorization" : "Bearer " + token
+                        }
+                      })
+                        .then((res) => res.json())
+                        .then((json) => {
+                          const fult_id = json._id;
+                          const time = pharseDate(json.created_at)
+
+                          let tempFult = {
+                            Num: fults.length + 1,
+                            Place: place,
+                            By: by,
+                            time: time,
+                            Network: network,
+                            Status: current_status,
+                            Actions:actions,
+                            Company:company,
+                            Description: description,
+                            Tech:"",
+                            Id: fult_id,
+                            Is_close: false,
+                            LastChange:"סטטוס לא עודכן מעולם",
+                            filetype :"",
+                            providerfiletype:"",
+                            avanch_num:"נא לעדכן מספר",
+                            future_actions: future_actions,
+                            lastUpdateBy : "תקלה זו לא עודכנה מעולם",
+                            pre_status : "-",
+                            hold_time:0
+                          };
+                          let temparry = [...fults];
+                          temparry.push(tempFult);
+                          setFults(temparry);
+                        });
+                    }
+                  });  
+                }                                  
+              });
           }
         });
     
+    }
+    catch
+    {
+      alert("server error");
+    };
   };
   const onClosingFult = ( db_id) => {
-    Swal.fire({
-      icon: "warning",
-      title: "?סגירת תקלה",
-      footer: "לחצ/י אישור לסגירת התקלה",
-      confirmButtonText: "אישור",
-      showCancelButton: true,
-      cancelButtonText: "בטל",
-    }).then((result) => {
-      if (result.isConfirmed) {
-      
-        fetch(`http://localhost:4000/luna/closeFult/${db_id}/${token}`, {
-          method: "POST",
-          headers: {
-            "Content-type": "application/json; charset=UTF-8", // Indicates the content
-            "authorization" : "Bearer " + token
-          }
-        })
-        .then((async () => {
-          const res = await fetch(`http://localhost:4000/luna/getFults/${token}`,      
-          {
+    try{
+      Swal.fire({
+        icon: "warning",
+        title: "?סגירת תקלה",
+        footer: "לחצ/י אישור לסגירת התקלה",
+        confirmButtonText: "אישור",
+        showCancelButton: true,
+        cancelButtonText: "בטל",
+      }).then((result) => {
+        if (result.isConfirmed) {
+        
+          fetch(`http://localhost:4000/luna/closeFult/${db_id}/${token}`, {
+            method: "POST",
             headers: {
-            "Content-type": "application/json", // Indicates the content
-          }});
-          let data = [];
-          setFults([])
-          data = await res.json();
-          let temp_arry = [];
-          data.map((entity) => {
-            const time = pharseDate(entity.created_at);
-            const updatetime = pharseDate(entity.last_changed);
-            let tempFult = {
-              Place: entity.place,
-              By: entity.by,
-              time: time,
-              Network: entity.network,
-              Description: entity.description,
-              Company:entity.company,
-              Actions:entity.actions,
-              Status: entity.status,
-              Tech: entity.emp,
-              Id: entity._id,
-              Is_close: entity.closed,
-              LastChange:updatetime,
-              filetype:entity.filetype,
-              providerfiletype:entity.providertypefile,
-              avanch_num :entity.avanch_num
-            };
-            temp_arry.push(tempFult);
-          });
-          setFults(temp_arry);
-          Swal.fire({ icon: "success", title: "!התקלה נסגרה בהצלחה" ,confirmButtonText: "אישור"});
-        }));     
-      }
-    });
+              "Content-type": "application/json; charset=UTF-8", // Indicates the content
+              "authorization" : "Bearer " + token
+            }
+          })
+          .then((async () => {
+            const res = await fetch(`http://localhost:4000/luna/getFults/${token}`,      
+            {
+              headers: {
+              "Content-type": "application/json", // Indicates the content
+            }});
+            let data = [];
+            setFults([])
+            data = await res.json();
+            let temp_arry = [];
+            data.map((entity) => {
+              const time = pharseDate(entity.created_at);
+              const updatetime = pharseDate(entity.last_changed);
+              let tempFult = {
+                Place: entity.place,
+                By: entity.by,
+                time: time,
+                Network: entity.network,
+                Description: entity.description,
+                Company:entity.company,
+                Actions:entity.actions,
+                Status: entity.status,
+                Tech: entity.emp,
+                Id: entity._id,
+                Is_close: entity.closed,
+                LastChange:updatetime,
+                filetype:entity.filetype,
+                providerfiletype:entity.providertypefile,
+                avanch_num :entity.avanch_num,
+                lastUpdateBy : entity.lastUpdateBy,
+                future_actions : entity.future_actions,
+                hold_time : entity.hold_time,
+                pre_status : entity.pre_status
+              };
+              temp_arry.push(tempFult);
+            });
+            setFults(temp_arry);
+            Swal.fire({ icon: "success", title: "!התקלה נסגרה בהצלחה" ,confirmButtonText: "אישור"});
+          }));     
+        }
+      });
+    }
+    catch
+    {
+      alert("server error");
+    };
   };
   const onDeleteFult = (db_id) => {
-    Swal.fire({
-      icon: "error",
-      title: "?מחיקת תקלה",
-      footer: "לחצ/י אישור למחיקת התקלה",
-      confirmButtonText: "אישור",
-      showCancelButton: true,
-      cancelButtonText: "בטל",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        fetch(`http://localhost:4000/luna/DeleteFult/${db_id}/${token}`, {
-          method: "DELETE",
-          headers: {
-            "Content-type": "application/json" // Indicates the content"
-          }
-        }).then((async () => {
-          const res = await fetch(`http://localhost:4000/luna/getFults/${token}`,      
-          {
+    try{
+      Swal.fire({
+        icon: "error",
+        title: "?מחיקת תקלה",
+        footer: "לחצ/י אישור למחיקת התקלה",
+        confirmButtonText: "אישור",
+        showCancelButton: true,
+        cancelButtonText: "בטל",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          fetch(`http://localhost:4000/luna/DeleteFult/${db_id}/${token}`, {
+            method: "DELETE",
             headers: {
-            "Content-type": "application/json", // Indicates the content
-          }});
-          let data = [];
-          setFults([])
-          data = await res.json();
-          let temp_arry = [];
-          data.map((entity) => {
-            const time = pharseDate(entity.created_at);
-            const updatetime = pharseDate(entity.last_changed);
-            let tempFult = {
-              Place: entity.place,
-              By: entity.by,
-              time: time,
-              Network: entity.network,
-              Description: entity.description,
-              Company:entity.company,
-              Actions:entity.actions,
-              Status: entity.status,
-              Tech: entity.emp,
-              Id: entity._id,
-              Is_close: entity.closed,
-              LastChange:updatetime,
-              filetype:entity.filetype,
-              providerfiletype:entity.providertypefile,
-              avanch_num :entity.avanch_num
-            };
-            temp_arry.push(tempFult);
-          });
-          setFults(temp_arry);
-          Swal.fire({ icon: "success", title: " !התקלה נמחקה בהצלחה" ,confirmButtonText: "אישור"});
-        }));     
-      }
-    });
+              "Content-type": "application/json" // Indicates the content"
+            }
+          }).then((async () => {
+            const res = await fetch(`http://localhost:4000/luna/getFults/${token}`,      
+            {
+              headers: {
+              "Content-type": "application/json", // Indicates the content
+            }});
+            let data = [];
+            setFults([])
+            data = await res.json();
+            let temp_arry = [];
+            data.map((entity) => {
+              const time = pharseDate(entity.created_at);
+              const updatetime = pharseDate(entity.last_changed);
+              let tempFult = {
+                Place: entity.place,
+                By: entity.by,
+                time: time,
+                Network: entity.network,
+                Description: entity.description,
+                Company:entity.company,
+                Actions:entity.actions,
+                Status: entity.status,
+                Tech: entity.emp,
+                Id: entity._id,
+                Is_close: entity.closed,
+                LastChange:updatetime,
+                filetype:entity.filetype,
+                providerfiletype:entity.providertypefile,
+                avanch_num :entity.avanch_num,
+                lastUpdateBy : entity.lastUpdateBy,
+                future_actions : entity.future_actions,
+                pre_status : entity.pre_status,
+                hold_time:entity.hold_time
+              };
+              temp_arry.push(tempFult);
+            });
+            setFults(temp_arry);
+            Swal.fire({ icon: "success", title: " !התקלה נמחקה בהצלחה" ,confirmButtonText: "אישור"});
+          }));     
+        }
+      });
+    }
+    catch
+    {
+      alert("server error")
+    };
   };
 
 
@@ -343,6 +530,10 @@ export default function FultsTable({token,IsEditor}) {
                 filetype = {entity.filetype}
                 providerfiletype = {entity.providerfiletype}
                 avanch_num = {entity.avanch_num}
+                hold_time = {entity.hold_time}
+                lastUpdateBy= {entity.lastUpdateBy}
+                future_actions= {entity.future_actions}
+                pre_status = {entity.pre_status}
                 onClose={() => {
                   onClosingFult(entity.Id);
                 }}

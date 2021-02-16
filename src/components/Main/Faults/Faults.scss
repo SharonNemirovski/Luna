@@ -12,13 +12,22 @@
 tr {
   border: 3px solid rgb(106, 158, 255);
 }
-.fultcard {
+.faultcard {
   display: flex;
   flex-direction: column;
   border-radius: 10px;
-  box-shadow: 1px 3px 5px rgba(241, 48, 48, 0.966);
-  border: 1px solid rgba(248, 48, 48, 0.171);
+  box-shadow: 1px 3px 5px rgba(0, 0, 0, 0.3);
+  border: 2.5px solid rgb(62, 145, 247);
   margin: 3px;
+  &.fault-hold {
+    border: 2.5px solid rgb(237, 240, 58);
+  }
+  &.fault-warning {
+    border: 2.5px solid rgb(245, 153, 15);
+  }
+  &.fault-critical {
+    border: 2.5px solid rgb(231, 35, 35);
+  }
 }
 .expend_fult {
   display: grid;
@@ -120,7 +129,6 @@ tr {
   flex-direction: column;
   width: 100%;
   height: 100%;
-
   overflow-y: scroll;
 }
 .table::-webkit-scrollbar {
@@ -155,11 +163,45 @@ tr {
   width: 100%;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
+  align-items: center;
+  grid-gap: 30px;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 15px;
 }
 .operation_hold_for_copmany {
   width: 100%;
   display: grid;
   grid-template-columns: repeat(5, 1fr);
+  align-items: center;
+  grid-gap: 30px;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 15px;
+}
+.iconButton {
+  display: grid;
+  grid-template-columns: 1fr 30px;
+  width: auto;
+  height: auto;
+  border-radius: 30px;
+  border: 1px solid #0d81ec;
+  align-items: center;
+  justify-items: center;
+  padding-left: 8px;
+  padding-right: 8px;
+  color: #0d81ec;
+  cursor: pointer;
+  h1 {
+    padding-top: 5px;
+    font-size: 14px;
+  }
+}
+.iconButton:hover {
+  box-shadow: 0 6px 14px 0 #666;
+  color: rgb(62, 145, 245);
+  background-color: white;
+  transform: scale(1.03);
 }
 .addfultbutton {
   margin-top: 5px;

@@ -6,17 +6,19 @@ import {
   FolderOpenOutlined,
   PhoneOutlined,
 } from "@ant-design/icons";
-
+import AccessAlarmIcon from '@material-ui/icons/AccessAlarm';
 export default {
   // --- icon by type
   IconByType(type) {
     switch (type) {
       case "fault":
         return <AlertOutlined />;
-      case "passes":
-        return <CreditCardOutlined />;
+      case "recent":
+        return <AccessAlarmIcon />;
       case "history":
         return <FolderOpenOutlined />;
+      case "passes":
+        return <CreditCardOutlined />;
       case "contact":
         return <PhoneOutlined />;
       default:
@@ -27,8 +29,9 @@ export default {
   getMenuItems() {
     return [
       { name: "צפייה בתקלות", link: "fault", type: "fault" },
-      { name: "אישורי כניסה", link: "passes", type: "passes" },
+      { name: "נסגרו לאחרונה", link: "recent", type: "recent" },
       { name: "ארכיון", link: "history", type: "history" },
+      { name: "אישורי כניסה", link: "passes", type: "passes" },
       { name: "צור קשר", link: "contact", type: "contact" },
     ];
   },

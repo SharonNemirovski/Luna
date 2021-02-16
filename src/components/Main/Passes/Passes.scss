@@ -17,15 +17,23 @@ body {
   padding: 0;
   background-color: #dbe5e3;
 }
+.WrapperCardHolder {
+  height: 100%;
+  width: 100%;
+  padding-bottom: 10px;
+}
 .CardHolder {
   height: 100%;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-column-gap: 13px;
   grid-gap: 50px;
-  overflow-y: auto;
   width: auto;
   padding: 20px;
+  overflow-y: scroll;
+}
+.CardHolder::-webkit-scrollbar {
+  width: 0 !important;
 }
 .fab {
   z-index: 10000;

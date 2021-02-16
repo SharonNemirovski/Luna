@@ -16,8 +16,8 @@
   .BackDropModal_content {
     background-color: #fff;
     border-radius: 8px;
-    height: 460px;
-    width: 460px;
+    height: 530px;
+    width: 490px;
     align-self: center;
     padding: 10px;
     img {
@@ -29,10 +29,16 @@
       display: flex;
       flex-grow: 1;
       flex-direction: column;
+      h1 {
+        display: rtl;
+        color: #df2b2b;
+        font-size: 16.5px;
+        animation: shake 0.45s cubic-bezier(0.15, 0.06, 0.19, 0.57) both;
+      }
     }
 
     .BackDropModal_actions {
-      padding-top: 15px;
+      padding-top: 13px;
       button {
         border: none;
         border-radius: 4px;
@@ -92,9 +98,9 @@
   .BackDropModal_content {
     background-color: #fff;
     border-radius: 8px;
-    height: 526px;
-    width: 490px;
-    padding: 5px;
+    height: 610px;
+    width: 500px;
+    padding: 4px;
     align-self: center;
     img {
       height: 210px;
@@ -105,10 +111,16 @@
       display: flex;
       flex-grow: 1;
       flex-direction: column;
+      h1 {
+        display: rtl;
+        color: #df2b2b;
+        font-size: 16.5px;
+        animation: shake 0.45s cubic-bezier(0.15, 0.06, 0.19, 0.57) both;
+      }
     }
 
     .BackDropModal_actions {
-      padding-top: 9px;
+      padding-top: 13px;
       button {
         border: none;
         border-radius: 4px;
@@ -146,5 +158,28 @@
         }
       }
     }
+  }
+}
+
+@keyframes shake {
+  10%,
+  90% {
+    transform: translate3d(-1px, 0, 0);
+  }
+
+  20%,
+  80% {
+    transform: translate3d(2px, 0, 0);
+  }
+
+  30%,
+  50%,
+  70% {
+    transform: translate3d(-4px, 0, 0);
+  }
+
+  40%,
+  60% {
+    transform: translate3d(4px, 0, 0);
   }
 }

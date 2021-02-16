@@ -6,7 +6,7 @@ import Faults from "./Faults/Faults";
 import Passes from "./Passes/Passes";
 import History from "./History/History";
 import Contact from "./Contact/Contact";
-
+import Recent from "./Recent/Recent"
 
 export default function Main({token , IsEditor}) {
   return (
@@ -16,6 +16,11 @@ export default function Main({token , IsEditor}) {
         path="/Main/fault" 
         render = {(props) => {
         return <Faults {...props} token = {token} IsEditor ={IsEditor}/>
+      }}/>
+        <Route 
+        path="/Main/recent" 
+        render = {(props) => {
+        return <Recent  {...props} token = {token} IsEditor ={IsEditor}/>
       }}/>
 
       <Route 

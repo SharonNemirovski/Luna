@@ -8,6 +8,7 @@ import CardActions from "@material-ui/core/CardActions";
 import Collapse from "@material-ui/core/Collapse";
 import IconButton from "@material-ui/core/IconButton";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import Tooltip from '@material-ui/core/Tooltip';
 import { ThemeProvider } from "@material-ui/core/styles";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -22,9 +23,18 @@ import bynet from "../../../assets/bynetlogo.png";
 import hoshen from "../../../assets/hoshenlogo.png";
 import Uploadfile from "./modals/Uloadbackdrop"
 import CollectionsIcon from '@material-ui/icons/Collections';
-import PostAddIcon from '@material-ui/icons/PostAdd';
 import ListAltIcon from '@material-ui/icons/ListAlt';
 import axios from "axios";
+import { green} from '@material-ui/core/colors';
+import { createMuiTheme } from '@material-ui/core/styles';
+
+const plugatext = "לחץ לצפייה בשרטוט";
+const plugtext = "לחץ להוספת שרטוט";
+const companytext = "לחץ לצפייה בטפסי הלקוח";
+const comptext = "לחץ לצירוף טפסי לקוח";
+const addplugatext = "הוספת שרטוט";
+const addcomptext = "הוספת טפסי לקוח";
+
 export default function Fult({
   token,
   IsEditor,
@@ -45,7 +55,12 @@ export default function Fult({
   LastChange,
   filetype,
   providerfiletype,
-  avanch_num
+  avanch_num,
+  hold_time,
+  lastUpdateBy,
+  future_actions,
+  pre_status
+
 }) {
   const classes = useStyles();
   const pharseDate = (oldDate) =>{
@@ -68,7 +83,10 @@ export default function Fult({
     status: status,
     tech: techname,
     last_changed:LastChange,
-    avanch_num : avanch_num
+    avanch_num : avanch_num,
+    lastUpdateBy:lastUpdateBy,
+    future_actions:future_actions,
+    pre_status:pre_status
   });
   const [expanded, setExpanded] = useState(false);
   const [isfileexist , setFileflag] = useState(filetype);
@@ -76,7 +94,13 @@ export default function Fult({
   const [backdrop, openBackdrop] = useState(false);
   const [filebackdrop, openfileBackdrop] = useState(false);
   const [Providerfilebackdrop, openProviderfileBackdrop] = useState(false);
-
+  const innerTheme = createMuiTheme({
+    palette: {
+      primary: {
+        main: green[400],
+      },
+    },
+  });
 
 
   const getLogoByCompany = () =>{
@@ -98,7 +122,8 @@ export default function Fult({
   const handleEdit = () =>{
     openBackdrop(true);
   };
-  const UpdateFault = (new_status , tech_name , avnachNUM) => {
+  const UpdateFault = (new_status , tech_name , avnachNUM , user) => {
+    const oldStatus = fields.status;
     let fultbody ={};
     let currentDate = new Date();
     if ((new_status !== ""))
@@ -107,26 +132,26 @@ export default function Fult({
       {
           if(avnachNUM !== "")
           {
-            fultbody = { status: String(new_status) , emp: String(tech_name) , avanch_num:String(avnachNUM) };
-            setFields({...fields , avanch_num: avnachNUM ,  tech:tech_name ,  status:new_status  ,last_changed : pharseDate(currentDate.toISOString())});
+            fultbody = { status: String(new_status),pre_status: String(oldStatus) , emp: String(tech_name) , lastUpdateBy: user, avanch_num:String(avnachNUM) };
+            setFields({...fields , avanch_num: avnachNUM ,lastUpdateBy: user , tech:tech_name ,  status:new_status , pre_status:oldStatus  ,last_changed : pharseDate(currentDate.toISOString())});
           }
           else
           {
-            fultbody = { status: String(new_status) , emp: String(tech_name)  };
-            setFields({...fields ,  tech:tech_name ,  status:new_status  ,last_changed : pharseDate(currentDate.toISOString())});
+            fultbody = { status: String(new_status),pre_status: String(oldStatus) ,lastUpdateBy: user, emp: String(tech_name)  };
+            setFields({...fields ,  tech:tech_name , lastUpdateBy: user, status:new_status ,pre_status:oldStatus ,last_changed : pharseDate(currentDate.toISOString())});
           }
       }
       else
       {
           if(avnachNUM !== "")
             {
-              fultbody = { status: String(new_status) , avanch_num:String(avnachNUM) };
-              setFields({...fields , avanch_num: avnachNUM  ,  status:new_status  ,last_changed : pharseDate(currentDate.toISOString())});
+              fultbody = { status: String(new_status),pre_status: String(oldStatus) ,lastUpdateBy: user, avanch_num:String(avnachNUM) };
+              setFields({...fields , avanch_num: avnachNUM  ,lastUpdateBy: user,  status:new_status,pre_status:oldStatus  ,last_changed : pharseDate(currentDate.toISOString())});
             }
           else
             {
-              fultbody = { status: String(new_status)  };
-              setFields({...fields ,  status:new_status  ,last_changed : pharseDate(currentDate.toISOString())});
+              fultbody = { status: String(new_status),lastUpdateBy: user , pre_status: String(oldStatus) };
+              setFields({...fields ,  status:new_status,pre_status:oldStatus  ,lastUpdateBy: user,last_changed : pharseDate(currentDate.toISOString())});
             }
       }
     }
@@ -136,21 +161,21 @@ export default function Fult({
         {
             if(avnachNUM !== "")
             {
-                fultbody = { emp: String(tech_name) , avanch_num:String(avnachNUM) };
-                setFields({...fields , avanch_num: avnachNUM ,  tech:tech_name   ,last_changed : pharseDate(currentDate.toISOString())});
+                fultbody = { emp: String(tech_name) , lastUpdateBy: user,avanch_num:String(avnachNUM) };
+                setFields({...fields , avanch_num: avnachNUM , lastUpdateBy: user, tech:tech_name   ,last_changed : pharseDate(currentDate.toISOString())});
             }
             else
             {
-                fultbody = { emp: String(tech_name)  };
-                setFields({...fields ,  tech:tech_name , last_changed : pharseDate(currentDate.toISOString())});
+                fultbody = {lastUpdateBy: user, emp: String(tech_name)  };
+                setFields({...fields , lastUpdateBy: user, tech:tech_name , last_changed : pharseDate(currentDate.toISOString())});
             }
         }
         else
         {
             if(avnachNUM !== "")
             {
-                fultbody = {avanch_num:String(avnachNUM) };
-                setFields({...fields , avanch_num: avnachNUM  ,last_changed : pharseDate(currentDate.toISOString())});
+                fultbody = {lastUpdateBy: user,avanch_num:String(avnachNUM) };
+                setFields({...fields , lastUpdateBy: user,avanch_num: avnachNUM  ,last_changed : pharseDate(currentDate.toISOString())});
             }
             else
             {
@@ -170,6 +195,7 @@ export default function Fult({
       }
     })
       .then((res) => res.json())
+      .catch(() => { alert("server error") })
     Swal.fire({confirmButtonText: "אישור" , title :"!התקלה עודכנה בהצלחה" ,icon:"success"});     
     setExpanded(false);
     openBackdrop(false);
@@ -246,7 +272,20 @@ export default function Fult({
       return "operation_hold_for_copmany";
     }
   }
-
+  const GetBorderByHoldTime = () =>{
+    if(hold_time<=3){
+      return "faultcard"
+    }
+    if((hold_time>3)&&(hold_time<=7)){
+      return "faultcard fault-hold"
+    }
+    if((hold_time>7)&&(hold_time<=15)){
+      return "faultcard fault-warning"
+    }
+    if(hold_time>15){
+      return "faultcard fault-critical"
+    }
+  }
   return (
     <div>
       {backdrop && (
@@ -278,7 +317,7 @@ export default function Fult({
             }} 
             onClose = {()=>openProviderfileBackdrop(false)}/>
         )}
-      <Card className="fultcard">
+      <Card className={GetBorderByHoldTime()}>
         <CardContent  className={classes.cardcontant}>
           <Typography component={'span'} className="topogragh"> {fields.num}</Typography>
           <Typography component={'span'} className="topogragh">{fields.place}</Typography>
@@ -298,17 +337,26 @@ export default function Fult({
             >
               <ExpandMoreIcon />
             </IconButton>
-            
             <IconButton color="primary" onClick ={DownloadFiles}>
-              <Badge badgeContent={isfileexist ==="" ? 0:1} color="secondary" variant="dot">
+            <ThemeProvider theme={innerTheme}>
+            <Tooltip disableFocusListener disableTouchListener title={company === "אחר" ? plugatext : companytext}  >
+              <Badge badgeContent={1} color={isfileexist ==="" ? "secondary":"primary"} variant="dot">
                 <AssignmentIcon />
               </Badge>
+            </Tooltip>
+            </ThemeProvider>
             </IconButton>
+           
             {!IsCompanyFault()&&<div className = "spacer"><span></span></div>}
-              {IsCompanyFault()&&<IconButton color="primary" onClick ={DownloadProviderFiles}>
-              <Badge badgeContent={isProviderFileExist ==="" ? 0:1} color="secondary"  variant="dot">
-                <ListAltIcon />
-              </Badge>
+              {IsCompanyFault()&&
+              <IconButton color="primary" onClick ={DownloadProviderFiles}>
+                <ThemeProvider theme={innerTheme}>
+                <Tooltip disableFocusListener disableTouchListener title="לחץ לצפיה בתעודת ספק"  >
+                  <Badge badgeContent={1} color={isProviderFileExist ==="" ? "secondary":"primary"} variant="dot">
+                    <ListAltIcon />
+                  </Badge>
+                 </Tooltip>
+                </ThemeProvider>
             </IconButton>}
 
             <div className="avatar">
@@ -328,10 +376,21 @@ export default function Fult({
                   תהליכים שבוצעו:
                   <span className = "topogragh_info">{fields.actions}</span>
                 </Typography>
+
+                <Typography component={'span'} className="topogragh_status">
+                  תהליכים שנדרש לבצע:
+                  <span className = "topogragh_info">{fields.future_actions}</span>
+                </Typography>
+                <Typography component={'span'} className="topogragh_status">
+                  סטטוס קודם:
+                  <span className = "topogragh_info">{fields.pre_status}</span>
+                </Typography>
                 <Typography component={'span'} className="topogragh_status">
                   סטטוס:
                   <span className = "topogragh_info">{fields.status}</span>
                 </Typography>
+
+
                 {(IsCompanyFault())&&(<Typography component={'span'} className="topogragh_status">
                   שם הטכנאי שיוצא לתקלה:
                   <span className = "topogragh_info">{techname === ""? "לא ידוע":fields.tech}</span>
@@ -341,30 +400,69 @@ export default function Fult({
                   <span className = "topogragh_info"> {fields.last_changed}</span>
                 </Typography>
 
+                <Typography component={'span'} className="topogragh_status">
+                  עודכן לאחרונה על ידי:
+                  <span className = "topogragh_info">{fields.lastUpdateBy}</span>
+                </Typography>
                 <Typography component={'span'}>
                   {IsEditor&&(<div className={GetOperationStyle()}>
-                    <IconButton onClick={handleEdit}>
-                      <EditIcon style={{ color: "#1562aa" }} />
-                    </IconButton>
+                
+                  <Tooltip disableFocusListener disableTouchListener title="לחץ לעריכת התקלה"  >
+                  <div className = "iconButton"
+                  onClick={handleEdit}
+                  >
+                          <h1>עריכת תקלה</h1>
+                          <EditIcon  />
+                        </div>
+                  </Tooltip>
 
-                    <IconButton onClick={()=>{
-                      setExpanded(false);
-                      onClose();
-                    }}>
-                      <DoneIcon style={{ color: "#1562aa" }} />
-                    </IconButton>
-                    <IconButton onClick={()=>{ 
-                      setExpanded(false);
-                      onDelete();}}>
-                      <DeleteIcon style={{ color: "#1562aa" }} />
-                    </IconButton>
 
-                    <IconButton onClick = {OnUploadFile}>
-                      <CollectionsIcon style={{ color: "#1562aa" }} />
-                    </IconButton>
-                    {IsCompanyFault()&&<IconButton onClick = {OnUploadProviderFile}>
-                      <PostAddIcon  style={{ color: "#1562aa" }} />
-                    </IconButton>}
+                      <Tooltip disableFocusListener disableTouchListener title="לחץ לסגירת התקלה" >
+                      <div className = "iconButton"
+                      onClick={()=>{
+                        setExpanded(false);
+                        onClose();
+                      }}
+                      >
+                          <h1>סגירת תקלה</h1>
+                          <DoneIcon/>
+                        </div>  
+                      </Tooltip>
+               
+                        <Tooltip disableFocusListener disableTouchListener title="לחץ למחיקת התקלה"  >
+                        <div className = "iconButton"
+                          onClick={()=>{ 
+                          setExpanded(false);
+                          onDelete();}}
+                        >
+                          <h1>מחיקת תקלה</h1>
+                          <DeleteIcon/>
+                        </div>
+                        </Tooltip>
+
+                
+                  
+                  <Tooltip disableFocusListener disableTouchListener title={company === "אחר"? plugtext: comptext}  >
+                      <div className = "iconButton"
+                      onClick = {OnUploadFile}>
+                            <h1>{company === "אחר"? addplugatext : addcomptext}</h1>
+                            <CollectionsIcon/>
+                      </div>
+                    </Tooltip>
+                  
+
+
+
+
+                    {IsCompanyFault()&&
+                    <Tooltip disableFocusListener disableTouchListener title="לחץ לצירוף תעודת ספק"  >
+                    <div className = "iconButton"
+                      onClick = {OnUploadProviderFile}>
+                            <h1>הוסף תעודת ספק</h1>
+                            <ListAltIcon/>
+                      </div>
+                    </Tooltip>}
+                   
                   </div>)}
                 </Typography>
               </div>
