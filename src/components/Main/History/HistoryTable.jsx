@@ -34,13 +34,19 @@ export default function HistoryTable({token , IsEditor}) {
 
   useEffect(() => {
     (async () => {
-      const res = await fetch(`http://localhost:4000/luna/getAllFults/${token}`,{
-        headers: {
-          "Content-type": "application/json; charset=UTF-8", // Indicates the content
-          "authorization" : "Bearer " + token
-        }});
       let data = [];
-      data = await res.json();
+      try{
+        const res = await fetch(`http://localhost:4000/luna/getAllFults/${token}`,{
+          headers: {
+            "Content-type": "application/json; charset=UTF-8", // Indicates the content
+            "authorization" : "Bearer " + token
+          }});
+        data = await res.json();
+      }
+      catch
+      {
+        alert("Server Error")
+      }
       let temp_arry = [...fults];
       data.map((entity) => {
         const time = pharseDate(entity.created_at);

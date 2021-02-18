@@ -156,7 +156,7 @@ const IsCompanyFault = () =>{
 };
 
 const GetBorderByHoldTime = () =>{
-  if(fields.is_close===true)
+  if((fields.isclose===true)||(is_close === true))
   {
     return "cardForGreenStatus"
   }
