@@ -25,7 +25,7 @@ export default function Uploadbackdrop({ onClose ,token , fualtid ,doneupload , 
         }
 
         try{
-          const res = await axios.post(`http://localhost:80/luna/upload/${isprovider}/${fualtid}/${ChangeExisistingFile}/${token}`, formData , {
+          const res = await axios.post(`http://106.0.4.171:80/luna/upload/${isprovider}/${fualtid}/${ChangeExisistingFile}/${token}`, formData , {
             headers:{
               'Content-Type':'multipart/form-data',
             },

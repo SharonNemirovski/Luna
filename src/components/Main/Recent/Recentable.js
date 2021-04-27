@@ -19,7 +19,7 @@ export default function Recentable({token , IsEditor}) {
   };
   useEffect(() => {
     (async () => {
-      const res = await fetch(`http://localhost:80/luna/getRecentFults/${token}`,{
+      const res = await fetch(`http://106.0.4.171:80/luna/getRecentFults/${token}`,{
         headers: {
           "Content-type": "application/json; charset=UTF-8", // Indicates the content
           "authorization" : "Bearer " + token

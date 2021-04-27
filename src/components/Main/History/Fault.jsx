@@ -85,7 +85,7 @@ const DownloadFiles = () =>{
       Swal.fire({confirmButtonText: "אישור" , title:"לא צורף קובץ לתקלה" ,icon:"info"});
     }
     else{
-      axios.get(`http://localhost:80/luna/getfiles/${ID}/${token}`,
+      axios.get(`http://106.0.4.171:80/luna/getfiles/${ID}/${token}`,
       {
           headers: {
               'Content-Type': 'application/json',
@@ -104,7 +104,7 @@ const DownloadProviderFiles = () =>{
           Swal.fire({confirmButtonText: "אישור" , title:"לא צורפה תעודת ספק לתקלה" ,icon:"info"});
         }
         else{
-          axios.get(`http://localhost:80/luna/getProviderfiles/${ID}/${token}`,
+          axios.get(`http://106.0.4.171:80/luna/getProviderfiles/${ID}/${token}`,
           {
               headers: {
                   'Content-Type': 'application/json',
@@ -129,7 +129,7 @@ const Reopen = () =>{
     cancelButtonText: "בטל",
   }).then((result) => {
     if (result.isConfirmed) {
-      fetch(`http://localhost:80/luna//ReopenFult/${ID}/${token}`, {
+      fetch(`http://106.0.4.171:80/luna//ReopenFult/${ID}/${token}`, {
         method: "POST",
         headers: {
           "Content-type": "application/json; charset=UTF-8", // Indicates the content

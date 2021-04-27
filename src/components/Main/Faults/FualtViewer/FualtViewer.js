@@ -95,7 +95,7 @@ function FualtViewer({fualtsArray,onClose,token}) {
         }
       }
       else{
-        axios.get(`http://localhost:80/luna/getfiles/${fults[FualtIndex].Id}/${token}`,
+        axios.get(`http://106.0.4.171:80/luna/getfiles/${fults[FualtIndex].Id}/${token}`,
         {
             headers: {
                 'Content-Type': 'application/json',
@@ -114,7 +114,7 @@ function FualtViewer({fualtsArray,onClose,token}) {
           Swal.fire({confirmButtonText: "אישור" , title:"לא צורפה תעודת ספק לתקלה" ,icon:"info"});
         }
         else{
-          axios.get(`http://localhost:80/luna/getProviderfiles/${fults[FualtIndex].Id}/${token}`,
+          axios.get(`http://106.0.4.171:80/luna/getProviderfiles/${fults[FualtIndex].Id}/${token}`,
           {
               headers: {
                   'Content-Type': 'application/json',
@@ -131,7 +131,7 @@ function FualtViewer({fualtsArray,onClose,token}) {
   
     return (
       
-        <div className="ViewBackDrop" onKeyPress ={handlpress} >
+        <div className="ViewBackDrop"  >
             <div className="View"  >
                 <div className="Header">
                     <div className="ActionButton" onClick={()=>{onClose()}}>

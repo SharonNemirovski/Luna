@@ -25,7 +25,7 @@ export default function LogIn({ onconnect }) {
       Username: username,
       Password: password,
     };
-    fetch(`http://localhost:80/luna/login`, {
+    fetch(`http://106.0.4.171:80/luna/login`, {
       method: 'POST',
       body: JSON.stringify(fulluser),
       headers: { 'Content-Type': 'application/json' },

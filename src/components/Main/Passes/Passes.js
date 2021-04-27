@@ -23,7 +23,7 @@ export default function Passes({token , IsEditor}) {
   const [loading , setLoading] = useState(false);
   useEffect(() => {
     (async () => {
-      const res = await fetch(`http://localhost:80/luna/getTechs/${token}`,       
+      const res = await fetch(`http://106.0.4.171:80/luna/getTechs/${token}`,       
       {headers: {
           "Content-type": "application/json; charset=UTF-8", // Indicates the content
           "authorization" : "Bearer " + token
@@ -55,7 +55,7 @@ export default function Passes({token , IsEditor}) {
 
 
   const onTechDelete = (id) => {
-    fetch(`http://localhost:80/luna/DeleteTech/${id}/${token}`, {
+    fetch(`http://106.0.4.171:80/luna/DeleteTech/${id}/${token}`, {
           method: "DELETE",
           headers: {
             "Content-type": "application/json; charset=UTF-8", // Indicates the content
@@ -77,7 +77,7 @@ export default function Passes({token , IsEditor}) {
       return post;
     });
     
-    fetch(`http://localhost:80/luna/UpdateTech/${techObj.id}/${token}`, {
+    fetch(`http://106.0.4.171:80/luna/UpdateTech/${techObj.id}/${token}`, {
       method: "POST",
       body: JSON.stringify(techObj),
       headers: {
@@ -150,7 +150,7 @@ const onTechAdding = () =>{
           };
           console.log("company is" + result.value[5])
           console.log(newTech.imgUrl)
-          fetch(`http://localhost:80/luna/AddTech/${token}`, {
+          fetch(`http://106.0.4.171:80/luna/AddTech/${token}`, {
             method: "POST",
             body: JSON.stringify(newTech),
             headers: {
@@ -189,7 +189,7 @@ const onTechSubmit = async (techObj) => {
   setLoading(true);
   // close modal
   setIsTechInfoModalOpen(false);
-  const res = await fetch(`http://localhost:80/luna/getTechs/${token}`,
+  const res = await fetch(`http://106.0.4.171:80/luna/getTechs/${token}`,
   {headers: {
     "Content-type": "application/json; charset=UTF-8", // Indicates the content
     "authorization" : "Bearer " + token

@@ -22,7 +22,7 @@ export default function FultsTable({token,IsEditor}) {
   useEffect(() => {
     try{
       (async () => {
-        const res = await fetch(`http://localhost:80/luna/getFults/${token}`,      
+        const res = await fetch(`http://106.0.4.171:80/luna/getFults/${token}`,      
         {
           headers: {
           "Content-type": "application/json", // Indicates the content
@@ -197,7 +197,7 @@ export default function FultsTable({token,IsEditor}) {
             const current_status = result.value[6];
             const by = result.value[7];
             console.log(result)
-            fetch(`http://localhost:80/luna/getFults/${token}`,      
+            fetch(`http://106.0.4.171:80/luna/getFults/${token}`,      
               {
                 headers: {
                 "Content-type": "application/json", // Indicates the content
@@ -250,7 +250,7 @@ export default function FultsTable({token,IsEditor}) {
                             status:String(current_status),
                             closed: false,
                           };
-                          fetch(`http://localhost:80/luna/addFult/${token}`, {
+                          fetch(`http://106.0.4.171:80/luna/addFult/${token}`, {
                             method: "POST",
                             body: JSON.stringify(fultbody),
                             headers: {
@@ -325,7 +325,7 @@ export default function FultsTable({token,IsEditor}) {
                         status:String(current_status),
                         closed: false,
                       };
-                      fetch(`http://localhost:80/luna/addFult/${token}`, {
+                      fetch(`http://106.0.4.171:80/luna/addFult/${token}`, {
                         method: "POST",
                         body: JSON.stringify(fultbody),
                         headers: {
@@ -389,7 +389,7 @@ export default function FultsTable({token,IsEditor}) {
       }).then((result) => {
         if (result.isConfirmed) {
         
-          fetch(`http://localhost:80/luna/closeFult/${db_id}/${token}`, {
+          fetch(`http://106.0.4.171:80/luna/closeFult/${db_id}/${token}`, {
             method: "POST",
             headers: {
               "Content-type": "application/json; charset=UTF-8", // Indicates the content
@@ -397,7 +397,7 @@ export default function FultsTable({token,IsEditor}) {
             }
           })
           .then((async () => {
-            const res = await fetch(`http://localhost:80/luna/getFults/${token}`,      
+            const res = await fetch(`http://106.0.4.171:80/luna/getFults/${token}`,      
             {
               headers: {
               "Content-type": "application/json", // Indicates the content
@@ -454,13 +454,13 @@ export default function FultsTable({token,IsEditor}) {
         cancelButtonText: "בטל",
       }).then((result) => {
         if (result.isConfirmed) {
-          fetch(`http://localhost:80/luna/DeleteFult/${db_id}/${token}`, {
+          fetch(`http://106.0.4.171:80/luna/DeleteFult/${db_id}/${token}`, {
             method: "DELETE",
             headers: {
               "Content-type": "application/json" // Indicates the content"
             }
           }).then((async () => {
-            const res = await fetch(`http://localhost:80/luna/getFults/${token}`,      
+            const res = await fetch(`http://106.0.4.171:80/luna/getFults/${token}`,      
             {
               headers: {
               "Content-type": "application/json", // Indicates the content
@@ -511,7 +511,7 @@ const handleSelcetChange = (SelectedVal)=>{
   if(SelectedVal===""){
     try{
       (async () => {
-        const res = await fetch(`http://localhost:80/luna/getFults/${token}`,      
+        const res = await fetch(`http://106.0.4.171:80/luna/getFults/${token}`,      
         {
           headers: {
           "Content-type": "application/json", // Indicates the content
@@ -557,7 +557,7 @@ const handleSelcetChange = (SelectedVal)=>{
   else{
     try{
       (async () => {
-        const res = await fetch(`http://localhost:80/luna/getFultsByCompany/${SelectedVal}/${token}`,      
+        const res = await fetch(`http://106.0.4.171:80/luna/getFultsByCompany/${SelectedVal}/${token}`,      
         {
           headers: {
           "Content-type": "application/json", // Indicates the content

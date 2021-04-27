@@ -137,7 +137,7 @@ export default function Fult({
        pre_status:oldStatus ,future_actions:futureaction,actions:pre_action, description:F_description,
        last_changed : pharseDate(currentDate.toISOString())});
     
-    fetch(`http://localhost:80/luna/UpdateFult/${ID}/${token}`, {
+    fetch(`http://106.0.4.171:80/luna/UpdateFult/${ID}/${token}`, {
       method: "POST",
       body: JSON.stringify(fultbody),
       headers: {
@@ -204,7 +204,7 @@ export default function Fult({
       }
     }
     else{
-      axios.get(`http://localhost:80/luna/getfiles/${ID}/${token}`,
+      axios.get(`http://106.0.4.171:80/luna/getfiles/${ID}/${token}`,
       {
           headers: {
               'Content-Type': 'application/json',
@@ -223,7 +223,7 @@ export default function Fult({
         Swal.fire({confirmButtonText: "אישור" , title:"לא צורפה תעודת ספק לתקלה" ,icon:"info"});
       }
       else{
-        axios.get(`http://localhost:80/luna/getProviderfiles/${ID}/${token}`,
+        axios.get(`http://106.0.4.171:80/luna/getProviderfiles/${ID}/${token}`,
         {
             headers: {
                 'Content-Type': 'application/json',
@@ -274,7 +274,7 @@ export default function Fult({
           IsProviderFile = {false}
             doneupload={()=>{
 
-              fetch(`http://localhost:80/luna/getfiletype/${ID}/${token}`, {
+              fetch(`http://106.0.4.171:80/luna/getfiletype/${ID}/${token}`, {
                 headers: { 'Content-Type': 'application/json' },
               })
                 .then((res) => res.json())
@@ -289,7 +289,7 @@ export default function Fult({
         )}
         {Providerfilebackdrop && (<Uploadfile fualtid = {ID} ChangeExisistingFile={ChangeExisistingProviderFile} token = {token} IsProviderFile = {true}
             doneupload={()=>{
-              fetch(`http://localhost:80/luna/getProviderfiletype/${ID}/${token}`, {
+              fetch(`http://106.0.4.171:80/luna/getProviderfiletype/${ID}/${token}`, {
                 headers: { 'Content-Type': 'application/json' },
               })
                 .then((res) => res.json())

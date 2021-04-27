@@ -36,7 +36,7 @@ export default function HistoryTable({token , IsEditor}) {
     (async () => {
       let data = [];
       try{
-        const res = await fetch(`http://localhost:80/luna/getAllFults/${token}`,{
+        const res = await fetch(`http://106.0.4.171:80/luna/getAllFults/${token}`,{
           headers: {
             "Content-type": "application/json; charset=UTF-8", // Indicates the content
             "authorization" : "Bearer " + token
@@ -93,13 +93,13 @@ export default function HistoryTable({token , IsEditor}) {
       cancelButtonText: "בטל",
     }).then((result) => {
       if (result.isConfirmed) {
-        fetch(`http://localhost:80/luna/DeleteFult/${db_id}/${token}`, {
+        fetch(`http://106.0.4.171:80/luna/DeleteFult/${db_id}/${token}`, {
           method: "DELETE",
           headers: {
             "Content-type": "application/json" // Indicates the content"
           }
         }).then((async () => {
-          const res = await fetch(`http://localhost:80/luna/getAllFults/${token}`,      
+          const res = await fetch(`http://106.0.4.171:80/luna/getAllFults/${token}`,      
           {
             headers: {
             "Content-type": "application/json", // Indicates the content
