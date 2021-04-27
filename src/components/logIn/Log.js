@@ -25,7 +25,7 @@ export default function LogIn({ onconnect }) {
       Username: username,
       Password: password,
     };
-    fetch(`http://localhost:4000/luna/login`, {
+    fetch(`http://localhost:80/luna/login`, {
       method: 'POST',
       body: JSON.stringify(fulluser),
       headers: { 'Content-Type': 'application/json' },
@@ -41,10 +41,14 @@ export default function LogIn({ onconnect }) {
         }
       });
   };
-
+  const handleKeypress = e => {
+  if (e.key === "Enter") {
+    handleconnect();
+  }
+};
   return (
     <div>
-      <div className="back">
+      <div className="back" onKeyPress ={handleKeypress}>
         <img src={background} alt="background"></img>
         <div className="loginform slide-in-elliptic-bottom-fwd">
           <div className="imgRapper">
@@ -87,9 +91,6 @@ export default function LogIn({ onconnect }) {
                 )}
               </Grid>
               <button
-                container
-                spacing={1}
-                alignItems="flex-end"
                 className="connect1"
                 onClick={handleconnect}
               >

@@ -32,7 +32,7 @@ export default function GenFile({token , onClose}) {
             }
             else
             {
-                    axios.get(`http://localhost:4000/luna/getFaultsSummary/${StartDate}/${EndDate}/${token}`,
+                    axios.get(`http://localhost:80/luna/getFaultsSummary/${StartDate}/${EndDate}/${token}`,
                     {
                         headers: {
                             'Content-Type': 'application/json',

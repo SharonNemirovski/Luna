@@ -29,11 +29,67 @@ tr {
     border: 2.5px solid rgb(231, 35, 35);
   }
 }
+.topogragh {
+  font-weight: bold;
+  text-align: right;
+  font-size: 14px;
+  margin-right: 10px;
+  margin-left: 10px;
+  direction: rtl;
+  align-self: center;
+  justify-self: center;
+}
 .expend_fult {
   display: grid;
-  grid-template-rows: repeat(2, 1fr);
+  grid-auto-rows: auto;
   grid-template-columns: 1fr;
   width: 100%;
+  .DataROw {
+    display: flex;
+    flex-direction: column;
+    .info {
+      font-weight: bold;
+      text-align: right;
+      font-size: 19px;
+      margin-right: 10px;
+      margin-left: 10px;
+      direction: rtl;
+    }
+    .importent {
+      color: red;
+      font-weight: bold;
+      text-align: right;
+      font-size: 17px;
+      margin-right: 10px;
+      margin-left: 10px;
+      direction: rtl;
+      overflow-wrap: break-word;
+      word-wrap: break-word;
+      -ms-word-break: break-all;
+      word-break: break-all;
+      word-break: break-word;
+      -ms-hyphens: auto;
+      -moz-hyphens: auto;
+      -webkit-hyphens: auto;
+      hyphens: auto;
+    }
+    .data {
+      text-align: right;
+      font-size: 16px;
+      margin-right: 10px;
+      margin-left: 10px;
+      direction: rtl;
+      overflow-wrap: break-word;
+      word-wrap: break-word;
+      -ms-word-break: break-all;
+      word-break: break-all;
+      word-break: break-word;
+      -ms-hyphens: auto;
+      -moz-hyphens: auto;
+      -webkit-hyphens: auto;
+      hyphens: auto;
+    }
+  }
 }
 
 .contant {
@@ -55,23 +111,41 @@ tr {
   align-items: center;
   justify-content: center;
   justify-items: center;
-}
-.topograghtopograghForTableContant {
-  text-align: center;
-  font-size: 14;
-  margin-right: 5px;
-  margin-left: 10px;
-  justify-self: center;
-  align-self: center;
-  font: italic small-caps bold 24px/2 cursive;
-}
-.topogragh {
-  text-align: right;
-  font-size: 14;
-  margin-right: 10px;
-  margin-left: 10px;
-  justify-self: center;
-  align-self: center;
+  span {
+    text-align: center;
+    font-size: 14;
+    justify-self: center;
+    align-self: center;
+    color: #444;
+    font-weight: bold;
+    font-weight: 800;
+    font-size: 17px;
+  }
+  .FilterSelect {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: auto;
+    align-self: center;
+    align-items: center;
+    .SelectInput {
+      font-weight: 700;
+      color: #444;
+      padding-left: 5px;
+      width: 100%;
+      height: 40px;
+      margin-top: 10px;
+      box-sizing: border-box;
+      border: 2.5px solid #dbe5e3;
+      border-radius: 0.2em;
+      //background-color: #dbe5e3;
+      cursor: pointer;
+      direction: rtl;
+      unicode-bidi: bidi-override;
+      text-align: right;
+      outline: 1px solid rgba(255, 255, 255, 1);
+    }
+  }
 }
 
 .topogragh_status {
@@ -156,8 +230,8 @@ tr {
   width: 100%;
   margin-bottom: 5px;
   margin-top: 5px;
-  padding-left: 95px;
-  padding-right: 95px;
+  padding-right: 10px;
+  padding-left: 10px;
 }
 .operation_hold_for_pluga {
   width: 100%;
@@ -203,27 +277,49 @@ tr {
   background-color: white;
   transform: scale(1.03);
 }
-.addfultbutton {
+.Addfultbutton {
   margin-top: 5px;
   margin-bottom: 5px;
-  grid-column: 3/4;
+  grid-column: 1/2;
   height: 100%;
   width: 100%;
   color: whitesmoke;
   background-color: rgb(62, 145, 247);
-  border-radius: 30px;
+  border-radius: 10px;
   border-color: transparent;
   cursor: pointer;
   transition: all 0.1s ease-in-out;
   font-size: 19px;
   text-align: center;
-  padding-top: 8px;
+  padding-top: 10px;
+  &:hover {
+    box-shadow: 0 6px 14px 0 #666;
+    color: rgb(62, 145, 245);
+    background-color: white;
+    transform: scale(1.03);
+  }
 }
-.addfultbutton:hover {
-  box-shadow: 0 6px 14px 0 #666;
-  color: rgb(62, 145, 245);
-  background-color: white;
-  transform: scale(1.03);
+.BigScreenbutton {
+  margin-top: 5px;
+  margin-bottom: 5px;
+  grid-column: 5/6;
+  height: 100%;
+  width: 100%;
+  color: whitesmoke;
+  background-color: rgb(62, 145, 247);
+  border-radius: 10px;
+  border-color: transparent;
+  cursor: pointer;
+  transition: all 0.1s ease-in-out;
+  font-size: 19px;
+  text-align: center;
+  padding-top: 10px;
+  &:hover {
+    box-shadow: 0 6px 14px 0 #666;
+    color: rgb(62, 145, 245);
+    background-color: white;
+    transform: scale(1.03);
+  }
 }
 .formControl {
   grid-column: 2/3;
@@ -243,4 +339,39 @@ tr {
 
 .spacer {
   width: 46px;
+}
+.FormControl {
+  //select bar style
+  grid-column: 4/5;
+  span {
+    color: rgb(62, 145, 245);
+  }
+  label {
+    color: rgb(62, 145, 245);
+  }
+  svg {
+    color: rgb(62, 145, 245);
+  }
+}
+.BigScreenbuttonTera {
+  margin-top: 5px;
+  margin-bottom: 5px;
+  grid-column: 3/4;
+  height: 100%;
+  width: 100%;
+  color: whitesmoke;
+  background-color: rgb(62, 145, 247);
+  border-radius: 10px;
+  border-color: transparent;
+  cursor: pointer;
+  transition: all 0.1s ease-in-out;
+  font-size: 19px;
+  text-align: center;
+  padding-top: 10px;
+  &:hover {
+    box-shadow: 0 6px 14px 0 #666;
+    color: rgb(62, 145, 245);
+    background-color: white;
+    transform: scale(1.03);
+  }
 }

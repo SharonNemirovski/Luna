@@ -2,7 +2,7 @@ import React,{useState} from 'react'
 import "./uploadbackdrop.scss"
 import axios from "axios";
 import Progressui from "./progressui";
-export default function Uploadbackdrop({ onClose ,token , fualtid ,doneupload , IsProviderFile}) {
+export default function Uploadbackdrop({ onClose ,token , fualtid ,doneupload , IsProviderFile , ChangeExisistingFile}) {
   const [uploaded,setFiles] = useState('');
   const [nameoffiles,setfilename] = useState('');
   const [precent , setprogress] = useState(0);
@@ -23,8 +23,9 @@ export default function Uploadbackdrop({ onClose ,token , fualtid ,doneupload , 
         else{
           isprovider ="no"
         }
+
         try{
-          const res = await axios.post(`http://localhost:4000/luna/upload/${isprovider}/${fualtid}/${token}`, formData , {
+          const res = await axios.post(`http://localhost:80/luna/upload/${isprovider}/${fualtid}/${ChangeExisistingFile}/${token}`, formData , {
             headers:{
               'Content-Type':'multipart/form-data',
             },

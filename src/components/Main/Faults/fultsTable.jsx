@@ -3,10 +3,12 @@ import Fult from "./fult";
 import FultTopics from "./Tablecontant";
 import fetch from "node-fetch";
 import "./Faults.scss";
-
-
+import FultViewer from "./FualtViewer/FualtViewer"
+import SearchIcon from '@material-ui/icons/Search';
 export default function FultsTable({token,IsEditor}) {
+  const [BigView , SetView] = useState(false);
   const [fults, setFults] = useState([]);
+  const [FilterBy , SetFilterValue] = useState("");
   const Swal = require("sweetalert2");
   const pharseDate = (oldDate) =>{
     if (oldDate !== "סטטוס לא עודכן מעולם"){
@@ -20,7 +22,7 @@ export default function FultsTable({token,IsEditor}) {
   useEffect(() => {
     try{
       (async () => {
-        const res = await fetch(`http://localhost:4000/luna/getFults/${token}`,      
+        const res = await fetch(`http://localhost:80/luna/getFults/${token}`,      
         {
           headers: {
           "Content-type": "application/json", // Indicates the content
@@ -91,7 +93,7 @@ export default function FultsTable({token,IsEditor}) {
             ">
             <h1 class="form-label select-label">לחץ ובחר את שם הרשת</h1>
               <select 
-              id="mySelectElement" 
+              id = "SelectBar" 
               style="
               font-weight: 700;
               color: #444;
@@ -108,10 +110,10 @@ export default function FultsTable({token,IsEditor}) {
               text-align: right;
               outline: 1px solid rgba(255,255,255,1);
               ">
-               <option value="נהר איתן">נהר איתן</option>
+                <option value="נהר איתן">נהר איתן</option>
                 <option value="סודי ביותר">סודי ביותר</option> 
                 <option value="ROIP">ROIP</option>
-                <option value=טקטית">טקטית</option>
+                <option value=טקטית>טקטית</option>
                 <option value="זוהרים">זוהרים</option>
                 <option value="DCNET RED">DCNET RED</option>
                 <option value="DCNET BLK">DCNET BLK</option>
@@ -121,23 +123,22 @@ export default function FultsTable({token,IsEditor}) {
                 <option value="מאמין">מאמין</option>
                 <option value="רואי">רואי</option>
                 <option value="אינטרנט מבצעי">אינטרנט מבצעי</option>
-                <option value=סיגל">סיגל</option>
-
+                <option value="סיגל">סיגל</option>
+                <option value="סביבת חיל האויר">סביבת חיל האויר</option>
+                <option value="סביבת חיל הים">סביבת חיל הים</option>
+                <option value="סביבת אמן">סביבת אמ"ן</option>
               </select>
             </div>
          `,
          focusConfirm: false,
          preConfirm: () => {
-           return [
-                      document.getElementById('mySelectElement').value,
-                  ]
+           return document.getElementById('SelectBar').value;
                }
           },
           {
             input:'textarea',
             title: "תיאור התקלה",
             inputAutoTrim:true,
-           
           },
           {
             input:'textarea',
@@ -150,12 +151,15 @@ export default function FultsTable({token,IsEditor}) {
             inputAutoTrim:true,
           },
           {
-            title: "?עבור איזו חברה נפתחה התקלה",
+            title: "?הגורם מולו נפתחת התקלה",
             input: "radio",
-            inputOptions: {   
+            inputOptions: { 
+              "צפון":"צפון",
+              "דרום":"דרום",
+              "מטכל":"מטכל",
+              "מרכז":"מרכז",  
             "נטקום": "נטקום",
-            "בינת": "בינת",
-            "אחר":"אחר"},
+            "בינת": "בינת"},
             inputValidator:  (result) =>
             { 
               if(!result){
@@ -192,7 +196,8 @@ export default function FultsTable({token,IsEditor}) {
             const company = result.value[5]
             const current_status = result.value[6];
             const by = result.value[7];
-            fetch(`http://localhost:4000/luna/getFults/${token}`,      
+            console.log(result)
+            fetch(`http://localhost:80/luna/getFults/${token}`,      
               {
                 headers: {
                 "Content-type": "application/json", // Indicates the content
@@ -245,7 +250,7 @@ export default function FultsTable({token,IsEditor}) {
                             status:String(current_status),
                             closed: false,
                           };
-                          fetch(`http://localhost:4000/luna/addFult/${token}`, {
+                          fetch(`http://localhost:80/luna/addFult/${token}`, {
                             method: "POST",
                             body: JSON.stringify(fultbody),
                             headers: {
@@ -320,7 +325,7 @@ export default function FultsTable({token,IsEditor}) {
                         status:String(current_status),
                         closed: false,
                       };
-                      fetch(`http://localhost:4000/luna/addFult/${token}`, {
+                      fetch(`http://localhost:80/luna/addFult/${token}`, {
                         method: "POST",
                         body: JSON.stringify(fultbody),
                         headers: {
@@ -384,7 +389,7 @@ export default function FultsTable({token,IsEditor}) {
       }).then((result) => {
         if (result.isConfirmed) {
         
-          fetch(`http://localhost:4000/luna/closeFult/${db_id}/${token}`, {
+          fetch(`http://localhost:80/luna/closeFult/${db_id}/${token}`, {
             method: "POST",
             headers: {
               "Content-type": "application/json; charset=UTF-8", // Indicates the content
@@ -392,7 +397,7 @@ export default function FultsTable({token,IsEditor}) {
             }
           })
           .then((async () => {
-            const res = await fetch(`http://localhost:4000/luna/getFults/${token}`,      
+            const res = await fetch(`http://localhost:80/luna/getFults/${token}`,      
             {
               headers: {
               "Content-type": "application/json", // Indicates the content
@@ -449,13 +454,13 @@ export default function FultsTable({token,IsEditor}) {
         cancelButtonText: "בטל",
       }).then((result) => {
         if (result.isConfirmed) {
-          fetch(`http://localhost:4000/luna/DeleteFult/${db_id}/${token}`, {
+          fetch(`http://localhost:80/luna/DeleteFult/${db_id}/${token}`, {
             method: "DELETE",
             headers: {
               "Content-type": "application/json" // Indicates the content"
             }
           }).then((async () => {
-            const res = await fetch(`http://localhost:4000/luna/getFults/${token}`,      
+            const res = await fetch(`http://localhost:80/luna/getFults/${token}`,      
             {
               headers: {
               "Content-type": "application/json", // Indicates the content
@@ -501,13 +506,110 @@ export default function FultsTable({token,IsEditor}) {
       alert("server error")
     };
   };
-
-
+const handleSelcetChange = (SelectedVal)=>{
+  SetFilterValue(SelectedVal)
+  if(SelectedVal===""){
+    try{
+      (async () => {
+        const res = await fetch(`http://localhost:80/luna/getFults/${token}`,      
+        {
+          headers: {
+          "Content-type": "application/json", // Indicates the content
+        }});
+        setFults([]);
+        let data = [];
+        data = await res.json();
+        let temp_arry = [];
+        data.map((entity) => {
+          const time = pharseDate(entity.created_at);
+          const updatetime = pharseDate(entity.last_changed);
+          let tempFult = {
+            Place: entity.place,
+            By: entity.by,
+            time: time,
+            Network: entity.network,
+            Description: entity.description,
+            Company:entity.company,
+            Actions:entity.actions,
+            Status: entity.status,
+            Tech: entity.emp,
+            Id: entity._id,
+            Is_close: entity.closed,
+            LastChange:updatetime,
+            filetype:entity.filetype,
+            providerfiletype:entity.providertypefile,
+            avanch_num :entity.avanch_num,
+            hold_time :entity.hold_time,
+            lastUpdateBy : entity.lastUpdateBy,
+            future_actions : entity.future_actions,
+            pre_status : entity.pre_status
+          };
+          temp_arry.push(tempFult);
+        });
+        setFults(temp_arry);
+      })();
+    }
+    catch
+    {
+      alert("server error");
+    }
+  }
+  else{
+    try{
+      (async () => {
+        const res = await fetch(`http://localhost:80/luna/getFultsByCompany/${SelectedVal}/${token}`,      
+        {
+          headers: {
+          "Content-type": "application/json", // Indicates the content
+        }});
+        setFults([]);
+        let data = [];
+        data = await res.json();
+        let temp_arry = [];
+        data.map((entity) => {
+          const time = pharseDate(entity.created_at);
+          const updatetime = pharseDate(entity.last_changed);
+          let tempFult = {
+            Place: entity.place,
+            By: entity.by,
+            time: time,
+            Network: entity.network,
+            Description: entity.description,
+            Company:entity.company,
+            Actions:entity.actions,
+            Status: entity.status,
+            Tech: entity.emp,
+            Id: entity._id,
+            Is_close: entity.closed,
+            LastChange:updatetime,
+            filetype:entity.filetype,
+            providerfiletype:entity.providertypefile,
+            avanch_num :entity.avanch_num,
+            hold_time :entity.hold_time,
+            lastUpdateBy : entity.lastUpdateBy,
+            future_actions : entity.future_actions,
+            pre_status : entity.pre_status
+          };
+          temp_arry.push(tempFult);
+        });
+        setFults(temp_arry);
+      })();
+    }
+    catch
+    {
+      alert("server error");
+    }
+  }
+}
+const getEditorButtonStyle = ()=>{
+   if(IsEditor)
+   return "BigScreenbutton"
+   return "BigScreenbuttonTera"}
   return (
 
         <div className="parenttable">
-
-            <FultTopics/>
+            {BigView&&<FultViewer token={token}fualtsArray={fults}onClose={()=>{SetView(false)}}/>}
+            <FultTopics  FilterValue = {(val) => handleSelcetChange(val)}/>
           <div className="table">
             {fults.map((entity) => (
               <Fult
@@ -545,9 +647,16 @@ export default function FultsTable({token,IsEditor}) {
           </div>
           
           <div className="button_holder">
-          {IsEditor&&(<div  className="addfultbutton" onClick={AddFult}>
+
+          {IsEditor&&(<div  className="Addfultbutton" onClick={AddFult}>
               הוסף  תקלה
             </div>)}
+
+            <div  className={getEditorButtonStyle()} onClick={()=>{
+            SetView(true);
+          }}>
+              לצפייה במסך מלא
+            </div>
           </div>
         </div>
   );

@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { useStyles, theme } from "./styles";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
-import Typography from "@material-ui/core/Typography";
 import clsx from "clsx";
 import CardActions from "@material-ui/core/CardActions";
 import Collapse from "@material-ui/core/Collapse";
@@ -86,7 +85,7 @@ const DownloadFiles = () =>{
       Swal.fire({confirmButtonText: "אישור" , title:"לא צורף קובץ לתקלה" ,icon:"info"});
     }
     else{
-      axios.get(`http://localhost:4000/luna/getfiles/${ID}/${token}`,
+      axios.get(`http://localhost:80/luna/getfiles/${ID}/${token}`,
       {
           headers: {
               'Content-Type': 'application/json',
@@ -105,7 +104,7 @@ const DownloadProviderFiles = () =>{
           Swal.fire({confirmButtonText: "אישור" , title:"לא צורפה תעודת ספק לתקלה" ,icon:"info"});
         }
         else{
-          axios.get(`http://localhost:4000/luna/getProviderfiles/${ID}/${token}`,
+          axios.get(`http://localhost:80/luna/getProviderfiles/${ID}/${token}`,
           {
               headers: {
                   'Content-Type': 'application/json',
@@ -130,7 +129,7 @@ const Reopen = () =>{
     cancelButtonText: "בטל",
   }).then((result) => {
     if (result.isConfirmed) {
-      fetch(`http://localhost:4000/luna//ReopenFult/${ID}/${token}`, {
+      fetch(`http://localhost:80/luna//ReopenFult/${ID}/${token}`, {
         method: "POST",
         headers: {
           "Content-type": "application/json; charset=UTF-8", // Indicates the content
@@ -175,14 +174,14 @@ const GetBorderByHoldTime = () =>{
 }
   return (
         <div >
-      <Card className={GetBorderByHoldTime()}>
+      <Card  className={GetBorderByHoldTime()}>
         <CardContent className={classes.cardcontant}>
-          <Typography  component={'span'} className="topogragh"> {number}</Typography>
-          <Typography  component={'span'} className="topogragh">{place}</Typography>
-          <Typography  component={'span'} className="topogragh">{network}</Typography>
-          <Typography  component={'span'} className="topogragh">{createdby}</Typography>
-          <Typography  component={'span'} className="topogragh">{avanch_num}</Typography>
-          <Typography  component={'span'} className="topogragh">{createdat}</Typography>
+          <span   className="topogragh"> {company}</span>
+          <span   className="topogragh">{place}</span>
+          <span   className="topogragh">{network}</span>
+          <span   className="topogragh">{createdby}</span>
+          <span   className="topogragh">{avanch_num}</span>
+          <span   className="topogragh">{createdat}</span>
 
           <CardActions disableSpacing className={classes.action}>
             <IconButton
@@ -198,7 +197,7 @@ const GetBorderByHoldTime = () =>{
             <IconButton color="primary" onClick ={DownloadFiles}>
             <ThemeProvider theme={innerTheme}>
             <Tooltip disableFocusListener disableTouchListener title={company === "אחר" ? plugatext : companytext}  >
-            <Badge badgeContent={1} color={isfileexist ==="" ? "secondary":"primary"} variant="dot">
+            <Badge badgeContent={1} color={filetype ==="" ? "secondary":"primary"} variant="dot">
                 <AssignmentIcon />
               </Badge>
               </Tooltip>
@@ -209,7 +208,7 @@ const GetBorderByHoldTime = () =>{
             {IsCompanyFault()&&<IconButton color="primary" onClick ={DownloadProviderFiles}>
             <ThemeProvider theme={innerTheme}>
             <Tooltip disableFocusListener disableTouchListener title="לחץ לצפיה בתעודת ספק"  >
-            <Badge badgeContent={1} color={isProviderFileExist ==="" ? "secondary":"primary"} variant = "dot">
+            <Badge badgeContent={1} color={providerfiletype ==="" ? "secondary":"primary"} variant = "dot">
                 <ListAltIcon />
               </Badge>
               </Tooltip>
@@ -221,52 +220,71 @@ const GetBorderByHoldTime = () =>{
           <CardContent className="contant">
             <ThemeProvider theme={theme}>
               <div className="expend_fult">
-                <Typography  component={'span'} className="topogragh_status">
+              <div className = "DataROw">
+              <span   className="info">
                   תיאור התקלה:
-                  <span  className="topogragh_info">
+                </span>
+                <span  className="data">
                     {description}
                   </span>
-                </Typography>
-                <Typography component={'span'} className="topogragh_status">
+              </div>
+
+              <div className = "DataROw">
+              <span  className="info">
                   תהליכים שבוצעו:
-                  <span className = "topogragh_info">{actions}</span>
-                </Typography>
+                </span>
+                <span className = "data">{actions}</span>
+              </div>
 
-                <Typography component={'span'} className="topogragh_status">
+              <div className = "DataROw">
+                <span  className="info">
                   תהליכים שנדרש לבצע:
-                  <span className = "topogragh_info">{future_actions}</span>
-                </Typography>
+                </span>
+                <span className = "data">{future_actions}</span>
+                </div>
 
-                <Typography  component={'span'} className="topogragh_status">
+                <div className = "DataROw">
+                <span   className="info">
              סטטוס קודם:
-                  <span className="topogragh_info">{pre_status}</span>
-                </Typography>
-                <Typography  component={'span'} className="topogragh_status">
+                </span>
+                <span className="data">{pre_status}</span>
+                </div>
+                <div className = "DataROw">
+                <span   className="info">
                   סטטוס:
-                  <span className="topogragh_info">{status}</span>
-                </Typography>
+                </span>
+                <span className="importent">{status}</span>
+                </div>
 
-                {(IsCompanyFault())&&(                
-                <Typography component={'span'} className="topogragh_status">
+                {(IsCompanyFault())&&(  
+                  <div className = "DataROw">              
+                <span  className="info">
                   שם הטכנאי שיוצא לתקלה:
-                  <span className = "topogragh_info">{techname === ""? "לא ידוע":techname}</span>
-                </Typography>)}
-                <Typography component={'span'} className="topogragh_status">
+                 
+                </span>
+                <span className = "data">{techname === ""? "לא ידוע":techname}</span></div>)}
+
+                <div className = "DataROw"> 
+                <span  className="info">
                   עודכן לאחרונה בתאריך:
-                  <span className = "topogragh_info"> {fields.last_changed}</span>
-                </Typography>
+                </span>
+                <span className = "data"> {fields.last_changed}</span>
+                </div>
 
                 {is_close&&(
-                <Typography component={'span'} className="topogragh_status">
+                  <div className = "DataROw"> 
+                <span  className="info">
                   נסגרה בתאריך:
-                  <span className = "topogragh_info">{closed_at}</span>
-                </Typography>)}
-
-                <Typography component={'span'} className="topogragh_status">
+                </span>
+                <span className = "data">{closed_at}</span>
+                </div>)}
+                <div className = "DataROw"> 
+                <span  className="info">
                   עודכן לאחרונה על ידי:
-                  <span className = "topogragh_info">{fields.lastUpdateBy}</span>
-                </Typography>
-                <Typography component={'span'} >
+                </span>
+                <span className = "data">{fields.lastUpdateBy}</span>
+                </div>
+                <span  >
                   {IsEditor&&(<div className="operation_holder">
 
  
@@ -293,7 +311,7 @@ const GetBorderByHoldTime = () =>{
                     </Tooltip>}
 
                   </div>)}
-                </Typography>
+                </span>
               </div>
             </ThemeProvider>
           </CardContent>

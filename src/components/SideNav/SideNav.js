@@ -9,7 +9,7 @@ import SideNavMenuItem from './SideNavMenuItem/SideNavMenuItem';
 import sideNavUtils from './SideNavUtil';
 import { useEffect } from 'react';
 import './SideNav.scss';
-import logo from '../../assets/logoClear.png';
+import logo from '../../assets/logo.png';
 import IconButton from "@material-ui/core/IconButton";
 import { useHistory, useLocation } from 'react-router-dom';
 

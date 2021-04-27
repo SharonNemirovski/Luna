@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { useStyles, theme } from "./styles";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
-import Typography from "@material-ui/core/Typography";
 import clsx from "clsx";
 import CardActions from "@material-ui/core/CardActions";
 import Collapse from "@material-ui/core/Collapse";
@@ -94,6 +93,8 @@ export default function Fult({
   const [backdrop, openBackdrop] = useState(false);
   const [filebackdrop, openfileBackdrop] = useState(false);
   const [Providerfilebackdrop, openProviderfileBackdrop] = useState(false);
+  const [ChangeExisistingFile , toChangefile] = useState("no");
+  const [ChangeExisistingProviderFile , toproviderfileChange] = useState("no");
   const innerTheme = createMuiTheme({
     palette: {
       primary: {
@@ -122,71 +123,21 @@ export default function Fult({
   const handleEdit = () =>{
     openBackdrop(true);
   };
-  const UpdateFault = (new_status , tech_name , avnachNUM , user) => {
+  const UpdateFault = (new_status , tech_name , avnachNUM , user ,pre_action , futureaction , F_description) => {
     const oldStatus = fields.status;
     let fultbody ={};
     let currentDate = new Date();
-    if ((new_status !== ""))
-    {
-      if(tech_name !== "")
-      {
-          if(avnachNUM !== "")
-          {
-            fultbody = { status: String(new_status),pre_status: String(oldStatus) , emp: String(tech_name) , lastUpdateBy: user, avanch_num:String(avnachNUM) };
-            setFields({...fields , avanch_num: avnachNUM ,lastUpdateBy: user , tech:tech_name ,  status:new_status , pre_status:oldStatus  ,last_changed : pharseDate(currentDate.toISOString())});
-          }
-          else
-          {
-            fultbody = { status: String(new_status),pre_status: String(oldStatus) ,lastUpdateBy: user, emp: String(tech_name)  };
-            setFields({...fields ,  tech:tech_name , lastUpdateBy: user, status:new_status ,pre_status:oldStatus ,last_changed : pharseDate(currentDate.toISOString())});
-          }
-      }
-      else
-      {
-          if(avnachNUM !== "")
-            {
-              fultbody = { status: String(new_status),pre_status: String(oldStatus) ,lastUpdateBy: user, avanch_num:String(avnachNUM) };
-              setFields({...fields , avanch_num: avnachNUM  ,lastUpdateBy: user,  status:new_status,pre_status:oldStatus  ,last_changed : pharseDate(currentDate.toISOString())});
-            }
-          else
-            {
-              fultbody = { status: String(new_status),lastUpdateBy: user , pre_status: String(oldStatus) };
-              setFields({...fields ,  status:new_status,pre_status:oldStatus  ,lastUpdateBy: user,last_changed : pharseDate(currentDate.toISOString())});
-            }
-      }
-    }
-    else
-    {
-        if(tech_name !== "")
-        {
-            if(avnachNUM !== "")
-            {
-                fultbody = { emp: String(tech_name) , lastUpdateBy: user,avanch_num:String(avnachNUM) };
-                setFields({...fields , avanch_num: avnachNUM , lastUpdateBy: user, tech:tech_name   ,last_changed : pharseDate(currentDate.toISOString())});
-            }
-            else
-            {
-                fultbody = {lastUpdateBy: user, emp: String(tech_name)  };
-                setFields({...fields , lastUpdateBy: user, tech:tech_name , last_changed : pharseDate(currentDate.toISOString())});
-            }
-        }
-        else
-        {
-            if(avnachNUM !== "")
-            {
-                fultbody = {lastUpdateBy: user,avanch_num:String(avnachNUM) };
-                setFields({...fields , lastUpdateBy: user,avanch_num: avnachNUM  ,last_changed : pharseDate(currentDate.toISOString())});
-            }
-            else
-            {
-              openBackdrop(false);
-              Swal.fire({confirmButtonText: "אישור" , title:"לא עודכן אף שדה" ,icon:"info"});
-              return;
-            }
-        
-        }  
-    }
-    fetch(`http://localhost:4000/luna/UpdateFult/${ID}/${token}`, {
+
+    fultbody = { status: String(new_status),pre_status: String(oldStatus) , 
+                 emp: String(tech_name) , lastUpdateBy: user, avanch_num:String(avnachNUM),
+                 actions : String(pre_action) , 
+                 future_actions:String(futureaction) ,description:String( F_description) };
+
+    setFields({...fields , avanch_num: avnachNUM ,lastUpdateBy: user , tech:tech_name ,  status:new_status , 
+       pre_status:oldStatus ,future_actions:futureaction,actions:pre_action, description:F_description,
+       last_changed : pharseDate(currentDate.toISOString())});
+    
+    fetch(`http://localhost:80/luna/UpdateFult/${ID}/${token}`, {
       method: "POST",
       body: JSON.stringify(fultbody),
       headers: {
@@ -197,7 +148,6 @@ export default function Fult({
       .then((res) => res.json())
       .catch(() => { alert("server error") })
     Swal.fire({confirmButtonText: "אישור" , title :"!התקלה עודכנה בהצלחה" ,icon:"success"});     
-    setExpanded(false);
     openBackdrop(false);
   };
   const IsCompanyFault = () =>{
@@ -211,14 +161,38 @@ export default function Fult({
   const OnUploadFile = () =>{
     if(isfileexist==="")
       openfileBackdrop(true);
-    else
-    Swal.fire({confirmButtonText: "אישור" , title:"לתקלה כבר קיים קובץ מצורף" ,icon:"info"});
+    else{
+      Swal.fire({confirmButtonText: "אישור" , showCancelButton: true,
+      cancelButtonText: "בטל",footer: "?האם ברצונך לדרוס את הקובץ הישן", 
+                title:"לתקלה כבר קיים קובץ מצורף" ,icon:"info"})
+                .then((result) => 
+                {
+                  if (result.isConfirmed) {
+                    toChangefile("yes");
+                    openfileBackdrop(true);
+                  }else{
+                    toChangefile("no")
+                  }
+                });
+    }
   };
   const OnUploadProviderFile = () =>{
     if(isProviderFileExist==="")
     openProviderfileBackdrop(true);
-    else
-    Swal.fire({confirmButtonText: "אישור" , title:"לתקלה כבר צורפה תעודת ספק" ,icon:"info"});
+    else{
+      Swal.fire({confirmButtonText: "אישור" , showCancelButton: true,
+        cancelButtonText: "בטל",footer: "?האם ברצונך לדרוס את הקובץ הישן", 
+                title:"לתקלה כבר קיים קובץ מצורף" ,icon:"info"})
+                .then((result) => 
+                {
+                  if (result.isConfirmed) {
+                    toproviderfileChange("yes");
+                    openProviderfileBackdrop(true);
+                  }else{
+                    toChangefile("no")
+                  }
+                });
+    }
   };
   const DownloadFiles = () =>{
     if(isfileexist ===""){
@@ -230,7 +204,7 @@ export default function Fult({
       }
     }
     else{
-      axios.get(`http://localhost:4000/luna/getfiles/${ID}/${token}`,
+      axios.get(`http://localhost:80/luna/getfiles/${ID}/${token}`,
       {
           headers: {
               'Content-Type': 'application/json',
@@ -249,7 +223,7 @@ export default function Fult({
         Swal.fire({confirmButtonText: "אישור" , title:"לא צורפה תעודת ספק לתקלה" ,icon:"info"});
       }
       else{
-        axios.get(`http://localhost:4000/luna/getProviderfiles/${ID}/${token}`,
+        axios.get(`http://localhost:80/luna/getProviderfiles/${ID}/${token}`,
         {
             headers: {
                 'Content-Type': 'application/json',
@@ -289,42 +263,51 @@ export default function Fult({
   return (
     <div>
       {backdrop && (
-          <Backdrop onClose={() => openBackdrop(false)} onEdit={UpdateFault} company ={company} />
+          <Backdrop onClose={() => openBackdrop(false)} onEdit={UpdateFault} company ={company}
+           status = {fields.status} 
+          techname ={fields.tech} avnach ={fields.avanch_num}
+          pre_action ={fields.actions} 
+          futureaction ={fields.future_actions} 
+          F_description = {fields.description} />
         )}
-          {filebackdrop && (<Uploadfile fualtid = {ID} token = {token} IsProviderFile = {false}
+          {filebackdrop && (<Uploadfile fualtid = {ID} ChangeExisistingFile={ChangeExisistingFile} token = {token} 
+          IsProviderFile = {false}
             doneupload={()=>{
 
-              fetch(`http://localhost:4000/luna/getfiletype/${ID}/${token}`, {
+              fetch(`http://localhost:80/luna/getfiletype/${ID}/${token}`, {
                 headers: { 'Content-Type': 'application/json' },
               })
                 .then((res) => res.json())
                 .then((json) => {
-                  setFileflag(json.Filetype)
+                  setFileflag(json.Filetype);
+                  toChangefile("no");
                 }).catch((error) => { alert(error) });
 
             }} 
-            onClose = {()=>openfileBackdrop(false)}/>
+            onClose = {()=>
+              openfileBackdrop(false)}/>
         )}
-        {Providerfilebackdrop && (<Uploadfile fualtid = {ID} token = {token} IsProviderFile = {true}
+        {Providerfilebackdrop && (<Uploadfile fualtid = {ID} ChangeExisistingFile={ChangeExisistingProviderFile} token = {token} IsProviderFile = {true}
             doneupload={()=>{
-              fetch(`http://localhost:4000/luna/getProviderfiletype/${ID}/${token}`, {
+              fetch(`http://localhost:80/luna/getProviderfiletype/${ID}/${token}`, {
                 headers: { 'Content-Type': 'application/json' },
               })
                 .then((res) => res.json())
                 .then((json) => {
                   setProviderFileFlag(json.Filetype);
+                  toproviderfileChange("no");
                 }).catch((error) => { alert(error) });
             }} 
             onClose = {()=>openProviderfileBackdrop(false)}/>
         )}
       <Card className={GetBorderByHoldTime()}>
         <CardContent  className={classes.cardcontant}>
-          <Typography component={'span'} className="topogragh"> {fields.num}</Typography>
-          <Typography component={'span'} className="topogragh">{fields.place}</Typography>
-          <Typography component={'span'} className="topogragh">{fields.network}</Typography>
-          <Typography component={'span'} className="topogragh">{fields.by}</Typography>
-          <Typography component={'span'} className="topogragh">{fields.avanch_num}</Typography>
-          <Typography component={'span'} className="topogragh">{fields.created_at}</Typography>
+          <span  className="topogragh"> {fields.company}</span>
+          <span  className="topogragh">{fields.place}</span>
+          <span  className="topogragh">{fields.network}</span>
+          <span  className="topogragh">{fields.by}</span>
+          <span  className="topogragh">{fields.avanch_num}</span>
+          <span  className="topogragh">{fields.created_at}</span>
 
           <CardActions disableSpacing className={classes.action}>
             <IconButton
@@ -368,43 +351,61 @@ export default function Fult({
           <CardContent className="contant">
             <ThemeProvider theme={theme}>
               <div className="expend_fult">
-                <Typography component={'span'} className="topogragh_status">
+                <div className = "DataROw">
+                  <span  className="info ">
                   תיאור התקלה:
-                  <span className = "topogragh_info">{fields.description}</span>
-                </Typography>
-                <Typography component={'span'} className="topogragh_status">
+                  </span>
+                  <span className = "data">{fields.description}</span>
+                </div>
+
+                <div className= "DataROw">
+                <span  className="info ">
                   תהליכים שבוצעו:
-                  <span className = "topogragh_info">{fields.actions}</span>
-                </Typography>
+                </span>
+                <span className = "data">{fields.actions}</span>
+                </div>
 
-                <Typography component={'span'} className="topogragh_status">
+                <div className= "DataROw">
+                <span  className="info ">
                   תהליכים שנדרש לבצע:
-                  <span className = "topogragh_info">{fields.future_actions}</span>
-                </Typography>
-                <Typography component={'span'} className="topogragh_status">
+                </span>
+                <span className = "data">{fields.future_actions}</span>
+                </div>
+
+                <div className= "DataROw">
+                <span  className="info ">
                   סטטוס קודם:
-                  <span className = "topogragh_info">{fields.pre_status}</span>
-                </Typography>
-                <Typography component={'span'} className="topogragh_status">
+                </span>
+                <span className = "data">{fields.pre_status}</span>
+                </div>
+
+
+                <div className= "DataROw">
+                <span  className="info ">
                   סטטוס:
-                  <span className = "topogragh_info">{fields.status}</span>
-                </Typography>
+                </span>
+                <span className = "importent">{fields.status}</span>
+                </div>
 
 
-                {(IsCompanyFault())&&(<Typography component={'span'} className="topogragh_status">
+                {(IsCompanyFault())&&(<div className= "DataROw"><span  className="info ">
                   שם הטכנאי שיוצא לתקלה:
-                  <span className = "topogragh_info">{techname === ""? "לא ידוע":fields.tech}</span>
-                </Typography>)}
-                <Typography component={'span'} className="topogragh_status">
+                </span><span className = "data">{techname === ""? "לא ידוע":fields.tech}</span>
+                </div>)}
+                <div className= "DataROw">
+                <span  className="info ">
                   עודכן לאחרונה בתאריך:
-                  <span className = "topogragh_info"> {fields.last_changed}</span>
-                </Typography>
+                </span>
+                <span className = "data"> {fields.last_changed}</span>
+                </div>
 
-                <Typography component={'span'} className="topogragh_status">
+                <div className= "DataROw">
+                <span  className="info ">
                   עודכן לאחרונה על ידי:
-                  <span className = "topogragh_info">{fields.lastUpdateBy}</span>
-                </Typography>
-                <Typography component={'span'}>
+                </span>
+                <span className = "data">{fields.lastUpdateBy}</span>
+                </div>
+                <span >
                   {IsEditor&&(<div className={GetOperationStyle()}>
                 
                   <Tooltip disableFocusListener disableTouchListener title="לחץ לעריכת התקלה"  >
@@ -464,7 +465,7 @@ export default function Fult({
                     </Tooltip>}
                    
                   </div>)}
-                </Typography>
+                </span>
               </div>
             </ThemeProvider>
           </CardContent>

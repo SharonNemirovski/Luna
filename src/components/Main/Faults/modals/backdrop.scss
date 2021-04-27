@@ -16,19 +16,35 @@
   .BackDropModal_content {
     background-color: #fff;
     border-radius: 8px;
-    height: 530px;
+    height: 585px;
     width: 490px;
     align-self: center;
     padding: 10px;
     img {
-      height: 210px;
-      width: 310px;
+      height: 170px;
+      width: 210px;
     }
-
+    h5 {
+      display: rtl;
+      color: black;
+      font-size: 14px;
+    }
+    h6 {
+      display: rtl;
+      color: #df2b2b;
+      font-size: 14px;
+      animation: shake 0.45s cubic-bezier(0.15, 0.06, 0.19, 0.57) both;
+    }
     .BackDropModal_form {
       display: flex;
-      flex-grow: 1;
       flex-direction: column;
+      height: 315px;
+      overflow-y: scroll;
+      overflow-x: hidden;
+      direction: ltr; //for placing the scrollbar on right
+      .BackDropModal_form_item {
+        direction: rtl;
+      }
       h1 {
         display: rtl;
         color: #df2b2b;
@@ -36,18 +52,33 @@
         animation: shake 0.45s cubic-bezier(0.15, 0.06, 0.19, 0.57) both;
       }
     }
-
+    .BackDropModal_form::-webkit-scrollbar {
+      width: 8px !important;
+      cursor: pointer;
+    }
+    .BackDropModal_form::-webkit-scrollbar-track {
+      box-shadow: inset 0 0 5px grey;
+      border-radius: 5px;
+    }
+    /* Handle */
+    .BackDropModal_form::-webkit-scrollbar-thumb {
+      background: rgb(106, 158, 255);
+      border-radius: 5px;
+    }
+    .BackDropModal_form::-webkit-scrollbar-thumb:hover {
+      background: #2b51a3;
+    }
     .BackDropModal_actions {
-      padding-top: 13px;
+      padding-top: 0px;
       button {
         border: none;
         border-radius: 4px;
         padding: 4px 8px;
         font-size: 17px;
         letter-spacing: 2px;
-        margin: 4px 8px;
+        margin: 14px 28px;
         cursor: pointer;
-        width: 80px;
+        width: 100px;
         outline: none;
 
         &:nth-child(1) {
@@ -75,86 +106,6 @@
         &:nth-child(3):hover {
           transform: scale(1.03);
           background-color: rgb(194, 11, 11);
-        }
-      }
-    }
-  }
-}
-.BackDropModalCompany {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  transform: translateX(-1.1%);
-  height: 100vh;
-  width: 100vw;
-  background-color: rgba(0, 0, 0, 0.3);
-  margin: auto;
-  display: flex;
-  text-align: center;
-  justify-content: center;
-  z-index: 1000000000;
-
-  .BackDropModal_content {
-    background-color: #fff;
-    border-radius: 8px;
-    height: 610px;
-    width: 500px;
-    padding: 4px;
-    align-self: center;
-    img {
-      height: 210px;
-      width: 310px;
-    }
-
-    .BackDropModal_form {
-      display: flex;
-      flex-grow: 1;
-      flex-direction: column;
-      h1 {
-        display: rtl;
-        color: #df2b2b;
-        font-size: 16.5px;
-        animation: shake 0.45s cubic-bezier(0.15, 0.06, 0.19, 0.57) both;
-      }
-    }
-
-    .BackDropModal_actions {
-      padding-top: 13px;
-      button {
-        border: none;
-        border-radius: 4px;
-        padding: 4px 8px;
-        font-size: 17px;
-        letter-spacing: 2px;
-        margin: 4px 8px;
-        cursor: pointer;
-        width: 80px;
-        outline: none;
-
-        &:nth-child(1) {
-          color: #fff;
-          background-color: #d37b6f;
-        }
-        &:nth-child(1):hover {
-          transform: scale(1.03);
-          background-color: rgb(194, 11, 11);
-        }
-
-        &:nth-child(2) {
-          color: #fff;
-          background-color: #c1e7b9;
-        }
-        &:nth-child(2):hover {
-          transform: scale(1.03);
-          background-color: #66b855;
-        }
-        &:nth-child(3) {
-          color: #fff;
-          background-color: rgb(212, 50, 50);
-        }
-        &:nth-child(3):hover {
-          transform: scale(1.03);
         }
       }
     }
